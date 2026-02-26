@@ -237,16 +237,6 @@ if (window.electronAPI) {
         }
     });
 
-    // Check if we should show Home Screen or App
-    const hasFSRoot = state.items.some(i => i.id === 'fs-root');
-    if (!hasFSRoot) {
-        homeScreen.style.display = 'flex';
-        appLayout.style.display = 'none';
-    } else {
-        homeScreen.style.display = 'none';
-        appLayout.style.display = 'flex';
-    }
-
     // ── Bind Window Controls ──
     const winControls = document.getElementById('window-controls');
     const closeFolderMenu = document.getElementById('menu-close-folder');
@@ -267,6 +257,26 @@ if (window.electronAPI) {
         document.getElementById('win-max')?.addEventListener('click', () => window.electronAPI.maximizeWindow());
         document.getElementById('win-close')?.addEventListener('click', () => window.electronAPI.closeWindow());
     }
+
+    // Hide web-only features
+    const liteToggle = document.getElementById('lite-mode-home-toggle')?.closest('.theme-row');
+    if (liteToggle) liteToggle.style.display = 'none';
+
+} else {
+    // ── Web (Browser) Integration ────────────────────────────────
+
+    // Hide Desktop-only features
+    if (homeCreateBtn) homeCreateBtn.style.display = 'none';
+    if (homeCloseAppBtn) homeCloseAppBtn.style.display = 'none';
+}
+
+const hasFSRoot = state.items.some(i => i.id === 'fs-root');
+if (!hasFSRoot) {
+    homeScreen.style.display = 'flex';
+    appLayout.style.display = 'none';
+} else {
+    homeScreen.style.display = 'none';
+    appLayout.style.display = 'flex';
 }
 
 // ── Boot ──────────────────────────────────────────────────────
