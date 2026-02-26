@@ -1,31 +1,38 @@
-# Welcome to Elefant 🐘
+# Welcome to Elefant! 🐘
 
-A **minimalist**, **self-hosted** markdown editor designed for people who want a clean, distraction-free writing environment — without cloud accounts, subscriptions, or unnecessary complexity.
+*(Português abaixo | Español abajo)*
 
----
+Elefant is a minimalist, self-hosted Markdown editor designed for speed and simplicity. 
 
-## What you can do right now
+- **No accounts, no cloud:** Everything is stored directly in your browser's local storage.
+- **Fast and Distraction-free:** The editor instantly renders your markdown with a live preview.
+- **Customizable:** Click the `⋮` menu to change themes, fonts, and accent colors.
+- **Image Support:** Paste (`Ctrl+V`) or drag & drop images straight into the editor. Try it!
 
-- ✅ **Write in markdown** — live preview updates as you type
-- ✅ **Create folders** — click the folder icon in the sidebar
-- ✅ **Import this file** — via **⋮ menu → Open File**
-- ✅ **Drag & drop notes** between folders
-- ✅ **Customise the theme** — open **⋮ menu → Theme Settings**
-
----
-
-## Your data
-
-Everything is stored in your **browser's localStorage** — nothing leaves your machine.
-
-To back up a note, use **⋮ menu → Download File** or press `Ctrl+D`.
+To get started, explore the other sample notes in the sidebar, or click the **New Note** icon to create your own! 
 
 ---
 
-## Where to start
+# Bem-vindo(a) ao Elefant! 🐘
 
-1. Open `Getting-Started.md` from the `notes/` folder for a quick tour
-2. Open `Markdown-Cheatsheet.md` for a syntax reference
-3. Open `Keyboard-Shortcuts.md` for all available shortcuts
+O Elefant é um editor Markdown minimalista e self-hosted (hospedado por você), focado em velocidade e simplicidade.
 
-> **Tip:** Right-click anywhere in the editor to access formatting options.
+- **Sem contas, sem nuvem:** Tudo fica salvo diretamente no armazenamento local do seu navegador (localStorage).
+- **Rápido e sem distrações:** O editor renderiza seu Markdown instantaneamente com pré-visualização em tempo real.
+- **Personalizável:** Clique no menu `⋮` para mudar temas, fontes e cores de destaque.
+- **Suporte a Imagens:** Cole (`Ctrl+V`) ou arraste e solte imagens direto no editor. Experimente!
+
+Para começar, explore as outras notas de exemplo na barra lateral, ou clique no ícone **Nova Nota** para criar a sua!
+
+---
+
+# ¡Te damos la bienvenida a Elefant! 🐘
+
+Elefant es un editor Markdown minimalista y "self-hosted" (autoalojado), diseñado para ser rápido y sencillo.
+
+- **Sin cuentas ni la nube:** Todo se guarda de forma segura directamente en el almacenamiento local de tu navegador.
+- **Rápido y sin distracciones:** El editor muestra tu código Markdown al instante con vista previa en vivo.
+- **Personalizable:** Haz clic en el menú `⋮` para cambiar temas, colores y tipos de letra.
+- **Soporte para Imágenes:** Pega (`Ctrl+V`) o arrastra y suelta imágenes directamente en el editor. ¡Pruébalo!
+
+Para empezar, explora las demás notas de muestra en la barra lateral o haz clic en el icono de **Nueva Nota** para crear tu primera nota.
