@@ -1,6 +1,6 @@
 # Elefant — Minimalist Markdown Editor
 
-> A lightweight, self-hosted markdown editor with live preview, folder organisation, image support, and full theme customisation. No accounts. No cloud. Your notes stay on your device.
+> A beautiful minimalist markdown editor with a modern glassmorphic interface. Available as a standalone **Native Desktop App** (Electron) or a self-hosted web app. Features live preview, deep local folder system synchronization, image visualization, and extensive theme customization. No accounts. No cloud. Your notes stay fully secure on your own machine.
 
 [![Live Demo](https://img.shields.io/badge/Live_Demo-Try_Elefant-%2325010065?style=for-the-badge)](https://barral0.github.io/elefant/)
 
@@ -12,18 +12,40 @@
 
 | Feature | Details |
 |---|---|
+| **Native Desktop App** | Fully featured local storage access using Electron |
+| **Local Folder Sync** | Automatically loads and synchronizes directories and images direct from your OS |
+| **Glassmorphic UI** | Premium Apple-style frosted glass interface with smooth micro-animations |
 | **Live preview** | Side-by-side markdown rendering as you type |
 | **Folder organiser** | Nest notes into folders, drag & drop to reorganise |
-| **Image support** | Paste, drag & drop, or insert images — auto-resized before storage |
+| **Image support** | Displays local `.png/jpg/webp/svg` inline, plus clipboard paste & drag-and-drop |
 | **Theme editor** | Dark / light mode, 7 accent colours + custom picker, font & size controls |
 | **Right-click menu** | Bold, italic, code, link, image — without leaving the keyboard |
 | **Keyboard shortcuts** | `Ctrl+S` save · `Ctrl+D` download · `Ctrl+B/I/`` formatting · `?` help |
-| **Local storage** | Everything is stored in the browser — nothing leaves your machine |
+| **Auto-Saving** | Your workflow is securely flushed instantly to disk or browser memory |
 | **Zero dependencies** | Vanilla HTML, CSS, and ES modules — no framework, no build step |
 
 ---
 
-## 🚀 Self-hosting with Docker
+## 💻 Desktop App (Windows)
+
+Elefant is packaged natively for Windows, allowing seamless local filesystem integration and standalone usage. 
+
+**Download the Pre-Built App:**
+1. Navigate to the **[Actions](https://github.com/barral0/elefant/actions)** tab.
+2. Select the latest **Build Desktop (Windows)** workflow.
+3. Download the built `Elefant-Windows` `.exe` or `.zip` artifact!
+
+**Build from Source:**
+
+```bash
+npm install
+npm run start # Start local sandbox
+npm run dist -- -w # Compile Windows build
+```
+
+---
+
+## 🚀 Self-hosting Web App natively with Docker
 
 ### Quick start
 
@@ -61,8 +83,11 @@ Edit `docker-compose.yml` and `nginx.conf` — replace `8095` with your preferre
 
 ## 📁 Project Structure
 
-```
+```text
 elefant/
+├── main.js                 ← Electron main backend process connecting the filesystem
+├── preload.js              ← Secure Electron IPC bridge
+├── package.json            ← Node and Electron-builder build configs
 ├── index.html              ← App entry point
 ├── css/
 │   ├── tokens.css          ← Design tokens (CSS variables)
