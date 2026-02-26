@@ -2,6 +2,8 @@
 
 > A lightweight, self-hosted markdown editor with live preview, folder organisation, image support, and full theme customisation. No accounts. No cloud. Your notes stay on your device.
 
+[![Live Demo](https://img.shields.io/badge/Live_Demo-Try_Elefant-%2325010065?style=for-the-badge)](https://barral0.github.io/elefant/)
+
 ![Elefant Screenshot](images/screenshot.png)
 
 ---
