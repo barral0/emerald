@@ -1,0 +1,40 @@
+name: Build Desktop (Windows)
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: 20
+        cache: 'npm'
+
+    - name: Install dependencies
+      run: npm ci
+
+    - name: Build Windows App
+      run: npm run dist -- -w
+      env:
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Upload Artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: Elefant-Windows
+        path: |
+          dist/*.exe
+          dist/*.zip
+          dist/*.nsis
+        retention-days: 7
