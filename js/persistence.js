@@ -19,6 +19,21 @@ export function updateSaveStatus(text, cls = '') {
 }
 
 export async function autoSave() {
+    // Garbage collection of orphaned images
+    const usedImages = new Set();
+    state.items.filter(i => i.type === 'file').forEach(file => {
+        const content = file.content || '';
+        const matches = content.matchAll(/img:\/\/([a-zA-Z0-9_-]+)/g);
+        for (const match of matches) {
+            usedImages.add(match[1]);
+        }
+    });
+    for (const key of Object.keys(state.imageStore)) {
+        if (!usedImages.has(key)) {
+            delete state.imageStore[key];
+        }
+    }
+
     persist();
 
     // Electron specific autosave to fs

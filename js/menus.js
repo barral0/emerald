@@ -3,11 +3,12 @@
    ============================================================= */
 import { state } from './state.js';
 import { insertAtCursor, openImageModal, closeImageModal } from './images.js';
-import { deleteCurrentItem, downloadNote, getActiveItem } from './files.js';
+import { deleteCurrentItem, downloadNote, getActiveItem, backupWorkspace } from './files.js';
 import { loadActiveItem, renderSidebar } from './render.js';
 import { openThemeModal, closeThemeModal } from './theme.js';
 import { openHelp, closeHelp } from './shortcuts.js';
 import { t } from './i18n.js';
+import { showCustomPrompt } from './dialogs.js';
 
 const noteTitleInput = document.getElementById('note-title');
 const contextMenu = document.getElementById('context-menu');
@@ -19,6 +20,22 @@ const appMenu = document.getElementById('app-menu');
 const imageInput = document.getElementById('image-input');
 const fileInput = document.getElementById('file-input');
 const editor = document.getElementById('editor');
+
+const aboutModal = document.getElementById('about-modal-overlay');
+const aboutCloseBtn = document.getElementById('about-close-btn');
+
+export function openAboutModal() {
+    aboutModal.hidden = false;
+}
+
+export function closeAboutModal() {
+    aboutModal.hidden = true;
+}
+
+aboutCloseBtn.addEventListener('click', closeAboutModal);
+aboutModal.addEventListener('click', e => {
+    if (e.target === aboutModal) closeAboutModal();
+});
 
 // ── File-browser context menu ────────────────────────────────
 export function showContextMenu(e, itemId) {
@@ -94,9 +111,9 @@ const editorActions = {
         const sel = editor.value.slice(editor.selectionStart, editor.selectionEnd);
         sel.includes('\n') ? wrapSelection('```\n', '\n```', 'code') : wrapSelection('`', '`', t('editor.code').toLowerCase());
     },
-    link: () => {
+    link: async () => {
         const sel = editor.value.slice(editor.selectionStart, editor.selectionEnd);
-        const url = prompt(t('msg.prompt_url'), 'https://');
+        const url = await showCustomPrompt(t('msg.prompt_url'), 'https://');
         if (url) insertAtCursor(`[${sel || t('editor.link').toLowerCase()}](${url})`);
     },
     image: () => imageInput.click(),
@@ -106,13 +123,13 @@ export { editorActions };
 
 editor.addEventListener('contextmenu', e => showEditorContextMenu(e));
 
-editorContextMenu.addEventListener('click', e => {
+editorContextMenu.addEventListener('click', async e => {
     const li = e.target.closest('li[data-action]');
     if (!li) return;
     hideEditorContextMenu();
     editor.focus();
     const action = editorActions[li.dataset.action];
-    if (action) action();
+    if (action) await action();
 });
 
 // ── App menu (three-dot) ──────────────────────────────────────
@@ -143,6 +160,8 @@ appMenu.addEventListener('click', e => {
         case 'theme': openThemeModal(); break;
         case 'image': imageInput.click(); break;
         case 'download': downloadNote(); break;
+        case 'backup': backupWorkspace(); break;
+        case 'about': openAboutModal(); break;
         case 'open': fileInput.click(); break;
         case 'help': openHelp(); break;
         case 'delete': deleteCurrentItem(); break;

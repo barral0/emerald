@@ -9,6 +9,8 @@ import { getActiveItem, getActiveNote, createNote, createFolder, moveItem, getUn
 import { openImageModal } from './images.js';
 import { applyTheme } from './theme.js';
 import { applyTranslations, t } from './i18n.js';
+import { showCustomPrompt } from './dialogs.js';
+import { openAboutModal } from './menus.js';
 
 // ── DOM references ───────────────────────────────────────────
 const editor = document.getElementById('editor');
@@ -26,6 +28,7 @@ const appLayout = document.getElementById('app-layout');
 const homeOpenBtn = document.getElementById('home-open-btn');
 const homeCreateBtn = document.getElementById('home-create-btn');
 const homeCloseAppBtn = document.getElementById('home-close-app-btn');
+const homeAboutBtn = document.getElementById('home-about-btn');
 
 // ── Marked.js ────────────────────────────────────────────────
 marked.use({ breaks: true, gfm: true });
@@ -136,11 +139,35 @@ editorPane.addEventListener('drop', e => {
     if (file) { e.preventDefault(); openImageModal(file); }
 });
 
-// ── Image input (from app-menu or editor context menu) ────────
 imageInput.addEventListener('change', e => {
     openImageModal(e.target.files[0]);
     imageInput.value = '';
 });
+
+// ── Recent Workspaces ─────────────────────────────────────────
+let recentWorkspaces = JSON.parse(localStorage.getItem('app-recent-workspaces') || '[]');
+const updateRecentWorkspacesUI = () => {
+    const recentEl = document.getElementById('home-recent');
+    const listEl = document.getElementById('recent-workspaces-list');
+    if (!recentEl || !listEl) return;
+
+    if (recentWorkspaces.length > 0) {
+        recentEl.style.display = 'block';
+        listEl.innerHTML = '';
+        recentWorkspaces.forEach(ws => {
+            const li = document.createElement('li');
+            li.style.cssText = 'padding: 8px 12px; background: var(--bg-pane-hover); border-radius: 6px; cursor: pointer; color: var(--text-primary); font-size: 0.85rem; display: flex; align-items: center; justify-content: space-between; gap: 12px; transition: background var(--transition);';
+            li.innerHTML = `<span style="font-weight:500; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${ws.name}</span><span style="font-size: 0.72rem; color: var(--text-secondary); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${ws.path}</span>`;
+            li.addEventListener('mouseover', () => li.style.background = 'var(--bg-pane)');
+            li.addEventListener('mouseout', () => li.style.background = 'var(--bg-pane-hover)');
+            // Need to pass openDirectoryFlow somehow; since it's defined later we resolve lazily
+            li.addEventListener('click', () => { window.__openDirectoryFlow?.(ws.path); });
+            listEl.appendChild(li);
+        });
+    } else {
+        recentEl.style.display = 'none';
+    }
+};
 
 // ── Electron (Desktop) Integration ────────────────────────────
 if (window.electronAPI) {
@@ -164,6 +191,12 @@ if (window.electronAPI) {
                     fsPath: dirPath
                 });
 
+                recentWorkspaces = recentWorkspaces.filter(ws => ws.path !== dirPath);
+                recentWorkspaces.unshift({ name: rootName, path: dirPath });
+                if (recentWorkspaces.length > 5) recentWorkspaces.pop();
+                localStorage.setItem('app-recent-workspaces', JSON.stringify(recentWorkspaces));
+                updateRecentWorkspacesUI();
+
                 // Attach orphans to root
                 state.items.forEach(i => {
                     if (i.id !== 'fs-root' && (typeof i.parentId === 'undefined' || i.parentId === null)) {
@@ -182,9 +215,11 @@ if (window.electronAPI) {
             }
         }
     };
+    window.__openDirectoryFlow = openDirectoryFlow;
 
     openLocalFolderBtn.addEventListener('click', () => openDirectoryFlow());
     homeOpenBtn?.addEventListener('click', () => openDirectoryFlow());
+    homeAboutBtn?.addEventListener('click', () => openAboutModal());
 
     homeCloseAppBtn?.addEventListener('click', () => {
         if (window.electronAPI) window.electronAPI.closeWindow();
@@ -193,7 +228,7 @@ if (window.electronAPI) {
     homeCreateBtn?.addEventListener('click', async () => {
         const parentPath = await window.electronAPI.openDirectory();
         if (parentPath) {
-            const folderName = prompt(t('sidebar.new_folder'), 'My Notes');
+            const folderName = await showCustomPrompt(t('sidebar.new_folder'), 'My Notes');
             if (folderName) {
                 const newPath = await window.electronAPI.joinPath(parentPath, folderName);
                 await window.electronAPI.mkdir(newPath);
@@ -235,6 +270,7 @@ if (window.electronAPI) {
 }
 
 // ── Boot ──────────────────────────────────────────────────────
+updateRecentWorkspacesUI();
 applyTranslations();
 applyTheme();
 renderSidebar();

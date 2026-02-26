@@ -252,7 +252,7 @@
     min-width: 210px;
     box-shadow: var(--shadow-glass);
     z-index: 1500;
-    animation: slideUp 0.13s ease-out;
+    animation: slideUp 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
     overflow: hidden;
 }
 
@@ -317,7 +317,8 @@
     overflow: hidden;
     backdrop-filter: blur(28px) saturate(180%);
     -webkit-backdrop-filter: blur(28px) saturate(180%);
-    animation: menuFadeIn 0.12s ease-out;
+    animation: menuFadeIn 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
+    transform-origin: top left;
 }
 
 .context-menu[hidden] {
@@ -378,7 +379,7 @@
 .menu-separator {
     height: 1px;
     background: var(--border);
-    margin: 4px 0;
+    margin: 2px 0;
     pointer-events: none;
 }
 
@@ -401,7 +402,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    animation: fadeIn 0.15s ease-out;
+    animation: fadeIn 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
 .modal-overlay[hidden] {
@@ -428,7 +429,7 @@
     width: 460px;
     max-width: calc(100vw - 32px);
     box-shadow: var(--shadow-glass);
-    animation: slideUp 0.15s ease-out;
+    animation: slideUp 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
 @keyframes slideUp {
