@@ -50,7 +50,7 @@ npm run dist -- -w # Compile Windows build
 ### Quick start
 
 ```bash
-docker compose up -d
+docker compose -f docker/docker-compose.yml up -d
 ```
 
 Open **http://localhost:8095** in your browser.
@@ -60,8 +60,10 @@ Open **http://localhost:8095** in your browser.
 ```yaml
 services:
   emerald:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
     image: emerald:latest
-    build: .
     container_name: emerald
     restart: unless-stopped
     ports:
@@ -71,13 +73,13 @@ services:
 ### Build manually
 
 ```bash
-docker build -t emerald:latest .
+docker build -t emerald:latest -f docker/Dockerfile .
 docker run -d --name emerald -p 8095:8095 emerald:latest
 ```
 
 ### Change the port
 
-Edit `docker-compose.yml` and `nginx.conf` — replace `8095` with your preferred port.
+Edit `docker/docker-compose.yml` and `docker/nginx.conf` — replace `8095` with your preferred port.
 
 ---
 
@@ -111,9 +113,10 @@ emerald/
 │   └── Keyboard-Shortcuts.md
 ├── images/                 ← Image assets
 │   └── README.md
-├── nginx.conf              ← nginx site config
-├── Dockerfile
-├── docker-compose.yml
+├── docker/                 ← Docker web app specific files
+│   ├── nginx.conf          ← nginx site config
+│   ├── Dockerfile
+│   └── docker-compose.yml
 └── .dockerignore
 ```
 

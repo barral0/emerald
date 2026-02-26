@@ -7,4 +7,9 @@
 !css/*.css
 !js/
 !js/*.js
-!nginx.conf
+!images/
+!images/*
+!notes/
+!notes/*
+!docker/
+!docker/nginx.conf

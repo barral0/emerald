@@ -14,8 +14,8 @@ RUN rm -rf /usr/share/nginx/html/*
 COPY . /usr/share/nginx/html/
 
 # Replace default nginx site config, then remove it from web root
-COPY nginx.conf /etc/nginx/conf.d/default.conf
-RUN rm -f /usr/share/nginx/html/nginx.conf
+COPY docker/nginx.conf /etc/nginx/conf.d/default.conf
+RUN rm -rf /usr/share/nginx/html/docker
 
 # Fix permissions
 RUN chown -R nginx:nginx /usr/share/nginx/html && \
