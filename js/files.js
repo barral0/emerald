@@ -5,7 +5,7 @@ import { state } from './state.js';
 import { generateId } from './utils.js';
 import { persist, autoSave } from './persistence.js';
 import { renderSidebar, loadActiveItem } from './render.js';
-import { confirmDelete, showCustomAlert } from './dialogs.js';
+import { confirmDelete } from './dialogs.js';
 import { t } from './i18n.js';
 
 const noteTitleInput = document.getElementById('note-title');
@@ -110,7 +110,7 @@ export async function deleteCurrentItem() {
         state.items = state.items.filter(i => !toDelete.has(i.id));
     } else {
         if (state.items.filter(i => i.type === 'file').length <= 1) {
-            await showCustomAlert(t('msg.cannot_delete_last'));
+            alert(t('msg.cannot_delete_last'));
             return;
         }
         state.items = state.items.filter(i => i.id !== item.id);
@@ -171,58 +171,6 @@ export function downloadNote() {
     const blob = new Blob([note.content], { type: 'text/markdown' });
     const url = URL.createObjectURL(blob);
     const a = Object.assign(document.createElement('a'), { href: url, download: note.title });
-    document.body.appendChild(a);
-    a.click();
-    setTimeout(() => { document.body.removeChild(a); URL.revokeObjectURL(url); }, 0);
-}
-
-// ── Backup ───────────────────────────────────────────────────
-export async function backupWorkspace() {
-    if (typeof JSZip === 'undefined') {
-        await showCustomAlert("JSZip library not loaded. Cannot perform backup.");
-        return;
-    }
-    const zip = new JSZip();
-
-    const getPath = (item) => {
-        let pathStr = item.type === 'folder' ? item.title + '/' : item.title;
-        let curr = state.items.find(i => i.id === item.parentId);
-        while (curr && curr.id !== 'fs-root') {
-            pathStr = curr.title + '/' + pathStr;
-            curr = state.items.find(i => i.id === curr.parentId);
-        }
-        return pathStr;
-    }
-
-    for (const item of state.items) {
-        if (item.id === 'fs-root') continue;
-
-        const pathStr = getPath(item);
-        if (item.type === 'folder') {
-            zip.folder(pathStr);
-        } else if (item.type === 'file') {
-            let content = item.content || '';
-            if (window.electronAPI && item.fsPath && !item.content) {
-                content = await window.electronAPI.readFile(item.fsPath) || '';
-            }
-            zip.file(pathStr, content);
-        }
-    }
-
-    const imgFolder = zip.folder("images");
-    for (const [id, dataUrl] of Object.entries(state.imageStore)) {
-        const parts = dataUrl.split(',');
-        if (parts.length === 2) {
-            const ext = dataUrl.match(/data:image\/([a-zA-Z0-9]+);/)?.[1] || 'jpg';
-            imgFolder.file(`${id}.${ext}`, parts[1], { base64: true });
-        }
-    }
-
-    const blob = await zip.generateAsync({ type: 'blob' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'emerald-backup.zip';
     document.body.appendChild(a);
     a.click();
     setTimeout(() => { document.body.removeChild(a); URL.revokeObjectURL(url); }, 0);

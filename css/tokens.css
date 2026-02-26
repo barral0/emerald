@@ -30,19 +30,3 @@
     --accent: hsl(250, 100%, 60%);
     --accent-glow: hsla(250, 100%, 60%, 0.2);
 }
-
-/* Fallbacks for Lite Mode (Dark) */
-html.lite-mode {
-    --bg-main: hsl(230, 15%, 12%);
-    --bg-pane: hsl(230, 15%, 15%);
-    --bg-pane-hover: hsl(230, 15%, 20%);
-    --border: hsl(230, 15%, 25%);
-}
-
-/* Fallbacks for Lite Mode (Light) */
-html.lite-mode[data-theme="light"] {
-    --bg-main: hsl(220, 20%, 96%);
-    --bg-pane: hsl(220, 20%, 98%);
-    --bg-pane-hover: hsl(220, 20%, 92%);
-    --border: hsl(220, 20%, 85%);
-}
