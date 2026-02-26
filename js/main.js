@@ -8,6 +8,7 @@ import { renderSidebar, loadActiveItem, updatePreview } from './render.js';
 import { getActiveItem, getActiveNote, createNote, createFolder, moveItem } from './files.js';
 import { openImageModal } from './images.js';
 import { applyTheme } from './theme.js';
+import { applyTranslations, t } from './i18n.js';
 
 // ── DOM references ───────────────────────────────────────────
 const editor = document.getElementById('editor');
@@ -37,7 +38,7 @@ saveBtn.addEventListener('click', triggerManualSave);
 noteTitleInput.addEventListener('change', () => {
     const item = getActiveItem();
     if (!item) return;
-    let title = noteTitleInput.value.trim() || 'Untitled';
+    let title = noteTitleInput.value.trim() || t('header.untitled');
     if (item.type === 'file' && !title.toLowerCase().endsWith('.md')) title += '.md';
     item.title = title;
     item.lastModified = Date.now();
@@ -116,6 +117,7 @@ imageInput.addEventListener('change', e => {
 });
 
 // ── Boot ──────────────────────────────────────────────────────
+applyTranslations();
 applyTheme();
 renderSidebar();
 loadActiveItem();

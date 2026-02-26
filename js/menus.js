@@ -7,6 +7,7 @@ import { deleteCurrentItem, downloadNote, getActiveItem } from './files.js';
 import { loadActiveItem, renderSidebar } from './render.js';
 import { openThemeModal, closeThemeModal } from './theme.js';
 import { openHelp, closeHelp } from './shortcuts.js';
+import { t } from './i18n.js';
 
 const noteTitleInput = document.getElementById('note-title');
 const contextMenu = document.getElementById('context-menu');
@@ -86,17 +87,17 @@ const editorActions = {
     redo: () => document.execCommand('redo'),
     cut: () => document.execCommand('cut'),
     copy: () => document.execCommand('copy'),
-    paste: () => navigator.clipboard.readText().then(t => insertAtCursor(t)).catch(() => document.execCommand('paste')),
-    bold: () => wrapSelection('**', '**', 'bold text'),
-    italic: () => wrapSelection('*', '*', 'italic text'),
+    paste: () => navigator.clipboard.readText().then(text => insertAtCursor(text)).catch(() => document.execCommand('paste')),
+    bold: () => wrapSelection('**', '**', t('editor.bold')),
+    italic: () => wrapSelection('*', '*', t('editor.italic')),
     code: () => {
         const sel = editor.value.slice(editor.selectionStart, editor.selectionEnd);
-        sel.includes('\n') ? wrapSelection('```\n', '\n```', 'code') : wrapSelection('`', '`', 'code');
+        sel.includes('\n') ? wrapSelection('```\n', '\n```', 'code') : wrapSelection('`', '`', t('editor.code').toLowerCase());
     },
     link: () => {
         const sel = editor.value.slice(editor.selectionStart, editor.selectionEnd);
-        const url = prompt('Enter URL:', 'https://');
-        if (url) insertAtCursor(`[${sel || 'link text'}](${url})`);
+        const url = prompt(t('msg.prompt_url'), 'https://');
+        if (url) insertAtCursor(`[${sel || t('editor.link').toLowerCase()}](${url})`);
     },
     image: () => imageInput.click(),
 };

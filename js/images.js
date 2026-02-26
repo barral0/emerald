@@ -18,11 +18,13 @@ let _pendingImageFile = null;
 
 // ── Insert at cursor ─────────────────────────────────────────
 export function insertAtCursor(text) {
-    const start = editor.selectionStart;
-    const end = editor.selectionEnd;
-    editor.setRangeText(text, start, end, 'end');
-    editor.dispatchEvent(new Event('input'));
     editor.focus();
+    if (!document.execCommand('insertText', false, text)) {
+        const start = editor.selectionStart;
+        const end = editor.selectionEnd;
+        editor.setRangeText(text, start, end, 'end');
+    }
+    editor.dispatchEvent(new Event('input'));
 }
 
 // ── Modal open/close ─────────────────────────────────────────

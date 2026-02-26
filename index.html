@@ -23,9 +23,9 @@
         <!-- Sidebar File Browser -->
         <aside class="sidebar">
             <div class="sidebar-header">
-                <h2>Notes</h2>
+                <h2 data-i18n="sidebar.notes">Notes</h2>
                 <div class="sidebar-actions">
-                    <button class="icon-btn" id="new-folder-btn" aria-label="New Folder" title="New Folder">
+                    <button class="icon-btn" id="new-folder-btn" data-i18n-title="sidebar.new_folder">
                         <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                             stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z">
@@ -34,7 +34,7 @@
                             <line x1="9" y1="14" x2="15" y2="14"></line>
                         </svg>
                     </button>
-                    <button class="icon-btn" id="new-note-btn" aria-label="New Note" title="New Note">
+                    <button class="icon-btn" id="new-note-btn" data-i18n-title="sidebar.new_note">
                         <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                             stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <line x1="12" y1="5" x2="12" y2="19"></line>
@@ -49,17 +49,17 @@
         <!-- Main Workspace -->
         <div class="main-content">
             <header class="app-header">
-                <input type="text" id="note-title" class="note-title-input" placeholder="Untitled">
+                <input type="text" id="note-title" class="note-title-input" data-i18n-placeholder="header.untitled">
                 <div class="controls">
-                    <span class="save-status" id="save-status">Saved</span>
-                    <span class="word-count" id="word-count">0 words</span>
+                    <span class="save-status" id="save-status" data-i18n="header.saved">Saved</span>
+                    <span class="word-count" id="word-count">0 <span data-i18n="header.words">words</span></span>
 
                     <!-- Hidden file inputs -->
                     <input type="file" id="file-input" accept=".md,.markdown,text/plain" style="display:none">
                     <input type="file" id="image-input" accept="image/*" style="display:none">
 
                     <!-- Save -->
-                    <button class="icon-btn" id="save-note-btn" aria-label="Save" title="Save (Ctrl+S)">
+                    <button class="icon-btn" id="save-note-btn" data-i18n-title="header.save_btn">
                         <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                             stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
@@ -89,7 +89,7 @@
                                             d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83">
                                         </path>
                                     </svg>
-                                    Theme Settings
+                                    <span data-i18n="menu.theme">Theme Settings</span>
                                 </li>
                                 <li data-menu="image">
                                     <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor"
@@ -98,7 +98,7 @@
                                         <circle cx="8.5" cy="8.5" r="1.5"></circle>
                                         <polyline points="21 15 16 10 5 21"></polyline>
                                     </svg>
-                                    Insert Image
+                                    <span data-i18n="menu.insert_img">Insert Image</span>
                                 </li>
                                 <li data-menu="download">
                                     <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor"
@@ -107,7 +107,7 @@
                                         <polyline points="7 10 12 15 17 10"></polyline>
                                         <line x1="12" y1="15" x2="12" y2="3"></line>
                                     </svg>
-                                    Download File
+                                    <span data-i18n="menu.download">Download File</span>
                                     <span class="menu-shortcut">Ctrl+D</span>
                                 </li>
                                 <li class="menu-separator"></li>
@@ -118,7 +118,7 @@
                                             d="M4 20h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.93a2 2 0 0 1-1.66-.9l-.82-1.2A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13c0 1.1.9 2 2 2Z">
                                         </path>
                                     </svg>
-                                    Open File
+                                    <span data-i18n="menu.open">Open File</span>
                                 </li>
                                 <li class="menu-separator"></li>
                                 <li data-menu="help">
@@ -128,7 +128,7 @@
                                         <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
                                         <line x1="12" y1="17" x2="12.01" y2="17"></line>
                                     </svg>
-                                    Help &amp; Shortcuts
+                                    <span data-i18n="menu.help">Help &amp; Shortcuts</span>
                                     <span class="menu-shortcut">?</span>
                                 </li>
                                 <li class="menu-separator"></li>
@@ -140,7 +140,7 @@
                                             d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2">
                                         </path>
                                     </svg>
-                                    Delete Note
+                                    <span data-i18n="menu.delete">Delete Note</span>
                                 </li>
                             </ul>
                         </div>
@@ -169,7 +169,7 @@
                     <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
                     <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
                 </svg>
-                Rename
+                <span data-i18n="cm.rename">Rename</span>
             </li>
             <li id="cm-delete" class="danger">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
@@ -177,7 +177,7 @@
                     <polyline points="3 6 5 6 21 6"></polyline>
                     <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
                 </svg>
-                Delete
+                <span data-i18n="cm.delete">Delete</span>
             </li>
         </ul>
     </div>
@@ -191,7 +191,7 @@
                     <polyline points="9 14 4 9 9 4"></polyline>
                     <path d="M20 20v-7a4 4 0 0 0-4-4H4"></path>
                 </svg>
-                Undo <span class="menu-shortcut">Ctrl+Z</span>
+                <span data-i18n="editor.undo">Undo</span> <span class="menu-shortcut">Ctrl+Z</span>
             </li>
             <li data-action="redo">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
@@ -199,7 +199,7 @@
                     <polyline points="15 14 20 9 15 4"></polyline>
                     <path d="M4 20v-7a4 4 0 0 1 4-4h12"></path>
                 </svg>
-                Redo <span class="menu-shortcut">Ctrl+Y</span>
+                <span data-i18n="editor.redo">Redo</span> <span class="menu-shortcut">Ctrl+Y</span>
             </li>
             <li class="menu-separator"></li>
             <li data-action="cut">
@@ -210,7 +210,7 @@
                     <line x1="8.12" y1="17.88" x2="19.07" y2="6.93"></line>
                     <line x1="19" y1="17" x2="8.93" y2="6.07"></line>
                 </svg>
-                Cut <span class="menu-shortcut">Ctrl+X</span>
+                <span data-i18n="editor.cut">Cut</span> <span class="menu-shortcut">Ctrl+X</span>
             </li>
             <li data-action="copy">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
@@ -218,7 +218,7 @@
                     <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
                     <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
                 </svg>
-                Copy <span class="menu-shortcut">Ctrl+C</span>
+                <span data-i18n="editor.copy">Copy</span> <span class="menu-shortcut">Ctrl+C</span>
             </li>
             <li data-action="paste">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
@@ -226,7 +226,7 @@
                     <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>
                     <rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect>
                 </svg>
-                Paste <span class="menu-shortcut">Ctrl+V</span>
+                <span data-i18n="editor.paste">Paste</span> <span class="menu-shortcut">Ctrl+V</span>
             </li>
             <li class="menu-separator"></li>
             <li data-action="bold">
@@ -235,7 +235,7 @@
                     <path d="M6 4h8a4 4 0 0 1 4 4 4 4 0 0 1-4 4H6z"></path>
                     <path d="M6 12h9a4 4 0 0 1 4 4 4 4 0 0 1-4 4H6z"></path>
                 </svg>
-                Bold <span class="menu-shortcut">Ctrl+B</span>
+                <span data-i18n="editor.bold">Bold</span> <span class="menu-shortcut">Ctrl+B</span>
             </li>
             <li data-action="italic">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
@@ -244,7 +244,7 @@
                     <line x1="14" y1="20" x2="5" y2="20"></line>
                     <line x1="15" y1="4" x2="9" y2="20"></line>
                 </svg>
-                Italic <span class="menu-shortcut">Ctrl+I</span>
+                <span data-i18n="editor.italic">Italic</span> <span class="menu-shortcut">Ctrl+I</span>
             </li>
             <li data-action="code">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
@@ -252,7 +252,7 @@
                     <polyline points="16 18 22 12 16 6"></polyline>
                     <polyline points="8 6 2 12 8 18"></polyline>
                 </svg>
-                Code <span class="menu-shortcut">Ctrl+`</span>
+                <span data-i18n="editor.code">Code</span> <span class="menu-shortcut">Ctrl+`</span>
             </li>
             <li data-action="link">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
@@ -260,7 +260,7 @@
                     <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
                     <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
                 </svg>
-                Link
+                <span data-i18n="editor.link">Link</span>
             </li>
             <li class="menu-separator"></li>
             <li data-action="image">
@@ -270,7 +270,7 @@
                     <circle cx="8.5" cy="8.5" r="1.5"></circle>
                     <polyline points="21 15 16 10 5 21"></polyline>
                 </svg>
-                Insert Image
+                <span data-i18n="menu.insert_img">Insert Image</span>
             </li>
         </ul>
     </div>
@@ -279,8 +279,8 @@
     <div id="theme-modal-overlay" class="modal-overlay" hidden>
         <div class="modal theme-modal">
             <div class="help-modal-header">
-                <h3 class="modal-title">Theme Editor</h3>
-                <button class="icon-btn" id="theme-modal-close" aria-label="Close">
+                <h3 class="modal-title" data-i18n="theme.title">Theme Editor</h3>
+                <button class="icon-btn" id="theme-modal-close" data-i18n-title="help.close_modal">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                         stroke-linecap="round" stroke-linejoin="round">
                         <line x1="18" y1="6" x2="6" y2="18"></line>
@@ -292,14 +292,14 @@
 
                 <!-- Mode Toggle -->
                 <div class="theme-row">
-                    <label class="theme-label">Color Mode</label>
+                    <label class="theme-label" data-i18n="theme.color_mode">Color Mode</label>
                     <div class="mode-toggle" id="mode-toggle">
                         <button class="mode-btn active" data-mode="dark">
                             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                                 stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
                             </svg>
-                            Dark
+                            <span data-i18n="theme.dark">Dark</span>
                         </button>
                         <button class="mode-btn" data-mode="light">
                             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
@@ -314,14 +314,14 @@
                                 <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
                                 <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
                             </svg>
-                            Light
+                            <span data-i18n="theme.light">Light</span>
                         </button>
                     </div>
                 </div>
 
                 <!-- Accent Color -->
                 <div class="theme-row">
-                    <label class="theme-label">Accent Color</label>
+                    <label class="theme-label" data-i18n="theme.accent">Accent Color</label>
                     <div class="accent-swatches" id="accent-swatches">
                         <button class="swatch active" data-hsl="250,100%,65%" style="background:hsl(250,100%,65%)"
                             title="Violet"></button>
@@ -350,7 +350,7 @@
 
                 <!-- Editor Font -->
                 <div class="theme-row">
-                    <label class="theme-label" for="editor-font-select">Editor Font</label>
+                    <label class="theme-label" for="editor-font-select" data-i18n="theme.font">Editor Font</label>
                     <select id="editor-font-select" class="theme-select">
                         <option value="'Fira Code', monospace">Fira Code</option>
                         <option value="'JetBrains Mono', monospace">JetBrains Mono</option>
@@ -362,23 +362,32 @@
 
                 <!-- Editor Font Size -->
                 <div class="theme-row">
-                    <label class="theme-label">Editor Font Size <span id="font-size-val"
-                            class="theme-value">15px</span></label>
+                    <label class="theme-label"><span data-i18n="theme.font_size">Editor Font Size</span> <span
+                            id="font-size-val" class="theme-value">15px</span></label>
                     <input type="range" id="editor-font-size" min="12" max="20" step="1" value="15"
                         class="theme-slider">
                 </div>
 
                 <!-- Line Height -->
                 <div class="theme-row">
-                    <label class="theme-label">Line Height <span id="line-height-val"
-                            class="theme-value">1.75</span></label>
+                    <label class="theme-label"><span data-i18n="theme.line_height">Line Height</span> <span
+                            id="line-height-val" class="theme-value">1.75</span></label>
                     <input type="range" id="editor-line-height" min="1.4" max="2.2" step="0.05" value="1.75"
                         class="theme-slider">
                 </div>
 
                 <!-- Reset -->
                 <div class="theme-row theme-row-actions">
-                    <button class="btn-secondary" id="theme-reset-btn">Reset to defaults</button>
+                    <div class="theme-row" style="margin-bottom: 12px; gap: 6px;">
+                        <label class="theme-label" for="lang-select" data-i18n="lang.title">Language / Idioma</label>
+                        <select id="lang-select" class="theme-select">
+                            <option value="en" selected>English</option>
+                            <option value="pt">Português</option>
+                            <option value="es">Español</option>
+                        </select>
+                    </div>
+                    <button class="btn-secondary" id="theme-reset-btn" data-i18n="theme.reset">Reset to
+                        defaults</button>
                 </div>
 
             </div>
@@ -389,8 +398,8 @@
     <div id="help-modal-overlay" class="modal-overlay" hidden>
         <div class="modal help-modal">
             <div class="help-modal-header">
-                <h3 class="modal-title">Keyboard Shortcuts</h3>
-                <button class="icon-btn" id="help-modal-close" aria-label="Close">
+                <h3 class="modal-title" data-i18n="help.title">Keyboard Shortcuts</h3>
+                <button class="icon-btn" id="help-modal-close" data-i18n-title="help.close_modal">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                         stroke-linecap="round" stroke-linejoin="round">
                         <line x1="18" y1="6" x2="6" y2="18"></line>
@@ -401,41 +410,48 @@
             <div class="help-grid">
 
                 <section class="help-section">
-                    <h4>File</h4>
-                    <div class="shortcut-row"><span>Save</span><kbd>Ctrl</kbd><kbd>S</kbd></div>
-                    <div class="shortcut-row"><span>Download .md</span><kbd>Ctrl</kbd><kbd>D</kbd></div>
+                    <h4 data-i18n="help.file">File</h4>
+                    <div class="shortcut-row"><span data-i18n="help.save">Save</span><kbd>Ctrl</kbd><kbd>S</kbd></div>
+                    <div class="shortcut-row"><span data-i18n="help.download">Download
+                            .md</span><kbd>Ctrl</kbd><kbd>D</kbd></div>
                 </section>
 
                 <section class="help-section">
-                    <h4>Formatting</h4>
-                    <div class="shortcut-row"><span>Bold</span><kbd>Ctrl</kbd><kbd>B</kbd></div>
-                    <div class="shortcut-row"><span>Italic</span><kbd>Ctrl</kbd><kbd>I</kbd></div>
-                    <div class="shortcut-row"><span>Code / Code block</span><kbd>Ctrl</kbd><kbd>`</kbd></div>
-                </section>
-
-                <section class="help-section">
-                    <h4>Editor</h4>
-                    <div class="shortcut-row"><span>Undo</span><kbd>Ctrl</kbd><kbd>Z</kbd></div>
-                    <div class="shortcut-row"><span>Redo</span><kbd>Ctrl</kbd><kbd>Y</kbd></div>
-                    <div class="shortcut-row"><span>Right-click menu</span><kbd>Right-click</kbd></div>
-                </section>
-
-                <section class="help-section">
-                    <h4>Navigation</h4>
-                    <div class="shortcut-row"><span>Open shortcuts</span><kbd>?</kbd></div>
-                    <div class="shortcut-row"><span>Close modal / Menu</span><kbd>Esc</kbd></div>
-                </section>
-
-                <section class="help-section">
-                    <h4>Images</h4>
-                    <div class="shortcut-row"><span>Insert image</span><kbd>Right-click</kbd> &rarr; Insert Image</div>
-                    <div class="shortcut-row"><span>Paste from clipboard</span><kbd>Ctrl</kbd><kbd>V</kbd> (in editor)
+                    <h4 data-i18n="help.format">Formatting</h4>
+                    <div class="shortcut-row"><span data-i18n="help.bold">Bold</span><kbd>Ctrl</kbd><kbd>B</kbd></div>
+                    <div class="shortcut-row"><span data-i18n="help.italic">Italic</span><kbd>Ctrl</kbd><kbd>I</kbd>
                     </div>
-                    <div class="shortcut-row"><span>Drag &amp; drop image</span>Drop onto editor pane</div>
+                    <div class="shortcut-row"><span data-i18n="help.code">Code / Code
+                            block</span><kbd>Ctrl</kbd><kbd>`</kbd></div>
                 </section>
 
                 <section class="help-section">
-                    <h4>Markdown Syntax</h4>
+                    <h4 data-i18n="help.editor">Editor</h4>
+                    <div class="shortcut-row"><span data-i18n="help.undo">Undo</span><kbd>Ctrl</kbd><kbd>Z</kbd></div>
+                    <div class="shortcut-row"><span data-i18n="help.redo">Redo</span><kbd>Ctrl</kbd><kbd>Y</kbd></div>
+                    <div class="shortcut-row"><span data-i18n="help.rc_menu">Right-click
+                            menu</span><kbd>Right-click</kbd></div>
+                </section>
+
+                <section class="help-section">
+                    <h4 data-i18n="help.nav">Navigation</h4>
+                    <div class="shortcut-row"><span data-i18n="help.open_shortcuts">Open shortcuts</span><kbd>?</kbd>
+                    </div>
+                    <div class="shortcut-row"><span data-i18n="help.close_modal">Close modal / Menu</span><kbd>Esc</kbd>
+                    </div>
+                </section>
+
+                <section class="help-section">
+                    <h4 data-i18n="help.img">Images</h4>
+                    <div class="shortcut-row"><span data-i18n="help.insert_img_rc">Right-click &rarr; Insert
+                            Image</span></div>
+                    <div class="shortcut-row"><span data-i18n="help.paste_img">Paste from clipboard (in
+                            editor)</span><kbd>Ctrl</kbd><kbd>V</kbd></div>
+                    <div class="shortcut-row"><span data-i18n="help.drag_drop">Drop onto editor pane</span></div>
+                </section>
+
+                <section class="help-section">
+                    <h4 data-i18n="help.syntax">Markdown Syntax</h4>
                     <div class="shortcut-row"><span><code># Heading 1</code></span></div>
                     <div class="shortcut-row"><span><code>**bold**</code></span></div>
                     <div class="shortcut-row"><span><code>*italic*</code></span></div>
@@ -454,31 +470,33 @@
     <!-- Image Insert Modal -->
     <div id="image-modal-overlay" class="modal-overlay" hidden>
         <div class="modal">
-            <h3 class="modal-title">Insert Image</h3>
+            <h3 class="modal-title" data-i18n="img.title">Insert Image</h3>
             <div class="modal-preview-wrap">
                 <img id="modal-img-preview" src="" alt="preview">
             </div>
             <div class="modal-fields">
-                <label for="modal-img-alt">Alt text</label>
-                <input type="text" id="modal-img-alt" placeholder="Image description">
+                <label for="modal-img-alt" data-i18n="img.alt">Alt text</label>
+                <input type="text" id="modal-img-alt" data-i18n-placeholder="img.alt_placeholder">
 
-                <label for="modal-img-width">Display width (px) <span class="label-hint">&mdash; leave blank for full
+                <label for="modal-img-width"><span data-i18n="img.width">Display width (px)</span> <span
+                        class="label-hint" data-i18n="img.width_hint">&mdash; leave blank for full
                         width</span></label>
                 <input type="number" id="modal-img-width" placeholder="e.g. 600" min="50" max="4000">
 
-                <label for="modal-img-quality">Resize before storing <span class="label-hint">&mdash; max edge, reduces
+                <label for="modal-img-quality"><span data-i18n="img.quality">Resize before storing</span> <span
+                        class="label-hint" data-i18n="img.quality_hint">&mdash; max edge, reduces
                         file size</span></label>
                 <select id="modal-img-quality">
-                    <option value="3840">Original size</option>
+                    <option value="3840" data-i18n="img.og_size">Original size</option>
                     <option value="1920">1920 px</option>
-                    <option value="1280" selected>1280 px (recommended)</option>
+                    <option value="1280" selected data-i18n="img.rec_size">1280 px (recommended)</option>
                     <option value="800">800 px</option>
-                    <option value="400">400 px (thumbnail)</option>
+                    <option value="400" data-i18n="img.thumb_size">400 px (thumbnail)</option>
                 </select>
             </div>
             <div class="modal-actions">
-                <button class="btn-secondary" id="modal-cancel-btn">Cancel</button>
-                <button class="btn-primary" id="modal-insert-btn">Insert</button>
+                <button class="btn-secondary" id="modal-cancel-btn" data-i18n="img.cancel">Cancel</button>
+                <button class="btn-primary" id="modal-insert-btn" data-i18n="img.insert">Insert</button>
             </div>
         </div>
     </div>

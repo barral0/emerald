@@ -13,6 +13,9 @@ const editorLineHeightEl = document.getElementById('editor-line-height');
 const fontSizeVal = document.getElementById('font-size-val');
 const lineHeightVal = document.getElementById('line-height-val');
 const themeResetBtn = document.getElementById('theme-reset-btn');
+const langSelect = document.getElementById('lang-select');
+
+import { setLang, getLang } from './i18n.js';
 
 const THEME_DEFAULTS = {
     mode: 'dark',
@@ -51,6 +54,7 @@ function syncThemeUI() {
     editorLineHeightEl.value = theme.lineHeight;
     fontSizeVal.textContent = theme.fontSize + 'px';
     lineHeightVal.textContent = parseFloat(theme.lineHeight).toFixed(2);
+    if (langSelect) langSelect.value = getLang();
     try { accentCustom.value = hslToHex(theme.accent); } catch { }
 }
 
@@ -119,6 +123,12 @@ themeResetBtn.addEventListener('click', () => {
     theme = { ...THEME_DEFAULTS };
     applyTheme(); saveTheme(); syncThemeUI();
 });
+
+if (langSelect) {
+    langSelect.addEventListener('change', () => {
+        setLang(langSelect.value);
+    });
+}
 
 // ── Utility — HSL → Hex ──────────────────────────────────────
 function hslToHex(hsl) {

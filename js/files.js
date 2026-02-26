@@ -5,6 +5,7 @@ import { state } from './state.js';
 import { generateId } from './utils.js';
 import { persist, autoSave } from './persistence.js';
 import { renderSidebar, loadActiveItem } from './render.js';
+import { t } from './i18n.js';
 
 const noteTitleInput = document.getElementById('note-title');
 
@@ -20,7 +21,7 @@ export const getActiveNote = () => {
 export function createNote(parentId = null) {
     const note = {
         id: generateId(), type: 'file', parentId,
-        title: 'Untitled.md', content: '', lastModified: Date.now(),
+        title: t('header.untitled') + '.md', content: '', lastModified: Date.now(),
     };
     state.items.push(note);
     state.currentItemId = note.id;
@@ -33,7 +34,7 @@ export function createNote(parentId = null) {
 export function createFolder() {
     const folder = {
         id: generateId(), type: 'folder', parentId: null,
-        title: 'New Folder', isOpen: true, lastModified: Date.now(),
+        title: t('sidebar.new_folder'), isOpen: true, lastModified: Date.now(),
     };
     state.items.push(folder);
     state.currentItemId = folder.id;
@@ -51,8 +52,8 @@ export function deleteCurrentItem() {
 
     const isFolder = item.type === 'folder';
     const msg = isFolder
-        ? `Delete folder "${item.title}" and all its contents?`
-        : `Delete note "${item.title}"?`;
+        ? t('msg.delete_folder', item.title)
+        : t('msg.delete_note', item.title);
 
     if (!confirm(msg)) return;
 
@@ -61,7 +62,7 @@ export function deleteCurrentItem() {
         state.items = state.items.filter(i => !toDelete.has(i.id));
     } else {
         if (state.items.filter(i => i.type === 'file').length <= 1) {
-            alert('Cannot delete the last note.');
+            alert(t('msg.cannot_delete_last'));
             return;
         }
         state.items = state.items.filter(i => i.id !== item.id);

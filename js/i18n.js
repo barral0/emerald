@@ -1,0 +1,278 @@
+/* =============================================================
+   i18n.js — Internationalization (en, pt, es)
+   ============================================================= */
+
+export const TRANSLATIONS = {
+    en: {
+        'app.title': 'Elefant — Markdown Editor',
+        'sidebar.notes': 'Notes',
+        'sidebar.new_folder': 'New Folder',
+        'sidebar.new_note': 'New Note',
+        'header.untitled': 'Untitled',
+        'header.saved': 'Saved',
+        'header.words': 'words',
+        'header.save_btn': 'Save',
+        'menu.theme': 'Theme Settings',
+        'menu.insert_img': 'Insert Image',
+        'menu.download': 'Download File',
+        'menu.open': 'Open File',
+        'menu.help': 'Help & Shortcuts',
+        'menu.delete': 'Delete Note',
+        'cm.rename': 'Rename',
+        'cm.delete': 'Delete',
+        'editor.undo': 'Undo',
+        'editor.redo': 'Redo',
+        'editor.cut': 'Cut',
+        'editor.copy': 'Copy',
+        'editor.paste': 'Paste',
+        'editor.bold': 'Bold',
+        'editor.italic': 'Italic',
+        'editor.code': 'Code',
+        'editor.link': 'Link',
+        'theme.title': 'Theme Editor',
+        'theme.color_mode': 'Color Mode',
+        'theme.dark': 'Dark',
+        'theme.light': 'Light',
+        'theme.accent': 'Accent Color',
+        'theme.font': 'Editor Font',
+        'theme.font_size': 'Editor Font Size',
+        'theme.line_height': 'Line Height',
+        'theme.reset': 'Reset to defaults',
+        'help.title': 'Keyboard Shortcuts',
+        'help.file': 'File',
+        'help.format': 'Formatting',
+        'help.editor': 'Editor',
+        'help.nav': 'Navigation',
+        'help.img': 'Images',
+        'help.syntax': 'Markdown Syntax',
+        'help.save': 'Save note',
+        'help.download': 'Download .md',
+        'help.bold': 'Bold',
+        'help.italic': 'Italic',
+        'help.code': 'Code / Code block',
+        'help.undo': 'Undo',
+        'help.redo': 'Redo',
+        'help.rc_menu': 'Right-click menu',
+        'help.open_shortcuts': 'Open shortcuts',
+        'help.close_modal': 'Close modal / Menu',
+        'help.insert_img': 'Insert image',
+        'help.insert_img_rc': 'Right-click → Insert Image',
+        'help.paste_img': 'Paste from clipboard (in editor)',
+        'help.drag_drop': 'Drop onto editor pane',
+        'img.title': 'Insert Image',
+        'img.alt': 'Alt text',
+        'img.alt_placeholder': 'Image description',
+        'img.width': 'Display width (px)',
+        'img.width_hint': '— leave blank for full width',
+        'img.quality': 'Resize before storing',
+        'img.quality_hint': '— max edge, reduces file size',
+        'img.og_size': 'Original size',
+        'img.rec_size': '1280 px (recommended)',
+        'img.thumb_size': '400 px (thumbnail)',
+        'img.cancel': 'Cancel',
+        'img.insert': 'Insert',
+        'lang.title': 'Language / Idioma',
+        'msg.delete_folder': 'Delete folder "{0}" and all its contents?',
+        'msg.delete_note': 'Delete note "{0}"?',
+        'msg.cannot_delete_last': 'Cannot delete the last note.',
+        'msg.prompt_url': 'Enter URL:'
+    },
+    pt: {
+        'app.title': 'Elefant — Editor Markdown',
+        'sidebar.notes': 'Notas',
+        'sidebar.new_folder': 'Nova Pasta',
+        'sidebar.new_note': 'Nova Nota',
+        'header.untitled': 'Sem título',
+        'header.saved': 'Salvo',
+        'header.words': 'palavras',
+        'header.save_btn': 'Salvar',
+        'menu.theme': 'Configurações de Tema',
+        'menu.insert_img': 'Inserir Imagem',
+        'menu.download': 'Baixar Arquivo',
+        'menu.open': 'Abrir Arquivo',
+        'menu.help': 'Ajuda & Atalhos',
+        'menu.delete': 'Excluir Nota',
+        'cm.rename': 'Renomear',
+        'cm.delete': 'Excluir',
+        'editor.undo': 'Desfazer',
+        'editor.redo': 'Refazer',
+        'editor.cut': 'Recortar',
+        'editor.copy': 'Copiar',
+        'editor.paste': 'Colar',
+        'editor.bold': 'Negrito',
+        'editor.italic': 'Itálico',
+        'editor.code': 'Código',
+        'editor.link': 'Link',
+        'theme.title': 'Editor de Tema',
+        'theme.color_mode': 'Modo de Cor',
+        'theme.dark': 'Escuro',
+        'theme.light': 'Claro',
+        'theme.accent': 'Cor de Destaque',
+        'theme.font': 'Fonte do Editor',
+        'theme.font_size': 'Tamanho da Fonte',
+        'theme.line_height': 'Altura da Linha',
+        'theme.reset': 'Restaurar padrões',
+        'help.title': 'Atalhos de Teclado',
+        'help.file': 'Arquivo',
+        'help.format': 'Formatação',
+        'help.editor': 'Editor',
+        'help.nav': 'Navegação',
+        'help.img': 'Imagens',
+        'help.syntax': 'Sintaxe Markdown',
+        'help.save': 'Salvar nota',
+        'help.download': 'Baixar .md',
+        'help.bold': 'Negrito',
+        'help.italic': 'Itálico',
+        'help.code': 'Código / Bloco de código',
+        'help.undo': 'Desfazer',
+        'help.redo': 'Refazer',
+        'help.rc_menu': 'Menu de contexto',
+        'help.open_shortcuts': 'Abrir atalhos',
+        'help.close_modal': 'Fechar janela / Menu',
+        'help.insert_img': 'Inserir imagem',
+        'help.insert_img_rc': 'Clique direito → Inserir Imagem',
+        'help.paste_img': 'Colar imagem da área de transferência',
+        'help.drag_drop': 'Arraste e solte no editor',
+        'img.title': 'Inserir Imagem',
+        'img.alt': 'Texto alternativo',
+        'img.alt_placeholder': 'Descrição da imagem',
+        'img.width': 'Largura de exibição (px)',
+        'img.width_hint': '— deixe em branco para largura total',
+        'img.quality': 'Redimensionar antes de salvar',
+        'img.quality_hint': '— tamanho máx, reduz peso do arquivo',
+        'img.og_size': 'Tamanho original',
+        'img.rec_size': '1280 px (recomendado)',
+        'img.thumb_size': '400 px (miniatura)',
+        'img.cancel': 'Cancelar',
+        'img.insert': 'Inserir',
+        'lang.title': 'Idioma (Language)',
+        'msg.delete_folder': 'Excluir pasta "{0}" e todo o seu conteúdo?',
+        'msg.delete_note': 'Excluir nota "{0}"?',
+        'msg.cannot_delete_last': 'Não é possível excluir a última nota.',
+        'msg.prompt_url': 'Insira a URL:'
+    },
+    es: {
+        'app.title': 'Elefant — Editor Markdown',
+        'sidebar.notes': 'Notas',
+        'sidebar.new_folder': 'Nueva Carpeta',
+        'sidebar.new_note': 'Nueva Nota',
+        'header.untitled': 'Sin título',
+        'header.saved': 'Guardado',
+        'header.words': 'palabras',
+        'header.save_btn': 'Guardar',
+        'menu.theme': 'Configuración de Tema',
+        'menu.insert_img': 'Insertar Imagen',
+        'menu.download': 'Descargar Archivo',
+        'menu.open': 'Abrir Archivo',
+        'menu.help': 'Ayuda y Atajos',
+        'menu.delete': 'Eliminar Nota',
+        'cm.rename': 'Renombrar',
+        'cm.delete': 'Eliminar',
+        'editor.undo': 'Deshacer',
+        'editor.redo': 'Rehacer',
+        'editor.cut': 'Cortar',
+        'editor.copy': 'Copiar',
+        'editor.paste': 'Pegar',
+        'editor.bold': 'Negrita',
+        'editor.italic': 'Cursiva',
+        'editor.code': 'Código',
+        'editor.link': 'Enlace',
+        'theme.title': 'Editor de Tema',
+        'theme.color_mode': 'Modo de Color',
+        'theme.dark': 'Oscuro',
+        'theme.light': 'Claro',
+        'theme.accent': 'Color de Acento',
+        'theme.font': 'Fuente del Editor',
+        'theme.font_size': 'Tamaño de Fuente',
+        'theme.line_height': 'Altura de Línea',
+        'theme.reset': 'Restaurar por defecto',
+        'help.title': 'Atajos de Teclado',
+        'help.file': 'Archivo',
+        'help.format': 'Formato',
+        'help.editor': 'Editor',
+        'help.nav': 'Navegación',
+        'help.img': 'Imágenes',
+        'help.syntax': 'Sintaxis Markdown',
+        'help.save': 'Guardar nota',
+        'help.download': 'Descargar .md',
+        'help.bold': 'Negrita',
+        'help.italic': 'Cursiva',
+        'help.code': 'Código / Bloque de código',
+        'help.undo': 'Deshacer',
+        'help.redo': 'Rehacer',
+        'help.rc_menu': 'Menú contextual',
+        'help.open_shortcuts': 'Abrir atajos',
+        'help.close_modal': 'Cerrar ventana / Menú',
+        'help.insert_img': 'Insertar imagen',
+        'help.insert_img_rc': 'Clic derecho → Insertar Imagen',
+        'help.paste_img': 'Pegar imagen del portapapeles',
+        'help.drag_drop': 'Arrastrar y soltar en el editor',
+        'img.title': 'Insertar Imagen',
+        'img.alt': 'Texto alternativo',
+        'img.alt_placeholder': 'Descripción de la imagen',
+        'img.width': 'Ancho en pantalla (px)',
+        'img.width_hint': '— en blanco para ancho completo',
+        'img.quality': 'Redimensionar antes de guardar',
+        'img.quality_hint': '— máximo borde, reduce peso',
+        'img.og_size': 'Tamaño original',
+        'img.rec_size': '1280 px (recomendado)',
+        'img.thumb_size': '400 px (miniatura)',
+        'img.cancel': 'Cancelar',
+        'img.insert': 'Insertar',
+        'lang.title': 'Idioma (Language)',
+        'msg.delete_folder': '¿Eliminar carpeta "{0}" y todo su contenido?',
+        'msg.delete_note': '¿Eliminar nota "{0}"?',
+        'msg.cannot_delete_last': 'No se puede eliminar la última nota.',
+        'msg.prompt_url': 'Introduzca la URL:'
+    }
+};
+
+let currentLang = localStorage.getItem('app-lang') || 'en';
+
+export function getLang() { return currentLang; }
+
+export function setLang(lang) {
+    if (TRANSLATIONS[lang]) {
+        currentLang = lang;
+        localStorage.setItem('app-lang', lang);
+        applyTranslations();
+    }
+}
+
+export function t(key, ...args) {
+    let str = TRANSLATIONS[currentLang]?.[key] || TRANSLATIONS['en'][key] || key;
+    args.forEach((arg, i) => str = str.replace(`{${i}}`, arg));
+    return str;
+}
+
+export function applyTranslations() {
+    document.title = t('app.title');
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+        if (el.tagName === 'INPUT' && el.type === 'text') {
+            // For standard text inputs, this is usually managed by placeholder, but if it has value...
+            // Unlikely in this app.
+        } else {
+            // Check if element has child elements (like svg)
+            if (el.children.length === 0) {
+                el.textContent = t(el.dataset.i18n);
+            } else {
+                // Find and replace the direct text node child
+                for (let child of el.childNodes) {
+                    if (child.nodeType === Node.TEXT_NODE && child.textContent.trim() !== '') {
+                        child.textContent = ' ' + t(el.dataset.i18n) + ' ';
+                        break;
+                    }
+                }
+            }
+        }
+    });
+
+    document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+        el.placeholder = t(el.dataset.i18nPlaceholder);
+    });
+
+    document.querySelectorAll('[data-i18n-title]').forEach(el => {
+        el.title = t(el.dataset.i18nTitle);
+        el.setAttribute('aria-label', t(el.dataset.i18nTitle));
+    });
+}
