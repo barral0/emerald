@@ -41,22 +41,29 @@ export async function loadActiveItem() {
     const item = getActiveItem();
     if (!item) return;
     noteTitleInput.value = item.title;
+
+    // Trigger smooth linear animation on note load
+    editor.style.animation = 'none';
+    preview.style.animation = 'none';
+    void editor.offsetWidth; // force reflow
+    void preview.offsetWidth;
+    editor.style.animation = 'smoothFade 0.25s linear';
+    preview.style.animation = 'smoothFade 0.25s linear';
+
     if (item.type === 'file') {
         if (window.electronAPI && item.fsPath && typeof item.content === 'undefined') {
             item.content = await window.electronAPI.readFile(item.fsPath) || '';
         }
-
-        // Trigger smooth linear animation on note load
-        editor.style.animation = 'none';
-        preview.style.animation = 'none';
-        void editor.offsetWidth; // force reflow
-        void preview.offsetWidth;
-        editor.style.animation = 'smoothFade 0.25s linear';
-        preview.style.animation = 'smoothFade 0.25s linear';
-
+        editor.style.display = 'block';
+        preview.style.display = 'block';
         editor.value = item.content ?? '';
         updatePreview();
+    } else if (item.type === 'image') {
+        const imgSrc = item.fsPath ? `file://${item.fsPath.replace(/\\/g, '/')}` : '';
+        editor.style.display = 'none';
+        preview.innerHTML = `<div style="display:flex;align-items:center;justify-content:center;height:100%;"><img src="${imgSrc}" style="max-width:100%;max-height:100%;object-fit:contain;border-radius:8px;"></div>`;
     }
+
     if (!window.electronAPI) persist();
 }
 
@@ -132,12 +139,21 @@ function buildFolderEl(item) {
 
 function buildFileEl(item) {
     const div = document.createElement('div');
-    div.className = 'file-item' + (item.id === state.currentItemId ? ' active' : '');
+    const typeClass = item.type === 'image' ? 'image-item' : 'file-item';
+    div.className = `${typeClass}` + (item.id === state.currentItemId ? ' active' : '');
     div.dataset.id = item.id;
     div.draggable = true;
 
+    // Visual queue for image files vs text files
+    const iconSvg = item.type === 'image'
+        ? `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;opacity:0.6;margin-right:2px;"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>`
+        : `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;opacity:0.6;margin-right:2px;"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>`;
+
     div.innerHTML = `
-        <div class="file-item-title">${escapeHtml(item.title)}</div>
+        <div style="display:flex;align-items:center;width:100%;">
+            ${iconSvg}
+            <div class="file-item-title" style="margin-left:4px;">${escapeHtml(item.title)}</div>
+        </div>
         <div class="file-item-date">${formatDate(item.lastModified)}</div>`;
 
     div.addEventListener('click', e => {

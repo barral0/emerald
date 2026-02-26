@@ -4,8 +4,10 @@
    ============================================================= */
 
 /* ── File / Folder items ─────────────────────────────────── */
+/* ── File / Folder items ─────────────────────────────────── */
 .folder-item,
-.file-item {
+.file-item,
+.image-item {
     padding: 7px 10px;
     border-radius: 6px;
     cursor: pointer;
@@ -17,12 +19,14 @@
 }
 
 .folder-item:hover,
-.file-item:hover {
+.file-item:hover,
+.image-item:hover {
     background: var(--bg-pane-hover);
 }
 
 .folder-item.active,
-.file-item.active {
+.file-item.active,
+.image-item.active {
     background: hsla(250, 100%, 65%, 0.15);
     border-left: 3px solid var(--accent);
     padding-left: 7px;
@@ -64,7 +68,8 @@
     display: block;
 }
 
-.file-item {
+.file-item,
+.image-item {
     flex-direction: column;
     align-items: flex-start;
     padding: 9px 10px;

@@ -92,17 +92,23 @@ ipcMain.handle('fs:readDirectory', async (_, dirPath) => {
                     fsPath: fullPath,
                 });
                 await scan(fullPath, id);
-            } else if (entry.isFile() && entry.name.toLowerCase().endsWith('.md')) {
-                const stats = await fsPromises.stat(fullPath);
-                items.push({
-                    id,
-                    type: 'file',
-                    parentId,
-                    title: entry.name,
-                    lastModified: stats.mtimeMs,
-                    fsPath: fullPath,
-                    // Content is loaded lazily to save memory
-                });
+            } else if (entry.isFile()) {
+                const lowerName = entry.name.toLowerCase();
+                const isMarkdown = lowerName.endsWith('.md');
+                const isImage = /\.(png|jpe?g|gif|webp|svg)$/.test(lowerName);
+
+                if (isMarkdown || isImage) {
+                    const stats = await fsPromises.stat(fullPath);
+                    items.push({
+                        id,
+                        type: isMarkdown ? 'file' : 'image', // custom 'image' type for sidebar
+                        parentId,
+                        title: entry.name,
+                        lastModified: stats.mtimeMs,
+                        fsPath: fullPath,
+                        // Content is loaded lazily to save memory
+                    });
+                }
             }
         }
     }
