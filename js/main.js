@@ -143,7 +143,7 @@ if (window.electronAPI) {
 
                 // Attach everything to fs-root
                 state.items.forEach(i => {
-                    if (i.id !== 'fs-root' && typeof i.parentId === 'undefined' || i.parentId === null) {
+                    if (i.id !== 'fs-root' && (typeof i.parentId === 'undefined' || i.parentId === null)) {
                         i.parentId = 'fs-root';
                     }
                 });
