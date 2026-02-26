@@ -160,6 +160,7 @@ ipcMain.handle('fs:mkdir', async (_, dirPath) => {
 // 6. Delete file or folder
 ipcMain.handle('fs:delete', async (_, itemPath) => {
     try {
+        if (!fs.existsSync(itemPath)) return true; // Already gone? Success.
         const stat = await fsPromises.stat(itemPath);
         if (stat.isDirectory()) {
             await fsPromises.rm(itemPath, { recursive: true, force: true });

@@ -17,11 +17,25 @@ export const getActiveNote = () => {
     return item?.type === 'file' ? item : state.items.find(i => i.type === 'file');
 };
 
+export function getUniqueTitle(baseTitle, parentId, isFile = true, excludeId = null) {
+    let title = baseTitle;
+    let counter = 1;
+    const extension = isFile ? '.md' : '';
+    const nameOnly = isFile && title.toLowerCase().endsWith('.md') ? title.slice(0, -3) : title;
+
+    while (state.items.some(i => i.parentId === parentId && i.title === title && i.id !== excludeId)) {
+        title = `${nameOnly} ${counter}${extension}`;
+        counter++;
+    }
+    return title;
+}
+
 // ── Create ───────────────────────────────────────────────────
 export async function createNote(parentId = null) {
+    const title = getUniqueTitle(t('header.untitled') + '.md', parentId, true);
     const note = {
         id: generateId(), type: 'file', parentId,
-        title: t('header.untitled') + '.md', content: '', lastModified: Date.now(),
+        title, content: '', lastModified: Date.now(),
     };
 
     if (window.electronAPI) {
@@ -45,15 +59,19 @@ export async function createNote(parentId = null) {
 }
 
 export async function createFolder() {
+    // Determine parent context: if root exists, use it as default
+    const root = state.items.find(i => i.id === 'fs-root');
+    const parentId = root ? 'fs-root' : null;
+
+    const title = getUniqueTitle(t('sidebar.new_folder'), parentId, false);
     const folder = {
-        id: generateId(), type: 'folder', parentId: null,
-        title: t('sidebar.new_folder'), isOpen: true, lastModified: Date.now(),
+        id: generateId(), type: 'folder', parentId,
+        title, isOpen: true, lastModified: Date.now(),
     };
 
     if (window.electronAPI) {
         const root = state.items.find(i => i.id === 'fs-root');
         if (root && root.fsPath) {
-            folder.parentId = 'fs-root';
             folder.fsPath = await window.electronAPI.joinPath(root.fsPath, folder.title);
             await window.electronAPI.mkdir(folder.fsPath);
         }
@@ -119,14 +137,15 @@ export async function moveItem(itemId, targetParentId) {
     if (!item) return;
     if (item.type === 'folder' && isDescendantOf(targetParentId, itemId)) return;
 
+    const uniqueTitle = getUniqueTitle(item.title, targetParentId, item.type === 'file', item.id);
+    item.title = uniqueTitle;
+
     if (window.electronAPI && item.fsPath) {
         const targetParent = getItem(targetParentId);
         if (targetParent && targetParent.fsPath) {
-            const newFsPath = await window.electronAPI.joinPath(targetParent.fsPath, item.title);
+            const newFsPath = await window.electronAPI.joinPath(targetParent.fsPath, uniqueTitle);
             await window.electronAPI.renameItem(item.fsPath, newFsPath);
             item.fsPath = newFsPath;
-            // Descendants will need recalculation, but to keep simple we re-read the directory 
-            // naturally relying on next boot or they stay bound to memory.
         }
     }
 

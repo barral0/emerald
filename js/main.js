@@ -5,7 +5,7 @@ import { state } from './state.js';
 import { generateId } from './utils.js';
 import { persist, autoSave, triggerManualSave } from './persistence.js';
 import { renderSidebar, loadActiveItem, updatePreview } from './render.js';
-import { getActiveItem, getActiveNote, createNote, createFolder, moveItem } from './files.js';
+import { getActiveItem, getActiveNote, createNote, createFolder, moveItem, getUniqueTitle } from './files.js';
 import { openImageModal } from './images.js';
 import { applyTheme } from './theme.js';
 import { applyTranslations, t } from './i18n.js';
@@ -48,6 +48,9 @@ noteTitleInput.addEventListener('change', async () => {
     let oldTitle = item.title;
     let title = noteTitleInput.value.trim() || t('header.untitled');
     if (item.type === 'file' && !title.toLowerCase().endsWith('.md')) title += '.md';
+
+    // Prevent duplicates in same folder
+    title = getUniqueTitle(title, item.parentId, item.type === 'file', item.id);
 
     // Electron: Rename on disk if it's a local file
     if (window.electronAPI && item.fsPath && oldTitle !== title) {
