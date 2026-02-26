@@ -73,6 +73,7 @@ body {
     flex-shrink: 0;
     z-index: 20;
     box-shadow: 1px 0 20px rgba(0, 0, 0, 0.1);
+    transition: all var(--transition);
 }
 
 .sidebar-header {
@@ -123,6 +124,7 @@ body {
     flex-shrink: 0;
     z-index: 10;
     box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    transition: all var(--transition);
 }
 
 /* ── Editor / Preview ────────────────────────────────────── */
@@ -140,6 +142,8 @@ body {
     background: var(--bg-pane);
     backdrop-filter: blur(28px) saturate(180%);
     -webkit-backdrop-filter: blur(28px) saturate(180%);
+    scroll-behavior: smooth;
+    transition: background var(--transition), backdrop-filter var(--transition);
 }
 
 .editor-pane {
@@ -160,6 +164,19 @@ body {
     line-height: 1.75;
     padding: 32px 40px;
     outline: none;
+    transition: color var(--transition), opacity var(--transition);
+}
+
+@keyframes smoothFade {
+    from {
+        opacity: 0;
+        transform: translateY(4px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 #editor::placeholder {
@@ -193,4 +210,5 @@ body {
     padding: 32px 40px;
     backdrop-filter: blur(28px) saturate(180%);
     -webkit-backdrop-filter: blur(28px) saturate(180%);
+    transition: color var(--transition), background var(--transition);
 }

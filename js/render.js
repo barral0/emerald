@@ -45,6 +45,15 @@ export async function loadActiveItem() {
         if (window.electronAPI && item.fsPath && typeof item.content === 'undefined') {
             item.content = await window.electronAPI.readFile(item.fsPath) || '';
         }
+
+        // Trigger smooth linear animation on note load
+        editor.style.animation = 'none';
+        preview.style.animation = 'none';
+        void editor.offsetWidth; // force reflow
+        void preview.offsetWidth;
+        editor.style.animation = 'smoothFade 0.25s linear';
+        preview.style.animation = 'smoothFade 0.25s linear';
+
         editor.value = item.content ?? '';
         updatePreview();
     }

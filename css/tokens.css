@@ -16,7 +16,7 @@
 
     --font-ui: 'Inter', -apple-system, sans-serif;
     --font-mono: 'Fira Code', monospace;
-    --transition: 0.25s cubic-bezier(0.25, 0.8, 0.25, 1);
+    --transition: 0.25s linear;
 }
 
 [data-theme="light"] {
