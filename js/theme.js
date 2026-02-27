@@ -14,15 +14,17 @@ const fontSizeVal = document.getElementById('font-size-val');
 const lineHeightVal = document.getElementById('line-height-val');
 const themeResetBtn = document.getElementById('theme-reset-btn');
 const langSelect = document.getElementById('lang-select');
+const animBgSelect = document.getElementById('anim-bg-select');
 
 import { setLang, getLang } from './i18n.js';
 
 const THEME_DEFAULTS = {
     mode: 'dark',
-    accent: '250,100%,65%',
+    accent: '142,65%,48%',
     editorFont: "'Fira Code', monospace",
     fontSize: 15,
     lineHeight: 1.75,
+    animBg: 'aurora',
 };
 
 export let theme = { ...THEME_DEFAULTS, ...JSON.parse(localStorage.getItem('app-theme') || '{}') };
@@ -37,6 +39,8 @@ export function applyTheme(t = theme) {
     const editor = document.getElementById('editor');
     editor.style.fontSize = t.fontSize + 'px';
     editor.style.lineHeight = t.lineHeight;
+
+    document.body.className = t.animBg && t.animBg !== 'default' ? `bg-${t.animBg}` : '';
 }
 
 export function saveTheme() {
@@ -55,6 +59,7 @@ function syncThemeUI() {
     fontSizeVal.textContent = theme.fontSize + 'px';
     lineHeightVal.textContent = parseFloat(theme.lineHeight).toFixed(2);
     if (langSelect) langSelect.value = getLang();
+    if (animBgSelect) animBgSelect.value = theme.animBg || 'aurora';
     try { accentCustom.value = hslToHex(theme.accent); } catch { }
 }
 
@@ -123,6 +128,13 @@ themeResetBtn.addEventListener('click', () => {
     theme = { ...THEME_DEFAULTS };
     applyTheme(); saveTheme(); syncThemeUI();
 });
+
+if (animBgSelect) {
+    animBgSelect.addEventListener('change', () => {
+        theme.animBg = animBgSelect.value;
+        applyTheme(); saveTheme();
+    });
+}
 
 if (langSelect) {
     langSelect.addEventListener('change', () => {

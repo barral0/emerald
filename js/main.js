@@ -142,6 +142,48 @@ imageInput.addEventListener('change', e => {
     imageInput.value = '';
 });
 
+// ── Home Screen — Language + About ────────────────────────────
+const homeLangSelect = document.getElementById('home-lang-select');
+const homeAboutInlineBtn = document.getElementById('home-about-inline-btn');
+
+if (homeLangSelect) {
+    homeLangSelect.value = localStorage.getItem('app-lang') || 'en';
+    homeLangSelect.addEventListener('change', async () => {
+        const { setLang } = await import('./i18n.js');
+        setLang(homeLangSelect.value);
+        const ls = document.getElementById('lang-select');
+        if (ls) ls.value = homeLangSelect.value;
+    });
+}
+
+if (homeAboutInlineBtn) {
+    homeAboutInlineBtn.addEventListener('click', () => {
+        const overlay = document.getElementById('about-modal-overlay');
+        if (overlay) overlay.hidden = false;
+    });
+}
+
+// ── Recent Workspaces ─────────────────────────────────────────
+let recentWorkspaces = JSON.parse(localStorage.getItem('app-recent-workspaces') || '[]');
+
+function updateRecentUI() {
+    const section = document.getElementById('home-recent-section');
+    const list = document.getElementById('home-recent-list');
+    if (!section || !list) return;
+    if (recentWorkspaces.length === 0) { section.style.display = 'none'; return; }
+    section.style.display = 'block';
+    list.innerHTML = '';
+    recentWorkspaces.forEach(ws => {
+        const li = document.createElement('li');
+        li.className = 'home-recent-item';
+        li.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.93a2 2 0 0 1-1.66-.9l-.82-1.2A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13c0 1.1.9 2 2 2Z"></path></svg>' +
+            '<span class="home-recent-name">' + ws.name + '</span>' +
+            '<span class="home-recent-path">' + ws.path + '</span>';
+        li.addEventListener('click', () => window.__openDirectoryFlow?.(ws.path));
+        list.appendChild(li);
+    });
+}
+
 // ── Electron (Desktop) Integration ────────────────────────────
 if (window.electronAPI) {
     // Show the small sidebar button as well
@@ -163,6 +205,13 @@ if (window.electronAPI) {
                     isOpen: true,
                     fsPath: dirPath
                 });
+
+                // Save to recents
+                recentWorkspaces = recentWorkspaces.filter(ws => ws.path !== dirPath);
+                recentWorkspaces.unshift({ name: rootName, path: dirPath });
+                if (recentWorkspaces.length > 6) recentWorkspaces.pop();
+                localStorage.setItem('app-recent-workspaces', JSON.stringify(recentWorkspaces));
+                updateRecentUI();
 
                 // Attach orphans to root
                 state.items.forEach(i => {
@@ -201,6 +250,7 @@ if (window.electronAPI) {
             }
         }
     });
+    window.__openDirectoryFlow = openDirectoryFlow;
 
     // ── Bind Window Controls ──
     const winControls = document.getElementById('window-controls');
@@ -245,6 +295,7 @@ if (!hasFSRoot) {
 }
 
 // ── Boot ──────────────────────────────────────────────────────
+updateRecentUI();
 applyTranslations();
 applyTheme();
 renderSidebar();

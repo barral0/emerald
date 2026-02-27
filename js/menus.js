@@ -20,6 +20,16 @@ const imageInput = document.getElementById('image-input');
 const fileInput = document.getElementById('file-input');
 const editor = document.getElementById('editor');
 
+// ── About Modal ───────────────────────────────────────────────
+const aboutModal = document.getElementById('about-modal-overlay');
+const aboutCloseBtn = document.getElementById('about-close-btn');
+
+function openAboutModal() { if (aboutModal) aboutModal.hidden = false; }
+function closeAboutModal() { if (aboutModal) aboutModal.hidden = true; }
+
+if (aboutCloseBtn) aboutCloseBtn.addEventListener('click', closeAboutModal);
+if (aboutModal) aboutModal.addEventListener('click', e => { if (e.target === aboutModal) closeAboutModal(); });
+
 // ── File-browser context menu ────────────────────────────────
 export function showContextMenu(e, itemId) {
     e.preventDefault();
@@ -145,6 +155,7 @@ appMenu.addEventListener('click', e => {
         case 'download': downloadNote(); break;
         case 'open': fileInput.click(); break;
         case 'help': openHelp(); break;
+        case 'about': openAboutModal(); break;
         case 'delete': deleteCurrentItem(); break;
         case 'close-folder': document.dispatchEvent(new CustomEvent('close-workspace')); break;
     }
