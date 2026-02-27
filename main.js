@@ -10,6 +10,7 @@ function createWindow() {
         width: 1200,
         height: 800,
         title: 'Emerald',
+        icon: path.join(__dirname, 'assets/icons/icon.png'),
         webPreferences: {
             nodeIntegration: false,
             contextIsolation: true,
