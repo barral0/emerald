@@ -73,7 +73,30 @@ body {
     flex-shrink: 0;
     z-index: 20;
     box-shadow: 1px 0 20px rgba(0, 0, 0, 0.1);
-    transition: all var(--transition);
+    transition: width 0.22s ease, opacity 0.18s ease, border-color 0.22s ease;
+    overflow: hidden;
+}
+
+.sidebar.collapsed {
+    width: 0;
+    opacity: 0;
+    border-right-color: transparent;
+    pointer-events: none;
+}
+
+.sidebar-toggle-btn {
+    flex-shrink: 0;
+    opacity: 0.55;
+    transition: opacity var(--transition), color var(--transition);
+}
+
+.sidebar-toggle-btn:hover {
+    opacity: 1;
+}
+
+.sidebar-collapsed-indicator .sidebar-toggle-btn {
+    color: var(--accent);
+    opacity: 1;
 }
 
 .sidebar-header {
@@ -151,8 +174,9 @@ body {
 .pane {
     flex: 1;
     height: 100%;
+    overflow-x: hidden;
     overflow-y: auto;
-    background: var(--bg-pane);
+    background: var(--bg-main);
     backdrop-filter: blur(28px) saturate(180%);
     -webkit-backdrop-filter: blur(28px) saturate(180%);
     scroll-behavior: smooth;
@@ -177,6 +201,12 @@ body {
     line-height: 1.75;
     padding: 32px 40px;
     outline: none;
+    white-space: pre-wrap;
+    word-break: break-all;
+    /* Force long strings like AAAAAA to wrap */
+    word-wrap: break-word;
+    /* Legacy fallback */
+    overflow-wrap: break-word;
     transition: color var(--transition), opacity var(--transition);
 }
 
@@ -223,14 +253,69 @@ body {
     padding: 32px 40px;
     backdrop-filter: blur(28px) saturate(180%);
     -webkit-backdrop-filter: blur(28px) saturate(180%);
-    transition: color var(--transition), background var(--transition);
+    transition: flex 0.2s ease, opacity 0.18s ease;
+    min-width: 0;
+    overflow: hidden;
+}
+
+/* Preview hidden — editor takes full width */
+.editor-container.preview-hidden .editor-pane {
+    flex: 1 1 100% !important;
+    /* Override JS inline flex */
+    max-width: 100% !important;
+}
+
+.editor-container.preview-hidden .preview-pane {
+    flex: 0 0 0px !important;
+    /* Override JS inline flex */
+    min-width: 0 !important;
+    opacity: 0;
+    pointer-events: none;
+    padding: 0 !important;
+    overflow: hidden;
+}
+
+.editor-container.preview-hidden .divider {
+    display: none;
+}
+
+/* Editor hidden — preview takes full width */
+.editor-container.editor-hidden .preview-pane {
+    flex: 1 1 100% !important;
+    /* Override JS inline flex */
+    max-width: 100% !important;
+}
+
+.editor-container.editor-hidden .editor-pane {
+    flex: 0 0 0px !important;
+    /* Override JS inline flex */
+    min-width: 0 !important;
+    overflow: hidden;
+    opacity: 0;
+    pointer-events: none;
+    padding: 0 !important;
+}
+
+.editor-container.editor-hidden .divider {
+    display: none;
+}
+
+/* Preview toggle button */
+.preview-toggle-btn {
+    flex-shrink: 0;
+    opacity: 0.55;
+    transition: opacity var(--transition), color var(--transition);
+}
+
+.preview-toggle-btn:hover {
+    opacity: 1;
 }
 
 /* ── Home Screen ─────────────────────────────────────────── */
 .home-screen {
     position: fixed;
     inset: 0;
-    z-index: 9999;
+    z-index: 10;
     display: flex;
     align-items: stretch;
     background: var(--bg-main);
@@ -249,7 +334,11 @@ body {
     -webkit-backdrop-filter: blur(28px) saturate(180%);
 }
 
-.home-brand { display: flex; flex-direction: column; gap: 12px; }
+.home-brand {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
 
 .home-gem {
     font-size: 3rem;
@@ -346,7 +435,10 @@ body {
     width: 100%;
 }
 
-.home-action-btn svg { flex-shrink: 0; opacity: 0.85; }
+.home-action-btn svg {
+    flex-shrink: 0;
+    opacity: 0.85;
+}
 
 .home-action-btn.primary {
     background: var(--accent);
@@ -417,7 +509,10 @@ body {
     border-color: var(--border);
 }
 
-.home-recent-item svg { flex-shrink: 0; opacity: 0.5; }
+.home-recent-item svg {
+    flex-shrink: 0;
+    opacity: 0.5;
+}
 
 .home-recent-name {
     font-size: 0.85rem;
@@ -501,4 +596,28 @@ body.bg-sunset {
         radial-gradient(circle at 20% 80%, rgba(236, 72, 153, 0.2), transparent 40%),
         radial-gradient(circle at 80% 80%, rgba(168, 85, 247, 0.2), transparent 50%),
         hsl(30, 20%, 94%);
+}
+
+/* ── Lite Mode (Performance) ── */
+.lite,
+.lite * {
+    animation: none !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    transition: none !important;
+}
+
+/* Fallback for background when blur is off */
+.lite .sidebar,
+.lite .pane,
+.lite .app-header,
+.lite .modal,
+.lite .app-menu {
+    background: var(--bg-pane) !important;
+    opacity: 1 !important;
+}
+
+/* Ensure the body gradient is static in lite mode */
+.lite body {
+    background-size: 100% 100% !important;
 }

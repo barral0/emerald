@@ -5,7 +5,7 @@ import { state } from './state.js';
 import { generateId } from './utils.js';
 import { persist, autoSave, triggerManualSave } from './persistence.js';
 import { renderSidebar, loadActiveItem, updatePreview } from './render.js';
-import { getActiveItem, getActiveNote, createNote, createFolder, moveItem, getUniqueTitle } from './files.js';
+import { getActiveItem, getActiveNote, createNote, createFolder, moveItem, getUniqueTitle, renameItem } from './files.js';
 import { openImageModal } from './images.js';
 import { applyTheme } from './theme.js';
 import { applyTranslations, t } from './i18n.js';
@@ -13,6 +13,7 @@ import { applyTranslations, t } from './i18n.js';
 // ── DOM references ───────────────────────────────────────────
 const editor = document.getElementById('editor');
 const noteTitleInput = document.getElementById('note-title');
+window.noteTitleInput = noteTitleInput;
 const fileListEl = document.getElementById('file-list');
 const saveBtn = document.getElementById('save-note-btn');
 const newNoteBtn = document.getElementById('new-note-btn');
@@ -30,6 +31,36 @@ const homeCloseAppBtn = document.getElementById('home-close-app-btn');
 // ── Marked.js ────────────────────────────────────────────────
 marked.use({ breaks: true, gfm: true });
 
+// ── Sidebar Toggle ────────────────────────────────────────────
+function setSidebarCollapsed(collapsed) {
+    const sb = document.getElementById('app-sidebar');
+    if (!sb) return;
+    sb.classList.toggle('collapsed', collapsed);
+    const btn = document.getElementById('sidebar-toggle-btn');
+    if (btn) btn.style.color = collapsed ? 'var(--accent)' : '';
+    localStorage.setItem('sidebar-collapsed', collapsed ? '1' : '0');
+}
+
+window.toggleSidebar = function () {
+    const sb = document.getElementById('app-sidebar');
+    if (!sb) return;
+    setSidebarCollapsed(!sb.classList.contains('collapsed'));
+};
+
+// Bind directly to the button element
+const _sidebarToggleBtn = document.getElementById('sidebar-toggle-btn');
+if (_sidebarToggleBtn) {
+    _sidebarToggleBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        window.toggleSidebar();
+    });
+}
+
+// Restore from localStorage at boot
+requestAnimationFrame(() => {
+    if (localStorage.getItem('sidebar-collapsed') === '1') setSidebarCollapsed(true);
+});
+
 // ── Sidebar action buttons ────────────────────────────────────
 newNoteBtn.addEventListener('click', () => {
     const active = getActiveItem();
@@ -43,34 +74,8 @@ saveBtn.addEventListener('click', triggerManualSave);
 // ── Title rename ─────────────────────────────────────────────
 noteTitleInput.addEventListener('change', async () => {
     const item = getActiveItem();
-    if (!item) return;
-
-    let oldTitle = item.title;
-    let title = noteTitleInput.value.trim() || t('header.untitled');
-    if (item.type === 'file' && !title.toLowerCase().endsWith('.md')) title += '.md';
-
-    // Prevent duplicates in same folder
-    title = getUniqueTitle(title, item.parentId, item.type === 'file', item.id);
-
-    // Electron: Rename on disk if it's a local file
-    if (window.electronAPI && item.fsPath && oldTitle !== title) {
-        try {
-            const parentDir = item.fsPath.substring(0, item.fsPath.lastIndexOf(window.electronAPI.sep || (item.fsPath.includes('/') ? '/' : '\\')));
-            const newFsPath = await window.electronAPI.joinPath(parentDir, title);
-            await window.electronAPI.renameItem(item.fsPath, newFsPath);
-            item.fsPath = newFsPath;
-        } catch (err) {
-            console.error('Failed to rename local file:', err);
-            // Fallback: keep old title in UI if disk rename failed? 
-            // For now we allow UI update anyway but log the error.
-        }
-    }
-
-    item.title = title;
-    item.lastModified = Date.now();
-    noteTitleInput.value = title;
-    autoSave();
-    renderSidebar();
+    if (!item || item.type === 'folder') return;
+    await renameItem(item.id, noteTitleInput.value);
 });
 
 // ── Editor input — live preview & autosave ───────────────────
@@ -226,6 +231,10 @@ if (window.electronAPI) {
                 homeScreen.style.display = 'none';
                 appLayout.style.display = 'flex';
 
+                // Update sidebar title to workspace folder name
+                const sidebarTitle = document.getElementById('sidebar-title');
+                if (sidebarTitle) sidebarTitle.textContent = rootName;
+
                 renderSidebar();
                 await loadActiveItem();
             }
@@ -262,6 +271,9 @@ if (window.electronAPI) {
         state.currentItemId = null;
         homeScreen.style.display = 'flex';
         appLayout.style.display = 'none';
+        // Reset sidebar title
+        const sidebarTitle = document.getElementById('sidebar-title');
+        if (sidebarTitle) sidebarTitle.textContent = t('sidebar.notes');
         persist(); // Clear from local storage persistence
         renderSidebar();
     });
@@ -292,6 +304,10 @@ if (!hasFSRoot) {
 } else {
     homeScreen.style.display = 'none';
     appLayout.style.display = 'flex';
+    // Set sidebar title to workspace name on boot
+    const fsRoot = state.items.find(i => i.id === 'fs-root');
+    const sidebarTitle = document.getElementById('sidebar-title');
+    if (fsRoot && sidebarTitle) sidebarTitle.textContent = fsRoot.title;
 }
 
 // ── Boot ──────────────────────────────────────────────────────

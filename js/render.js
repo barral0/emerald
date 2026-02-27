@@ -1,10 +1,10 @@
 /* =============================================================
-   render.js — Sidebar and preview rendering
+   render.js — Sidebar and preview rendering + multi-selection
    ============================================================= */
 import { state } from './state.js';
 import { escapeHtml, formatDate, sortItems } from './utils.js';
 import { persist, autoSave } from './persistence.js';
-import { getActiveItem, getActiveNote, moveItem } from './files.js';
+import { getActiveItem, getActiveNote, moveItem, renameItem } from './files.js';
 import { showContextMenu } from './menus.js';
 
 /* marked.js and DOMPurify are loaded globally via <script> tags */
@@ -37,9 +37,54 @@ export function updatePreview() {
 }
 
 // ── Load active item into editor ─────────────────────────────
+const editorPane = document.querySelector('.editor-pane');
+const previewPane = document.querySelector('.preview-pane');
+
+function showFolderPlaceholder(item) {
+    editor.style.display = 'none';
+    preview.style.display = 'none';
+    // Show a subtle folder placeholder in the preview pane
+    let ph = document.getElementById('folder-placeholder');
+    if (!ph) {
+        ph = document.createElement('div');
+        ph.id = 'folder-placeholder';
+        ph.className = 'folder-placeholder';
+        previewPane?.appendChild(ph);
+    }
+    ph.style.display = 'flex';
+    ph.innerHTML = `
+        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" style="opacity:0.25;">
+            <path d="M4 20h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.93a2 2 0 0 1-1.66-.9l-.82-1.2A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13c0 1.1.9 2 2 2Z"></path>
+        </svg>
+        <p style="opacity:0.35; font-size:0.85rem; margin-top:12px;">${item.title}</p>`;
+}
+
+function hideFolderPlaceholder() {
+    const ph = document.getElementById('folder-placeholder');
+    if (ph) ph.style.display = 'none';
+    editor.style.display = 'block';
+    preview.style.display = 'block';
+}
+
 export async function loadActiveItem() {
     const item = getActiveItem();
     if (!item) return;
+
+    // ── Folder: lock title input, show placeholder ────────────
+    if (item.type === 'folder') {
+        noteTitleInput.value = item.title;
+        noteTitleInput.readOnly = true;
+        noteTitleInput.style.opacity = '0.45';
+        noteTitleInput.style.cursor = 'default';
+        showFolderPlaceholder(item);
+        return;
+    }
+
+    // ── File/Image: normal editable title ────────────────────
+    noteTitleInput.readOnly = false;
+    noteTitleInput.style.opacity = '';
+    noteTitleInput.style.cursor = '';
+    hideFolderPlaceholder();
     noteTitleInput.value = item.title;
 
     // Trigger smooth linear animation on note load
@@ -67,11 +112,160 @@ export async function loadActiveItem() {
     if (!window.electronAPI) persist();
 }
 
+
+// ── Multi-select helpers ──────────────────────────────────────
+let _lastClickedId = null;   // for Shift+Click range
+
+function getFlatOrderedIds() {
+    // Returns all visible item IDs in sidebar DOM order
+    return [...fileListEl.querySelectorAll('[data-id]')].map(el => el.dataset.id);
+}
+
+function selectRange(fromId, toId) {
+    const ordered = getFlatOrderedIds();
+    const a = ordered.indexOf(fromId);
+    const b = ordered.indexOf(toId);
+    if (a === -1 || b === -1) return;
+    const [start, end] = a < b ? [a, b] : [b, a];
+    for (let i = start; i <= end; i++) {
+        state.selectedIds.add(ordered[i]);
+    }
+}
+
+function handleItemClick(e, itemId) {
+    if (e.ctrlKey || e.metaKey) {
+        // Ctrl+Click: toggle this item in selection
+        if (state.selectedIds.has(itemId)) {
+            state.selectedIds.delete(itemId);
+        } else {
+            state.selectedIds.add(itemId);
+        }
+        _lastClickedId = itemId;
+    } else if (e.shiftKey && _lastClickedId) {
+        // Shift+Click: range select
+        state.selectedIds.add(_lastClickedId);
+        selectRange(_lastClickedId, itemId);
+    } else {
+        // Normal click: clear multi-selection
+        state.selectedIds.clear();
+        _lastClickedId = itemId;
+    }
+    updateSelectionBar();
+    updateSelectionStyles();
+}
+
+function updateSelectionStyles() {
+    fileListEl.querySelectorAll('[data-id]').forEach(el => {
+        el.classList.toggle('multi-selected', state.selectedIds.has(el.dataset.id));
+    });
+}
+
+// ── Selection bar ─────────────────────────────────────────────
+let selBar = null;
+
+function ensureSelBar() {
+    if (selBar) return selBar;
+    selBar = document.getElementById('multi-select-bar');
+    if (!selBar) {
+        selBar = document.createElement('div');
+        selBar.id = 'multi-select-bar';
+        selBar.className = 'multi-select-bar';
+        selBar.innerHTML = `
+            <span class="msel-count" id="msel-count"></span>
+            <button class="msel-btn danger" id="msel-delete-btn">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="3 6 5 6 21 6"></polyline>
+                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                </svg>
+                Excluir
+            </button>
+            <button class="msel-btn ghost" id="msel-clear-btn">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+            </button>`;
+        document.getElementById('app-sidebar').appendChild(selBar);
+
+        document.getElementById('msel-delete-btn').addEventListener('click', deleteSelected);
+        document.getElementById('msel-clear-btn').addEventListener('click', clearSelection);
+    }
+    return selBar;
+}
+
+export function clearSelection() {
+    state.selectedIds.clear();
+    _lastClickedId = null;
+    updateSelectionBar();
+    updateSelectionStyles();
+}
+
+function updateSelectionBar() {
+    const bar = ensureSelBar();
+    const count = state.selectedIds.size;
+    if (count > 1) {
+        bar.classList.add('visible');
+        document.getElementById('msel-count').textContent = `${count} selecionados`;
+    } else {
+        bar.classList.remove('visible');
+    }
+}
+
+async function deleteSelected() {
+    const { confirmDelete } = await import('./dialogs.js');
+    const { t } = await import('./i18n.js');
+    const ids = [...state.selectedIds].filter(id => id !== 'fs-root');
+    if (ids.length === 0) return;
+
+    const confirmed = await confirmDelete(`Excluir ${ids.length} item(s) selecionado(s)?`);
+    if (!confirmed) return;
+
+    for (const id of ids) {
+        const item = state.items.find(i => i.id === id);
+        if (!item) continue;
+        if (window.electronAPI && item.fsPath) {
+            await window.electronAPI.deleteItem(item.fsPath);
+        }
+        if (item.type === 'folder') {
+            // collect all descendants and remove
+            const toDelete = new Set([id]);
+            const walk = pid => state.items.filter(i => i.parentId === pid).forEach(c => {
+                toDelete.add(c.id);
+                if (c.type === 'folder') walk(c.id);
+            });
+            walk(id);
+            state.items = state.items.filter(i => !toDelete.has(i.id));
+        } else {
+            state.items = state.items.filter(i => i.id !== id);
+        }
+    }
+
+    state.selectedIds.clear();
+    const next = state.items.find(i => i.type === 'file');
+    state.currentItemId = next?.id ?? null;
+    await loadActiveItem();
+    renderSidebar();
+    autoSave();
+}
+
 // ── Build sidebar tree ────────────────────────────────────────
 export function renderSidebar() {
     fileListEl.innerHTML = '';
-    sortItems(state.items.filter(i => i.parentId === null))
-        .forEach(item => fileListEl.appendChild(createTreeNode(item)));
+
+    const fsRoot = state.items.find(i => i.id === 'fs-root');
+
+    if (fsRoot) {
+        // Electron mode: hide the root folder row, show children directly
+        sortItems(state.items.filter(i => i.parentId === 'fs-root'))
+            .forEach(item => fileListEl.appendChild(createTreeNode(item)));
+    } else {
+        // Web mode: render normally from parentId === null
+        sortItems(state.items.filter(i => i.parentId === null))
+            .forEach(item => fileListEl.appendChild(createTreeNode(item)));
+    }
+
+    updateSelectionBar();
+    updateSelectionStyles();
 }
 
 function createTreeNode(item) {
@@ -99,14 +293,17 @@ function buildFolderEl(item) {
 
     row.addEventListener('click', e => {
         e.stopPropagation();
-        if (state.currentItemId === item.id) {
-            item.isOpen = !item.isOpen;
-        } else {
-            state.currentItemId = item.id;
-            item.isOpen = true;
+        handleItemClick(e, item.id);
+        if (!e.ctrlKey && !e.metaKey && !e.shiftKey) {
+            if (state.currentItemId === item.id) {
+                item.isOpen = !item.isOpen;
+            } else {
+                state.currentItemId = item.id;
+                item.isOpen = true;
+            }
+            autoSave();
+            loadActiveItem(); // triggers folder placeholder + read-only title
         }
-        noteTitleInput.value = item.title;
-        autoSave();
         renderSidebar();
     });
 
@@ -158,8 +355,11 @@ function buildFileEl(item) {
 
     div.addEventListener('click', e => {
         e.stopPropagation();
-        state.currentItemId = item.id;
-        loadActiveItem();
+        handleItemClick(e, item.id);
+        if (!e.ctrlKey && !e.metaKey && !e.shiftKey) {
+            state.currentItemId = item.id;
+            loadActiveItem();
+        }
         renderSidebar();
     });
 
@@ -172,5 +372,72 @@ function buildFileEl(item) {
     });
     div.addEventListener('dragend', () => div.classList.remove('dragging'));
 
+    // Support double click inline rename? Or just via F2/context-menu.
+
     return div;
 }
+
+// ── Inline Rename ────────────────────────────────────────────
+window.startInlineRename = function (itemId) {
+    const item = state.items.find(i => i.id === itemId);
+    if (!item || item.id === 'fs-root') return;
+
+    const row = document.querySelector(`[data-id="${itemId}"]`);
+    if (!row) return;
+
+    const titleSpan = row.querySelector(item.type === 'folder' ? '.folder-item-title' : '.file-item-title');
+    if (!titleSpan) return;
+
+    const input = document.createElement('input');
+    input.type = 'text';
+    input.className = 'inline-rename-input';
+    // Remove .md extension for display during editing
+    let displayVal = item.title;
+    if (item.type === 'file' && displayVal.toLowerCase().endsWith('.md')) {
+        displayVal = displayVal.slice(0, -3);
+    }
+    input.value = displayVal;
+
+    // Minimal reset to match span visually
+    input.style.width = '100%';
+    input.style.background = 'transparent';
+    input.style.color = 'inherit';
+    input.style.border = '1px solid var(--accent)';
+    input.style.borderRadius = '3px';
+    input.style.outline = 'none';
+    input.style.fontFamily = 'inherit';
+    input.style.fontSize = 'inherit';
+    input.style.padding = '0 2px';
+    input.style.marginLeft = '4px';
+
+    // Stop drag and click ops
+    input.addEventListener('click', e => e.stopPropagation());
+    input.addEventListener('mousedown', e => e.stopPropagation());
+
+    const finishRename = async () => {
+        if (input.dataset.done) return;
+        input.dataset.done = '1';
+        let newTitle = input.value.trim();
+        if (!newTitle) newTitle = item.title;
+        else if (item.type === 'file' && !newTitle.toLowerCase().endsWith('.md')) newTitle += '.md';
+
+        await renameItem(itemId, newTitle);
+        // renameItem calls renderSidebar() which removes the input naturally
+    };
+
+    input.addEventListener('blur', finishRename);
+    input.addEventListener('keydown', e => {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            input.blur();
+        } else if (e.key === 'Escape') {
+            e.preventDefault();
+            input.dataset.done = '1';
+            renderSidebar();
+        }
+    });
+
+    titleSpan.replaceWith(input);
+    input.focus();
+    input.select();
+};

@@ -52,12 +52,11 @@ export function hideContextMenu() {
 
 cmRenameBtn.addEventListener('click', () => {
     if (!state.contextTargetId) return;
-    state.currentItemId = state.contextTargetId;
-    loadActiveItem();
-    renderSidebar();
+    const targetId = state.contextTargetId;
     hideContextMenu();
-    noteTitleInput.focus();
-    noteTitleInput.select();
+    if (window.startInlineRename) {
+        window.startInlineRename(targetId);
+    }
 });
 
 cmDeleteBtn.addEventListener('click', () => {
@@ -152,7 +151,6 @@ appMenu.addEventListener('click', e => {
     switch (li.dataset.menu) {
         case 'theme': openThemeModal(); break;
         case 'image': imageInput.click(); break;
-        case 'download': downloadNote(); break;
         case 'open': fileInput.click(); break;
         case 'help': openHelp(); break;
         case 'about': openAboutModal(); break;

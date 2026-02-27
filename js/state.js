@@ -63,4 +63,5 @@ export const state = {
     currentItemId: localStorage.getItem('app-current-item') || _items.find(i => i.type === 'file')?.id,
     contextTargetId: null,
     imageStore: JSON.parse(localStorage.getItem('app-images')) || {},
+    selectedIds: new Set(),   // multi-selection
 };

@@ -4,8 +4,6 @@
 
 [![Live Demo](https://img.shields.io/badge/Live_Demo-Try_Emerald-%2325010065?style=for-the-badge)](https://barral0.github.io/emerald/)
 
-![Emerald Screenshot](images/screenshot.png)
-
 ---
 
 ## ✨ Features
@@ -42,44 +40,6 @@ npm install
 npm run start # Start local sandbox
 npm run dist -- -w # Compile Windows build
 ```
-
----
-
-## 🚀 Self-hosting Web App natively with Docker
-
-### Quick start
-
-```bash
-docker compose -f docker/docker-compose.yml up -d
-```
-
-Open **http://localhost:8095** in your browser.
-
-### Docker Compose
-
-```yaml
-services:
-  emerald:
-    build:
-      context: ..
-      dockerfile: docker/Dockerfile
-    image: emerald:latest
-    container_name: emerald
-    restart: unless-stopped
-    ports:
-      - "8095:8095"
-```
-
-### Build manually
-
-```bash
-docker build -t emerald:latest -f docker/Dockerfile .
-docker run -d --name emerald -p 8095:8095 emerald:latest
-```
-
-### Change the port
-
-Edit `docker/docker-compose.yml` and `docker/nginx.conf` — replace `8095` with your preferred port.
 
 ---
 

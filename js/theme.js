@@ -15,6 +15,7 @@ const lineHeightVal = document.getElementById('line-height-val');
 const themeResetBtn = document.getElementById('theme-reset-btn');
 const langSelect = document.getElementById('lang-select');
 const animBgSelect = document.getElementById('anim-bg-select');
+const liteModeToggle = document.getElementById('lite-mode-toggle');
 
 import { setLang, getLang } from './i18n.js';
 
@@ -25,6 +26,7 @@ const THEME_DEFAULTS = {
     fontSize: 15,
     lineHeight: 1.75,
     animBg: 'aurora',
+    liteMode: false,
 };
 
 export let theme = { ...THEME_DEFAULTS, ...JSON.parse(localStorage.getItem('app-theme') || '{}') };
@@ -37,10 +39,21 @@ export function applyTheme(t = theme) {
     root.style.setProperty('--accent-glow', `hsla(${t.accent}, 0.2)`);
     root.style.setProperty('--font-mono', t.editorFont);
     const editor = document.getElementById('editor');
-    editor.style.fontSize = t.fontSize + 'px';
-    editor.style.lineHeight = t.lineHeight;
+    if (editor) {
+        editor.style.fontSize = t.fontSize + 'px';
+        editor.style.lineHeight = t.lineHeight;
+    }
 
     document.body.className = t.animBg && t.animBg !== 'default' ? `bg-${t.animBg}` : '';
+
+    // Lite Mode
+    if (t.liteMode) {
+        root.classList.add('lite');
+        document.body.classList.add('lite');
+    } else {
+        root.classList.remove('lite');
+        document.body.classList.remove('lite');
+    }
 }
 
 export function saveTheme() {
@@ -60,6 +73,7 @@ function syncThemeUI() {
     lineHeightVal.textContent = parseFloat(theme.lineHeight).toFixed(2);
     if (langSelect) langSelect.value = getLang();
     if (animBgSelect) animBgSelect.value = theme.animBg || 'aurora';
+    if (liteModeToggle) liteModeToggle.checked = theme.liteMode || false;
     try { accentCustom.value = hslToHex(theme.accent); } catch { }
 }
 
@@ -139,6 +153,14 @@ if (animBgSelect) {
 if (langSelect) {
     langSelect.addEventListener('change', () => {
         setLang(langSelect.value);
+    });
+}
+
+if (liteModeToggle) {
+    liteModeToggle.addEventListener('change', () => {
+        theme.liteMode = liteModeToggle.checked;
+        applyTheme();
+        saveTheme();
     });
 }
 

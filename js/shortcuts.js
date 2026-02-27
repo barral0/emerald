@@ -6,6 +6,7 @@ import { downloadNote } from './files.js';
 import { closeImageModal } from './images.js';
 import { closeThemeModal } from './theme.js';
 import { closeAppMenu, hideEditorContextMenu, hideContextMenu, editorActions } from './menus.js';
+import { clearSelection } from './render.js';
 
 const editor = document.getElementById('editor');
 const helpModalOverlay = document.getElementById('help-modal-overlay');
@@ -32,6 +33,10 @@ editor.addEventListener('keydown', e => {
 window.addEventListener('keydown', e => {
     if ((e.ctrlKey || e.metaKey) && e.key === 's') { e.preventDefault(); triggerManualSave(); }
     if ((e.ctrlKey || e.metaKey) && e.key === 'd') { e.preventDefault(); downloadNote(); }
+    if ((e.ctrlKey || e.metaKey) && e.key === '\\') {
+        e.preventDefault();
+        window.toggleSidebar?.();
+    }
 
     if (e.key === '?' && !['INPUT', 'TEXTAREA', 'SELECT'].includes(document.activeElement.tagName)) {
         openHelp();
@@ -43,5 +48,6 @@ window.addEventListener('keydown', e => {
         closeAppMenu();
         hideEditorContextMenu();
         hideContextMenu();
+        clearSelection();
     }
 });

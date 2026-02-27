@@ -157,6 +157,39 @@ export async function moveItem(itemId, targetParentId) {
     renderSidebar();
 }
 
+// ── Rename ───────────────────────────────────────────────────
+export async function renameItem(itemId, newTitle) {
+    const item = getItem(itemId);
+    if (!item || item.id === 'fs-root') return;
+
+    let title = newTitle.trim() || t('header.untitled');
+    if (item.type === 'file' && !title.toLowerCase().endsWith('.md')) title += '.md';
+    if (item.title === title) return;
+
+    title = getUniqueTitle(title, item.parentId, item.type === 'file', item.id);
+
+    if (window.electronAPI && item.fsPath && item.title !== title) {
+        try {
+            const parentDir = item.fsPath.substring(0, item.fsPath.lastIndexOf(window.electronAPI.sep || (item.fsPath.includes('/') ? '/' : '\\')));
+            const newFsPath = await window.electronAPI.joinPath(parentDir, title);
+            await window.electronAPI.renameItem(item.fsPath, newFsPath);
+            item.fsPath = newFsPath;
+        } catch (err) {
+            console.error('Failed to rename local object:', err);
+        }
+    }
+
+    item.title = title;
+    item.lastModified = Date.now();
+    autoSave();
+
+    // update header title if it's the active item
+    if (state.currentItemId === itemId && window.noteTitleInput) {
+        window.noteTitleInput.value = title;
+    }
+    renderSidebar();
+}
+
 function isDescendantOf(potentialChildId, ancestorId) {
     if (!potentialChildId) return false;
     if (potentialChildId === ancestorId) return true;
