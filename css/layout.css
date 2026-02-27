@@ -17,7 +17,7 @@ body {
         radial-gradient(circle at 50% 80%, rgba(190, 24, 93, 0.35), transparent 30%),
         hsl(230, 20%, 8%);
     background-size: 150% 150%;
-    animation: liquidGradient 15s ease infinite alternate;
+    animation: liquidGradient 30s ease infinite alternate;
     color: var(--text-primary);
     font-family: var(--font-ui);
     height: 100vh;
@@ -540,7 +540,7 @@ body.bg-aurora {
         radial-gradient(circle at 40% 60%, rgba(6, 78, 59, 0.6), transparent 50%),
         hsl(160, 20%, 8%);
     background-size: 200% 200%;
-    animation: liquidGradient 12s ease infinite alternate;
+    animation: liquidGradient 25s ease infinite alternate;
 }
 
 [data-theme="light"] body.bg-aurora {
@@ -556,7 +556,7 @@ body.bg-cyberpunk {
         radial-gradient(circle at 50% 50%, rgba(138, 43, 226, 0.4), transparent 50%),
         hsl(280, 20%, 8%);
     background-size: 200% 200%;
-    animation: liquidGradient 10s ease infinite alternate;
+    animation: liquidGradient 20s ease infinite alternate;
 }
 
 [data-theme="light"] body.bg-cyberpunk {
@@ -572,7 +572,7 @@ body.bg-ocean {
         radial-gradient(circle at 50% 50%, rgba(125, 211, 252, 0.2), transparent 50%),
         hsl(200, 20%, 8%);
     background-size: 200% 200%;
-    animation: liquidGradient 18s ease infinite alternate;
+    animation: liquidGradient 40s ease infinite alternate;
 }
 
 [data-theme="light"] body.bg-ocean {
@@ -588,7 +588,7 @@ body.bg-sunset {
         radial-gradient(circle at 80% 80%, rgba(168, 85, 247, 0.4), transparent 50%),
         hsl(30, 20%, 8%);
     background-size: 200% 200%;
-    animation: liquidGradient 16s ease infinite alternate;
+    animation: liquidGradient 35s ease infinite alternate;
 }
 
 [data-theme="light"] body.bg-sunset {
