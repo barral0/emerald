@@ -10,35 +10,43 @@
 
 | Feature | Details |
 |---|---|
-| **Native Desktop App** | Fully featured local storage access using Electron |
+| **🤖 AI Assistant** | Built-in smart writing features (Grammar Fix & Text Summarization) connecting natively to **Google Gemini** & **OpenAI** |
+| **⚡ Hugo Support** | Deep integration with Hugo Static Site Generator, featuring `Ctrl+M` hotkey for YAML Front-Matter generation and specific shortcode rendering |
+| **Native Desktop App** | Fully featured local storage access using Electron for Windows, macOS, and Linux |
 | **Local Folder Sync** | Automatically loads and synchronizes directories and images direct from your OS |
 | **Glassmorphic UI** | Premium Apple-style frosted glass interface with smooth micro-animations |
 | **Live preview** | Side-by-side markdown rendering as you type |
 | **Folder organiser** | Nest notes into folders, drag & drop to reorganise |
 | **Image support** | Displays local `.png/jpg/webp/svg` inline, plus clipboard paste & drag-and-drop |
 | **Theme editor** | Dark / light mode, 7 accent colours + custom picker, font & size controls |
+| **Animated Wallpapers** | 5 built-in dynamic liquid radial gradients (Aurora, Cyberpunk, Ocean, Sunset) and a fully **Custom Colors Mixer** |
 | **Right-click menu** | Bold, italic, code, link, image — without leaving the keyboard |
 | **Keyboard shortcuts** | `Ctrl+S` save · `Ctrl+D` download · `Ctrl+B/I/`` formatting · `?` help |
 | **Auto-Saving** | Your workflow is securely flushed instantly to disk or browser memory |
+| **Multilingual** | Available natively in English, Portuguese, and Spanish |
 | **Zero dependencies** | Vanilla HTML, CSS, and ES modules — no framework, no build step |
 
 ---
 
-## 💻 Desktop App (Windows)
+## 💻 Desktop App (Windows, macOS, Linux)
 
-Emerald is packaged natively for Windows, allowing seamless local filesystem integration and standalone usage. 
+Emerald is packaged natively for all major desktop Operating Systems using Electron, allowing seamless local filesystem integration and standalone usage. 
 
 **Download the Pre-Built App:**
-1. Navigate to the **[Actions](https://github.com/barral0/emerald/actions)** tab.
-2. Select the latest **Build Desktop (Windows)** workflow.
-3. Download the built `Emerald-Windows` `.exe` or `.zip` artifact!
+1. Navigate to the **[Releases](https://github.com/FilipeBarral/emerald/releases)** page or **[Actions](https://github.com/FilipeBarral/emerald/actions)** tab.
+2. Select the latest build for your system (Windows `.exe`, macOS `.dmg` / `.app`, Linux `.AppImage`).
+3. Download and Run!
 
 **Build from Source:**
 
 ```bash
 npm install
 npm run start # Start local sandbox
-npm run dist -- -w # Compile Windows build
+
+# Compile builds
+npm run dist -- -w      # Windows
+npm run dist -- --mac   # macOS
+npm run dist -- --linux # Linux
 ```
 
 ---
@@ -63,8 +71,9 @@ emerald/
 │   ├── files.js            ← Note/folder CRUD
 │   ├── render.js           ← Sidebar + preview rendering
 │   ├── images.js           ← Image insertion, resizing, modal
-│   ├── theme.js            ← Theme system and controls
-│   ├── menus.js            ← All context and app menus
+│   ├── theme.js            ← Theme system, UI syncing, and configs
+│   ├── menus.js            ← All context and app menus + AI Google/OpenAI Callers
+│   ├── i18n.js             ← Internationalization dictionaries
 │   └── shortcuts.js        ← Keyboard shortcuts + help modal
 ├── notes/                  ← Sample notes (import via Open File)
 │   ├── Welcome.md
@@ -91,11 +100,12 @@ emerald/
 | `Ctrl + B` | Bold |
 | `Ctrl + I` | Italic |
 | `Ctrl + \`` | Code / Code block |
+| `Ctrl + M` | Generate Hugo Front-Matter |
 | `Ctrl + Z` | Undo |
 | `Ctrl + Y` | Redo |
 | `?` | Open shortcuts help |
 | `Esc` | Close any open modal or menu |
-| Right-click in editor | Formatting context menu |
+| Right-click in editor | Formatting, Insert Image, Grammar Fix, Summarize Text |
 
 ---
 
