@@ -16,6 +16,7 @@ const themeResetBtn = document.getElementById('theme-reset-btn');
 const langSelect = document.getElementById('lang-select');
 const animBgSelect = document.getElementById('anim-bg-select');
 const liteModeToggle = document.getElementById('lite-mode-toggle');
+const aiKeyInput = document.getElementById('ai-key-input');
 
 import { setLang, getLang } from './i18n.js';
 
@@ -27,6 +28,7 @@ const THEME_DEFAULTS = {
     lineHeight: 1.75,
     animBg: 'aurora',
     liteMode: false,
+    aiKey: '',
 };
 
 export let theme = { ...THEME_DEFAULTS, ...JSON.parse(localStorage.getItem('app-theme') || '{}') };
@@ -74,6 +76,7 @@ function syncThemeUI() {
     if (langSelect) langSelect.value = getLang();
     if (animBgSelect) animBgSelect.value = theme.animBg || 'aurora';
     if (liteModeToggle) liteModeToggle.checked = theme.liteMode || false;
+    if (aiKeyInput) aiKeyInput.value = theme.aiKey || '';
     try { accentCustom.value = hslToHex(theme.accent); } catch { }
 }
 
@@ -160,6 +163,13 @@ if (liteModeToggle) {
     liteModeToggle.addEventListener('change', () => {
         theme.liteMode = liteModeToggle.checked;
         applyTheme();
+        saveTheme();
+    });
+}
+
+if (aiKeyInput) {
+    aiKeyInput.addEventListener('input', () => {
+        theme.aiKey = aiKeyInput.value.trim();
         saveTheme();
     });
 }

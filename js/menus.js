@@ -5,7 +5,7 @@ import { state } from './state.js';
 import { insertAtCursor, openImageModal, closeImageModal } from './images.js';
 import { deleteCurrentItem, downloadNote, getActiveItem } from './files.js';
 import { loadActiveItem, renderSidebar } from './render.js';
-import { openThemeModal, closeThemeModal } from './theme.js';
+import { openThemeModal, closeThemeModal, theme } from './theme.js';
 import { openHelp, closeHelp } from './shortcuts.js';
 import { t } from './i18n.js';
 
@@ -91,6 +91,62 @@ function wrapSelection(prefix, suffix = prefix, placeholder = '') {
     insertAtCursor(prefix + sel + suffix);
 }
 
+// ── AI Helper ──────────────────────────────────────────────────
+async function callLLM(systemPrompt, noSelectionMsgs) {
+    if (!theme.aiKey) {
+        alert(t('theme.ai_key') + " is required.");
+        openThemeModal();
+        return;
+    }
+
+    const start = editor.selectionStart;
+    const end = editor.selectionEnd;
+    let selectedText = editor.value.slice(start, end);
+
+    if (!selectedText.trim()) {
+        alert("Please select some text first.");
+        return;
+    }
+
+    editor.disabled = true;
+    editor.style.opacity = '0.5';
+
+    try {
+        const res = await fetch('https://api.openai.com/v1/chat/completions', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${theme.aiKey}`
+            },
+            body: JSON.stringify({
+                model: 'gpt-4o-mini',
+                temperature: 0.3,
+                messages: [
+                    { role: 'system', content: systemPrompt },
+                    { role: 'user', content: selectedText }
+                ]
+            })
+        });
+
+        const data = await res.json();
+        if (data.error) throw new Error(data.error.message);
+
+        const resultText = data.choices[0].message.content;
+
+        editor.disabled = false;
+        editor.style.opacity = '1';
+        editor.focus();
+        editor.selectionStart = start;
+        editor.selectionEnd = end;
+        document.execCommand('insertText', false, resultText);
+
+    } catch (e) {
+        alert(`LLM Error: ${e.message}`);
+        editor.disabled = false;
+        editor.style.opacity = '1';
+    }
+}
+
 const editorActions = {
     undo: () => document.execCommand('undo'),
     redo: () => document.execCommand('redo'),
@@ -108,6 +164,8 @@ const editorActions = {
         const url = prompt(t('msg.prompt_url'), 'https://');
         if (url) insertAtCursor(`[${sel || t('editor.link').toLowerCase()}](${url})`);
     },
+    spellcheck: () => callLLM("You are an expert copyeditor. Fix any spelling and grammar mistakes in the following text. Do not change the original formatting, markdown tags, or meaning. Reply ONLY with the fixed text, without quotes or conversational filler."),
+    summarize: () => callLLM("You are a helpful assistant. Provide a brief, concise summary of the following text. Preserve any formatting if it helps. Reply ONLY with the summary."),
     image: () => imageInput.click(),
     frontmatter: () => {
         if (editor.value.trim().startsWith('---') || editor.value.trim().startsWith('+++')) return;
