@@ -23,11 +23,54 @@ const editor = document.getElementById('editor');
 // ── About Modal ───────────────────────────────────────────────
 const aboutModal = document.getElementById('about-modal-overlay');
 const aboutCloseBtn = document.getElementById('about-close-btn');
+const updateCheckBtn = document.getElementById('update-check-btn');
+const updaterStatus = document.getElementById('updater-status');
 
 function openAboutModal() { if (aboutModal) aboutModal.hidden = false; }
 function closeAboutModal() { if (aboutModal) aboutModal.hidden = true; }
 
 if (aboutCloseBtn) aboutCloseBtn.addEventListener('click', closeAboutModal);
+
+// Auto Updater Listeners
+if (updateCheckBtn && window.electronAPI && window.electronAPI.checkForUpdates) {
+    updateCheckBtn.addEventListener('click', async () => {
+        updateCheckBtn.disabled = true;
+        updateCheckBtn.textContent = t('update.checking');
+        await window.electronAPI.checkForUpdates();
+        setTimeout(() => {
+            if (updateCheckBtn.textContent === t('update.checking')) {
+                updateCheckBtn.textContent = t('update.up_to_date');
+                updateCheckBtn.disabled = false;
+            }
+        }, 5000);
+    });
+
+    window.electronAPI.onUpdateAvailable(() => {
+        if (updaterStatus) {
+            updaterStatus.style.display = 'block';
+            updaterStatus.style.color = 'var(--accent)';
+            updaterStatus.textContent = t('update.bg_download');
+        }
+        if (updateCheckBtn) {
+            updateCheckBtn.textContent = t('update.downloading');
+        }
+    });
+
+    window.electronAPI.onUpdateDownloaded(() => {
+        if (updaterStatus) {
+            updaterStatus.style.display = 'block';
+            updaterStatus.style.color = '#10b981';
+            updaterStatus.textContent = t('update.ready');
+        }
+        if (updateCheckBtn) {
+            updateCheckBtn.disabled = false;
+            updateCheckBtn.classList.add('primary');
+            updateCheckBtn.classList.remove('secondary');
+            updateCheckBtn.textContent = t('update.install');
+            updateCheckBtn.onclick = () => window.electronAPI.installUpdate();
+        }
+    });
+}
 if (aboutModal) aboutModal.addEventListener('click', e => { if (e.target === aboutModal) closeAboutModal(); });
 
 // ── File-browser context menu ────────────────────────────────

@@ -28,6 +28,13 @@
   "build": {
     "appId": "com.github.barral0.emerald",
     "productName": "Emerald",
+    "publish": [
+      {
+        "provider": "github",
+        "owner": "barral0",
+        "repo": "emerald"
+      }
+    ],
     "directories": {
       "output": "dist"
     },
@@ -43,6 +50,7 @@
     }
   },
   "dependencies": {
+    "electron-updater": "^6.8.3",
     "sharp": "^0.34.5"
   }
 }

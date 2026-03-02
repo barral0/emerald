@@ -1,4 +1,5 @@
 const { app, BrowserWindow, ipcMain, dialog } = require('electron');
+const { autoUpdater } = require('electron-updater');
 const path = require('path');
 const fs = require('fs');
 const fsPromises = fs.promises;
@@ -31,9 +32,27 @@ function createWindow() {
 app.whenReady().then(() => {
     createWindow();
 
+    // Check for updates seamlessly
+    autoUpdater.checkForUpdatesAndNotify();
+
     app.on('activate', () => {
         if (BrowserWindow.getAllWindows().length === 0) createWindow();
     });
+});
+
+// Update event listeners
+autoUpdater.on('update-available', () => {
+    if (mainWindow) mainWindow.webContents.send('updater:available');
+});
+autoUpdater.on('update-downloaded', () => {
+    if (mainWindow) mainWindow.webContents.send('updater:downloaded');
+});
+
+ipcMain.handle('updater:install', () => {
+    autoUpdater.quitAndInstall();
+});
+ipcMain.handle('updater:check', () => {
+    autoUpdater.checkForUpdatesAndNotify();
 });
 
 app.on('window-all-closed', () => {

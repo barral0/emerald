@@ -108,6 +108,13 @@ export const TRANSLATIONS = {
         'about.version': 'Version 1.0.0',
         'about.desc': 'A lightweight, self-hosted markdown editor with live preview, folder organization, image support, and full theme customization. No accounts. No cloud. Your notes stay on your device.',
         'about.close': 'Close',
+        'about.update': 'Check for Updates',
+        'update.checking': 'Checking...',
+        'update.up_to_date': 'You are up to date!',
+        'update.downloading': 'Downloading...',
+        'update.ready': 'Update Ready! Click to Restart.',
+        'update.install': 'Install Update & Restart',
+        'update.bg_download': 'A new update is downloading in the background...',
     },
     pt: {
         'app.title': 'Emerald — Editor Markdown',
@@ -214,6 +221,13 @@ export const TRANSLATIONS = {
         'about.version': 'Versão 1.0.0',
         'about.desc': 'Um editor markdown leve e self-hosted com pré-visualização ao vivo, organização de pastas, suporte a imagens e temas customizáveis. Sem contas. Sem nuvem. Suas notas ficam no seu aparelho.',
         'about.close': 'Fechar',
+        'about.update': 'Verificar Atualizações',
+        'update.checking': 'Verificando...',
+        'update.up_to_date': 'Seu Emerald está atualizado!',
+        'update.downloading': 'Baixando atualização...',
+        'update.ready': 'Atualização Pronta! Clique para Reiniciar.',
+        'update.install': 'Instalar e Reiniciar',
+        'update.bg_download': 'Uma nova versão está sendo baixada em segundo plano...',
     },
     es: {
         'app.title': 'Emerald — Editor Markdown',
@@ -320,6 +334,13 @@ export const TRANSLATIONS = {
         'about.version': 'Versión 1.0.0',
         'about.desc': 'Un editor markdown ligero y self-hosted con vista previa en vivo, carpetas, imágenes y temas personalizables. Sin cuentas. Sin nube. Tus notas se quedan en tu dispositivo.',
         'about.close': 'Cerrar',
+        'about.update': 'Buscar Actualizaciones',
+        'update.checking': 'Buscando...',
+        'update.up_to_date': '¡Estás al día!',
+        'update.downloading': 'Descargando...',
+        'update.ready': '¡Actualización Lista! Haz clic para Reiniciar.',
+        'update.install': 'Instalar y Reiniciar',
+        'update.bg_download': 'Se está descargando una actualización en segundo plano...',
     }
 };
 
