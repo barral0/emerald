@@ -374,120 +374,160 @@
                 </button>
             </div>
             <div class="theme-editor-body">
-
-                <!-- Mode Toggle -->
-                <div class="theme-row">
-                    <label class="theme-label" data-i18n="theme.color_mode">Color Mode</label>
-                    <div class="mode-toggle" id="mode-toggle">
-                        <button class="mode-btn active" data-mode="dark">
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
-                            </svg>
-                            <span data-i18n="theme.dark">Dark</span>
-                        </button>
-                        <button class="mode-btn" data-mode="light">
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <circle cx="12" cy="12" r="5"></circle>
-                                <line x1="12" y1="1" x2="12" y2="3"></line>
-                                <line x1="12" y1="21" x2="12" y2="23"></line>
-                                <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
-                                <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
-                                <line x1="1" y1="12" x2="3" y2="12"></line>
-                                <line x1="21" y1="12" x2="23" y2="12"></line>
-                                <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
-                                <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
-                            </svg>
-                            <span data-i18n="theme.light">Light</span>
-                        </button>
-                    </div>
+                <div class="settings-tabs" id="settings-tabs">
+                    <button class="settings-tab active" data-tab="tab-general"
+                        data-i18n="settings.general">General</button>
+                    <button class="settings-tab" data-tab="tab-ai" data-i18n="settings.ai">AI Assistant</button>
+                    <button class="settings-tab" data-tab="tab-editor" data-i18n="settings.editor">Editor</button>
                 </div>
 
-                <!-- Accent Color -->
-                <div class="theme-row">
-                    <label class="theme-label" data-i18n="theme.accent">Accent Color</label>
-                    <div class="accent-swatches" id="accent-swatches">
-                        <button class="swatch active" data-hsl="250,100%,65%" style="background:hsl(250,100%,65%)"
-                            title="Violet"></button>
-                        <button class="swatch" data-hsl="210,100%,60%" style="background:hsl(210,100%,60%)"
-                            title="Blue"></button>
-                        <button class="swatch" data-hsl="185,90%,45%" style="background:hsl(185,90%,45%)"
-                            title="Cyan"></button>
-                        <button class="swatch" data-hsl="142,65%,48%" style="background:hsl(142,65%,48%)"
-                            title="Green"></button>
-                        <button class="swatch" data-hsl="30,100%,58%" style="background:hsl(30,100%,58%)"
-                            title="Orange"></button>
-                        <button class="swatch" data-hsl="320,90%,62%" style="background:hsl(320,90%,62%)"
-                            title="Pink"></button>
-                        <button class="swatch" data-hsl="0,85%,60%" style="background:hsl(0,85%,60%)"
-                            title="Red"></button>
-                        <label class="swatch swatch-custom" title="Custom color">
-                            <input type="color" id="accent-custom" value="#7c4dff">
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                stroke-width="2.5">
-                                <line x1="12" y1="5" x2="12" y2="19"></line>
-                                <line x1="5" y1="12" x2="19" y2="12"></line>
-                            </svg>
+                <!-- Tab: General -->
+                <div class="settings-tab-content active" id="tab-general">
+                    <!-- Mode Toggle -->
+                    <div class="theme-row">
+                        <label class="theme-label" data-i18n="theme.color_mode">Color Mode</label>
+                        <div class="mode-toggle" id="mode-toggle">
+                            <button class="mode-btn active" data-mode="dark">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                                </svg>
+                                <span data-i18n="theme.dark">Dark</span>
+                            </button>
+                            <button class="mode-btn" data-mode="light">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="12" cy="12" r="5"></circle>
+                                    <line x1="12" y1="1" x2="12" y2="3"></line>
+                                    <line x1="12" y1="21" x2="12" y2="23"></line>
+                                    <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                                    <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                                    <line x1="1" y1="12" x2="3" y2="12"></line>
+                                    <line x1="21" y1="12" x2="23" y2="12"></line>
+                                    <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                                    <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                                </svg>
+                                <span data-i18n="theme.light">Light</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Accent Color -->
+                    <div class="theme-row">
+                        <label class="theme-label" data-i18n="theme.accent">Accent Color</label>
+                        <div class="accent-swatches" id="accent-swatches">
+                            <button class="swatch active" data-hsl="250,100%,65%" style="background:hsl(250,100%,65%)"
+                                title="Violet"></button>
+                            <button class="swatch" data-hsl="210,100%,60%" style="background:hsl(210,100%,60%)"
+                                title="Blue"></button>
+                            <button class="swatch" data-hsl="185,90%,45%" style="background:hsl(185,90%,45%)"
+                                title="Cyan"></button>
+                            <button class="swatch" data-hsl="142,65%,48%" style="background:hsl(142,65%,48%)"
+                                title="Green"></button>
+                            <button class="swatch" data-hsl="30,100%,58%" style="background:hsl(30,100%,58%)"
+                                title="Orange"></button>
+                            <button class="swatch" data-hsl="320,90%,62%" style="background:hsl(320,90%,62%)"
+                                title="Pink"></button>
+                            <button class="swatch" data-hsl="0,85%,60%" style="background:hsl(0,85%,60%)"
+                                title="Red"></button>
+                            <label class="swatch swatch-custom" title="Custom color">
+                                <input type="color" id="accent-custom" value="#7c4dff">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2.5">
+                                    <line x1="12" y1="5" x2="12" y2="19"></line>
+                                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                                </svg>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Animated Wallpaper -->
+                    <div class="theme-row">
+                        <label class="theme-label" data-i18n="theme.anim_bg">Animated Background</label>
+                        <select id="anim-bg-select" class="theme-select">
+                            <option value="default" data-i18n="theme.anim_default">Default Emerald</option>
+                            <option value="aurora" data-i18n="theme.anim_aurora">Aurora Borealis</option>
+                            <option value="cyberpunk" data-i18n="theme.anim_cyberpunk">Cyberpunk Neon</option>
+                            <option value="ocean" data-i18n="theme.anim_ocean">Ocean Deep</option>
+                            <option value="sunset" data-i18n="theme.anim_sunset">Sunset Horizon</option>
+                            <option value="custom" data-i18n="theme.anim_custom">Custom Colors</option>
+                        </select>
+                    </div>
+
+                    <!-- Custom Wallpaper Colors (Hidden by default) -->
+                    <div class="theme-row" id="custom-bg-colors-row"
+                        style="display: none; padding-left: 10px; border-left: 2px solid var(--border); margin-top: -10px; margin-bottom: 10px;">
+                        <label class="theme-label" data-i18n="theme.custom_colors">Wallpaper Colors</label>
+                        <div style="display: flex; gap: 10px; margin-top: 5px;" id="custom-bg-pickers">
+                            <input type="color" id="custom-bg-color-1" value="#4c1d95" title="Color 1"
+                                style="width: 32px; height: 32px; padding: 0; border: 1px solid var(--border); border-radius: 4px; cursor: pointer; background: transparent;">
+                            <input type="color" id="custom-bg-color-2" value="#0e7490" title="Color 2"
+                                style="width: 32px; height: 32px; padding: 0; border: 1px solid var(--border); border-radius: 4px; cursor: pointer; background: transparent;">
+                            <input type="color" id="custom-bg-color-3" value="#be185d" title="Color 3"
+                                style="width: 32px; height: 32px; padding: 0; border: 1px solid var(--border); border-radius: 4px; cursor: pointer; background: transparent;">
+                        </div>
+                    </div>
+
+                    <!-- Lite Mode -->
+                    <div class="theme-row">
+                        <label class="theme-label" data-i18n="theme.lite_mode">Lite Mode (No Blur/Anim)</label>
+                        <label class="switch">
+                            <input type="checkbox" id="lite-mode-toggle">
+                            <span class="slider round"></span>
                         </label>
                     </div>
                 </div>
 
-                <!-- Editor Font -->
-                <div class="theme-row">
-                    <label class="theme-label" for="editor-font-select" data-i18n="theme.font">Editor Font</label>
-                    <select id="editor-font-select" class="theme-select">
-                        <option value="'Fira Code', monospace">Fira Code</option>
-                        <option value="'JetBrains Mono', monospace">JetBrains Mono</option>
-                        <option value="'Source Code Pro', monospace">Source Code Pro</option>
-                        <option value="'Cascadia Code', monospace">Cascadia Code</option>
-                        <option value="monospace">System Mono</option>
-                    </select>
+                <!-- Tab: Editor -->
+                <div class="settings-tab-content" id="tab-editor">
+                    <!-- Editor Font -->
+                    <div class="theme-row">
+                        <label class="theme-label" for="editor-font-select" data-i18n="theme.font">Editor Font</label>
+                        <select id="editor-font-select" class="theme-select">
+                            <option value="'Fira Code', monospace">Fira Code</option>
+                            <option value="'JetBrains Mono', monospace">JetBrains Mono</option>
+                            <option value="'Source Code Pro', monospace">Source Code Pro</option>
+                            <option value="'Cascadia Code', monospace">Cascadia Code</option>
+                            <option value="monospace">System Mono</option>
+                        </select>
+                    </div>
+
+                    <!-- Editor Font Size -->
+                    <div class="theme-row">
+                        <label class="theme-label"><span data-i18n="theme.font_size">Editor Font Size</span> <span
+                                id="font-size-val" class="theme-value">15px</span></label>
+                        <input type="range" id="editor-font-size" min="12" max="20" step="1" value="15"
+                            class="theme-slider">
+                    </div>
+
+                    <!-- Line Height -->
+                    <div class="theme-row">
+                        <label class="theme-label"><span data-i18n="theme.line_height">Line Height</span> <span
+                                id="line-height-val" class="theme-value">1.75</span></label>
+                        <input type="range" id="editor-line-height" min="1.4" max="2.2" step="0.05" value="1.75"
+                            class="theme-slider">
+                    </div>
                 </div>
 
-                <!-- Editor Font Size -->
-                <div class="theme-row">
-                    <label class="theme-label"><span data-i18n="theme.font_size">Editor Font Size</span> <span
-                            id="font-size-val" class="theme-value">15px</span></label>
-                    <input type="range" id="editor-font-size" min="12" max="20" step="1" value="15"
-                        class="theme-slider">
-                </div>
-
-                <!-- Line Height -->
-                <div class="theme-row">
-                    <label class="theme-label"><span data-i18n="theme.line_height">Line Height</span> <span
-                            id="line-height-val" class="theme-value">1.75</span></label>
-                    <input type="range" id="editor-line-height" min="1.4" max="2.2" step="0.05" value="1.75"
-                        class="theme-slider">
-                </div>
-
-                <!-- Animated Wallpaper -->
-                <div class="theme-row">
-                    <label class="theme-label" data-i18n="theme.anim_bg">Animated Background</label>
-                    <select id="anim-bg-select" class="theme-select">
-                        <option value="default" data-i18n="theme.anim_default">Default Emerald</option>
-                        <option value="aurora" data-i18n="theme.anim_aurora">Aurora Borealis</option>
-                        <option value="cyberpunk" data-i18n="theme.anim_cyberpunk">Cyberpunk Neon</option>
-                        <option value="ocean" data-i18n="theme.anim_ocean">Ocean Deep</option>
-                        <option value="sunset" data-i18n="theme.anim_sunset">Sunset Horizon</option>
-                    </select>
-                </div>
-
-                <!-- Lite Mode -->
-                <div class="theme-row">
-                    <label class="theme-label" data-i18n="theme.lite_mode">Lite Mode (No Blur/Anim)</label>
-                    <label class="switch">
-                        <input type="checkbox" id="lite-mode-toggle">
-                        <span class="slider round"></span>
-                    </label>
-                </div>
-
-                <!-- AI Assistant (LLM Key) -->
-                <div class="theme-row" style="flex-direction: column; align-items: flex-start; gap: 8px;">
-                    <label class="theme-label" data-i18n="theme.ai_key">OpenAI API Key (Local only)</label>
-                    <input type="password" id="ai-key-input" data-i18n-placeholder="theme.ai_key_placeholder"
-                        placeholder="sk-..." class="theme-slider"
-                        style="width: 100%; border: 1px solid var(--border); background: var(--bg-hover); padding: 6px 10px; border-radius: 4px; color: var(--text-primary); outline: none; font-size: 0.9rem; font-family: monospace;">
+                <!-- Tab: AI -->
+                <div class="settings-tab-content" id="tab-ai">
+                    <div class="theme-row">
+                        <label class="theme-label" data-i18n="theme.ai_provider">AI Provider</label>
+                        <select id="ai-provider-select" class="theme-select">
+                            <option value="openai">OpenAI</option>
+                            <option value="gemini">Google Gemini</option>
+                        </select>
+                    </div>
+                    <div class="theme-row">
+                        <label class="theme-label" data-i18n="theme.ai_model">AI Model</label>
+                        <select id="ai-model-select" class="theme-select"></select>
+                    </div>
+                    <div class="theme-row" style="flex-direction: column; align-items: flex-start; gap: 8px;">
+                        <label class="theme-label" data-i18n="theme.ai_key">API Key (Local only)</label>
+                        <input type="password" id="ai-key-input" data-i18n-placeholder="theme.ai_key_placeholder"
+                            placeholder="sk-... or AIza..." class="theme-slider"
+                            style="width: 100%; border: 1px solid var(--border); background: var(--bg-hover); padding: 6px 10px; border-radius: 4px; color: var(--text-primary); outline: none; font-size: 0.9rem; font-family: monospace;">
+                    </div>
                 </div>
 
                 <!-- Reset -->
@@ -681,7 +721,7 @@
                     stroke-linecap="round" stroke-linejoin="round">
                     <circle cx="12" cy="12" r="3"></circle>
                     <path
-                        d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83">
+                        d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z">
                     </path>
                 </svg>
                 <span data-i18n="menu.theme">Theme Settings</span>

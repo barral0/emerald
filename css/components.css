@@ -756,6 +756,48 @@ kbd {
     gap: 20px;
 }
 
+.settings-tabs {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 4px;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 12px;
+}
+
+.settings-tab {
+    background: transparent;
+    border: none;
+    color: var(--text-secondary);
+    font-size: 0.85rem;
+    font-weight: 600;
+    font-family: var(--font-ui);
+    padding: 6px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all var(--transition);
+}
+
+.settings-tab:hover {
+    background: var(--bg-pane-hover);
+    color: var(--text-primary);
+}
+
+.settings-tab.active {
+    background: var(--bg-pane-hover);
+    color: var(--accent);
+    box-shadow: 0 0 0 1px var(--border);
+}
+
+.settings-tab-content {
+    display: none;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.settings-tab-content.active {
+    display: flex;
+}
+
 .theme-row {
     display: flex;
     flex-direction: column;

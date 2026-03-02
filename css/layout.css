@@ -621,3 +621,19 @@ body.bg-sunset {
 .lite body {
     background-size: 100% 100% !important;
 }
+
+body.bg-custom {
+    background: radial-gradient(circle at 15% 30%, rgba(var(--bg-custom-1), 0.5), transparent 40%),
+        radial-gradient(circle at 85% 70%, rgba(var(--bg-custom-2), 0.4), transparent 40%),
+        radial-gradient(circle at 50% 60%, rgba(var(--bg-custom-3), 0.6), transparent 50%),
+        hsl(230, 20%, 8%);
+    background-size: 200% 200%;
+    animation: liquidGradient 30s ease infinite alternate;
+}
+
+[data-theme="light"] body.bg-custom {
+    background: radial-gradient(circle at 15% 30%, rgba(var(--bg-custom-1), 0.3), transparent 40%),
+        radial-gradient(circle at 85% 70%, rgba(var(--bg-custom-2), 0.2), transparent 40%),
+        radial-gradient(circle at 50% 60%, rgba(var(--bg-custom-3), 0.4), transparent 50%),
+        hsl(220, 20%, 94%);
+}

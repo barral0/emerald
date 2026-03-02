@@ -112,26 +112,43 @@ async function callLLM(systemPrompt, noSelectionMsgs) {
     editor.style.opacity = '0.5';
 
     try {
-        const res = await fetch('https://api.openai.com/v1/chat/completions', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${theme.aiKey}`
-            },
-            body: JSON.stringify({
-                model: 'gpt-4o-mini',
-                temperature: 0.3,
-                messages: [
-                    { role: 'system', content: systemPrompt },
-                    { role: 'user', content: selectedText }
-                ]
-            })
-        });
+        let resultText = '';
 
-        const data = await res.json();
-        if (data.error) throw new Error(data.error.message);
-
-        const resultText = data.choices[0].message.content;
+        if (theme.aiProvider === 'gemini') {
+            const modelName = theme.aiModel || 'gemini-2.5-flash';
+            const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${theme.aiKey}`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    systemInstruction: { parts: [{ text: systemPrompt }] },
+                    contents: [{ parts: [{ text: selectedText }] }],
+                    generationConfig: { temperature: 0.3 }
+                })
+            });
+            const data = await res.json();
+            if (data.error) throw new Error(data.error.message);
+            resultText = data.candidates[0].content.parts[0].text;
+        } else {
+            const modelName = theme.aiModel || 'gpt-4o-mini';
+            const res = await fetch('https://api.openai.com/v1/chat/completions', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${theme.aiKey}`
+                },
+                body: JSON.stringify({
+                    model: modelName,
+                    temperature: 0.3,
+                    messages: [
+                        { role: 'system', content: systemPrompt },
+                        { role: 'user', content: selectedText }
+                    ]
+                })
+            });
+            const data = await res.json();
+            if (data.error) throw new Error(data.error.message);
+            resultText = data.choices[0].message.content;
+        }
 
         editor.disabled = false;
         editor.style.opacity = '1';
