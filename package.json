@@ -41,5 +41,8 @@
     "linux": {
       "target": "AppImage"
     }
+  },
+  "dependencies": {
+    "sharp": "^0.34.5"
   }
 }
