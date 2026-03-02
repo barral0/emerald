@@ -109,6 +109,20 @@ const editorActions = {
         if (url) insertAtCursor(`[${sel || t('editor.link').toLowerCase()}](${url})`);
     },
     image: () => imageInput.click(),
+    frontmatter: () => {
+        if (editor.value.trim().startsWith('---') || editor.value.trim().startsWith('+++')) return;
+        const title = noteTitleInput.value || t('header.untitled');
+        const date = new Date().toISOString();
+        const fm = `---\ntitle: "${title}"\ndate: ${date}\ndraft: true\n---\n\n`;
+        const origStart = editor.selectionStart;
+        const origEnd = editor.selectionEnd;
+        editor.selectionStart = 0;
+        editor.selectionEnd = 0;
+        editor.focus();
+        document.execCommand('insertText', false, fm);
+        editor.selectionStart = origStart > 0 ? origStart + fm.length : fm.length;
+        editor.selectionEnd = origEnd > 0 ? origEnd + fm.length : fm.length;
+    },
 };
 
 export { editorActions };

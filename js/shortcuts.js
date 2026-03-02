@@ -27,6 +27,7 @@ editor.addEventListener('keydown', e => {
     if (e.key === 'b') { e.preventDefault(); editorActions.bold(); }
     if (e.key === 'i') { e.preventDefault(); editorActions.italic(); }
     if (e.key === '`') { e.preventDefault(); editorActions.code(); }
+    if (e.key.toLowerCase() === 'm') { e.preventDefault(); editorActions.frontmatter(); }
 });
 
 // ── Global shortcuts ──────────────────────────────────────────

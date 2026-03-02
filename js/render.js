@@ -27,7 +27,19 @@ function resolveImageRefs(md) {
 
 // ── Preview and word count ────────────────────────────────────
 export function updatePreview() {
-    const md = editor.value;
+    let md = editor.value;
+
+    // --- Hugo Support ---
+    // Format YAML front-matter as a code block
+    md = md.replace(/^---\r?\n([\s\S]*?)\r?\n---(\r?\n|$)/, '```yaml\n$1\n```\n');
+    // Format TOML front-matter as a code block
+    md = md.replace(/^\+\+\+\r?\n([\s\S]*?)\r?\n\+\+\+(\r?\n|$)/, '```toml\n$1\n```\n');
+    // Escape Hugo shortcodes so DOMPurify doesn't strip them as unknown HTML tags
+    md = md.replace(/\{\{([<%])([\s\S]*?)([>%])\}\}/g, (match) => {
+        return match.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    });
+    // --------------------
+
     const resolved = resolveImageRefs(md);
     const clean = DOMPurify.sanitize(marked.parse(resolved));
     preview.innerHTML = clean;
