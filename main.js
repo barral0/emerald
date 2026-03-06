@@ -5,6 +5,45 @@ const fs = require('fs');
 const fsPromises = fs.promises;
 
 let mainWindow;
+let allowedWorkspaces = [];
+
+function loadAllowedWorkspaces() {
+    try {
+        const userDataPath = app.getPath('userData');
+        const workspacesFile = path.join(userDataPath, 'allowed-workspaces.json');
+        if (fs.existsSync(workspacesFile)) {
+            allowedWorkspaces = JSON.parse(fs.readFileSync(workspacesFile, 'utf8'));
+        }
+    } catch (err) {
+        console.error('Failed to load allowed workspaces:', err);
+    }
+}
+
+function saveAllowedWorkspaces() {
+    try {
+        const userDataPath = app.getPath('userData');
+        const workspacesFile = path.join(userDataPath, 'allowed-workspaces.json');
+        fs.writeFileSync(workspacesFile, JSON.stringify(allowedWorkspaces), 'utf8');
+    } catch (err) {
+        console.error('Failed to save allowed workspaces:', err);
+    }
+}
+
+function addAllowedWorkspace(workspacePath) {
+    if (!allowedWorkspaces.includes(workspacePath)) {
+        allowedWorkspaces.push(workspacePath);
+        saveAllowedWorkspaces();
+    }
+}
+
+function isSafePath(targetPath) {
+    const resolvedPath = path.resolve(targetPath);
+    return allowedWorkspaces.some(workspace => {
+        const resolvedWorkspace = path.resolve(workspace);
+        // Ensure the path is within the workspace, or is the workspace itself
+        return resolvedPath === resolvedWorkspace || resolvedPath.startsWith(resolvedWorkspace + path.sep);
+    });
+}
 
 function createWindow() {
     mainWindow = new BrowserWindow({
@@ -30,6 +69,7 @@ function createWindow() {
 }
 
 app.whenReady().then(() => {
+    loadAllowedWorkspaces();
     createWindow();
 
     // Check for updates seamlessly
@@ -89,11 +129,18 @@ ipcMain.handle('dialog:openDirectory', async () => {
         properties: ['openDirectory']
     });
     if (canceled || filePaths.length === 0) return null;
-    return filePaths[0];
+    const selectedPath = filePaths[0];
+    addAllowedWorkspace(selectedPath);
+    return selectedPath;
 });
 
 // 2. Read all files in a directory (recursive) looking for .md files
 ipcMain.handle('fs:readDirectory', async (_, dirPath) => {
+    if (!isSafePath(dirPath)) {
+        console.warn('Blocked path traversal attempt in readDirectory:', dirPath);
+        return null;
+    }
+
     const items = [];
 
     async function scan(currentPath, parentId = null) {
@@ -147,6 +194,10 @@ ipcMain.handle('fs:readDirectory', async (_, dirPath) => {
 
 // 3. Read a specific file's content
 ipcMain.handle('fs:readFile', async (_, filePath) => {
+    if (!isSafePath(filePath)) {
+        console.warn('Blocked path traversal attempt in readFile:', filePath);
+        return null;
+    }
     try {
         return await fsPromises.readFile(filePath, 'utf8');
     } catch (err) {
@@ -157,6 +208,10 @@ ipcMain.handle('fs:readFile', async (_, filePath) => {
 
 // 4. Save file to disk
 ipcMain.handle('fs:writeFile', async (_, filePath, content) => {
+    if (!isSafePath(filePath)) {
+        console.warn('Blocked path traversal attempt in writeFile:', filePath);
+        return false;
+    }
     try {
         await fsPromises.writeFile(filePath, content, 'utf8');
         return true;
@@ -168,6 +223,10 @@ ipcMain.handle('fs:writeFile', async (_, filePath, content) => {
 
 // 5. Create new folder
 ipcMain.handle('fs:mkdir', async (_, dirPath) => {
+    if (!isSafePath(dirPath)) {
+        console.warn('Blocked path traversal attempt in mkdir:', dirPath);
+        return false;
+    }
     try {
         await fsPromises.mkdir(dirPath, { recursive: true });
         return true;
@@ -179,6 +238,10 @@ ipcMain.handle('fs:mkdir', async (_, dirPath) => {
 
 // 6. Delete file or folder
 ipcMain.handle('fs:delete', async (_, itemPath) => {
+    if (!isSafePath(itemPath)) {
+        console.warn('Blocked path traversal attempt in delete:', itemPath);
+        return false;
+    }
     try {
         if (!fs.existsSync(itemPath)) return true; // Already gone? Success.
         const stat = await fsPromises.stat(itemPath);
@@ -196,6 +259,10 @@ ipcMain.handle('fs:delete', async (_, itemPath) => {
 
 // 7. Rename file or folder
 ipcMain.handle('fs:rename', async (_, oldPath, newPath) => {
+    if (!isSafePath(oldPath) || !isSafePath(newPath)) {
+        console.warn('Blocked path traversal attempt in rename:', oldPath, '->', newPath);
+        return false;
+    }
     try {
         await fsPromises.rename(oldPath, newPath);
         return true;
