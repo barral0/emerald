@@ -1,0 +1,3 @@
+## 2024-05-18 - Missing ARIA Labels on Icon-only Buttons
+**Learning:** Many icon-only interactive elements in this app (like window controls, sidebar toggles, and theme color swatches) rely entirely on `title` attributes for accessible names. While `title` provides a tooltip for mouse users, it is often insufficient or inconsistently read by screen readers compared to explicit `aria-label` attributes.
+**Action:** Always ensure that icon-only interactive elements (`button`, `a`, etc.) are given an explicit `aria-label` for reliable screen reader support, even if they already have a `title` attribute.
