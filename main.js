@@ -98,9 +98,11 @@ ipcMain.handle('fs:readDirectory', async (_, dirPath) => {
 
     async function scan(currentPath, parentId = null) {
         const entries = await fsPromises.readdir(currentPath, { withFileTypes: true });
-        for (const entry of entries) {
+
+        // Use Promise.all with map for concurrent I/O operations
+        await Promise.all(entries.map(async (entry) => {
             // Ignore hidden files / node_modules
-            if (entry.name.startsWith('.') || entry.name === 'node_modules') continue;
+            if (entry.name.startsWith('.') || entry.name === 'node_modules') return;
 
             const fullPath = path.join(currentPath, entry.name);
             const id = Buffer.from(fullPath).toString('base64'); // use path as stable ID
@@ -133,7 +135,7 @@ ipcMain.handle('fs:readDirectory', async (_, dirPath) => {
                     });
                 }
             }
-        }
+        }));
     }
 
     try {
