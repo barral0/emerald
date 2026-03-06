@@ -196,8 +196,17 @@ if (window.electronAPI) {
     openLocalFolderBtn.title = t('sidebar.open_folder');
 
     const openDirectoryFlow = async (path = null) => {
-        const dirPath = path || await window.electronAPI.openDirectory();
-        if (dirPath) {
+        let dirPath = path;
+        let isSafe = true;
+
+        if (!dirPath) {
+            dirPath = await window.electronAPI.openDirectory();
+        } else {
+            // Re-establish safe root for previously known paths
+            isSafe = await window.electronAPI.setSafeRoot(dirPath);
+        }
+
+        if (dirPath && isSafe) {
             const items = await window.electronAPI.readDirectory(dirPath);
             if (items) {
                 state.items = items;

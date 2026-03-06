@@ -61,6 +61,31 @@ ipcMain.handle('window:close', () => {
 
 // ── IPC Listeners for Local FS ─────────────────────────────────
 
+let safeRoot = null;
+
+// The main process keeps track of allowed recent workspaces.
+let allowedWorkspaces = new Set();
+try {
+    const data = fs.readFileSync(path.join(app.getPath('userData'), 'allowed-workspaces.json'), 'utf8');
+    allowedWorkspaces = new Set(JSON.parse(data));
+} catch (e) {
+    // Ignore if file doesn't exist yet
+}
+
+function saveAllowedWorkspaces() {
+    try {
+        fs.writeFileSync(path.join(app.getPath('userData'), 'allowed-workspaces.json'), JSON.stringify([...allowedWorkspaces]), 'utf8');
+    } catch (e) {
+        console.error('Failed to save allowed workspaces:', e);
+    }
+}
+
+function isSafePath(targetPath) {
+    if (!safeRoot) return false;
+    const resolvedPath = path.resolve(targetPath);
+    return resolvedPath.startsWith(safeRoot + path.sep) || resolvedPath === safeRoot;
+}
+
 // Utility path join
 ipcMain.handle('fs:joinPath', (_, ...parts) => path.join(...parts));
 
@@ -70,11 +95,35 @@ ipcMain.handle('dialog:openDirectory', async () => {
         properties: ['openDirectory']
     });
     if (canceled || filePaths.length === 0) return null;
+
+    // Set the safeRoot ONLY when the user explicitly selects a directory via the native dialog
+    safeRoot = path.resolve(filePaths[0]);
+
+    // Remember this user-approved path for the future
+    allowedWorkspaces.add(safeRoot);
+    saveAllowedWorkspaces();
+
     return filePaths[0];
+});
+
+// Establish safe root for previously allowed recent workspaces
+ipcMain.handle('fs:setSafeRoot', async (_, dirPath) => {
+    const resolvedPath = path.resolve(dirPath);
+    if (allowedWorkspaces.has(resolvedPath)) {
+        safeRoot = resolvedPath;
+        return true;
+    }
+    console.error('Security Error: Renderer attempted to set unapproved safe root:', resolvedPath);
+    return false;
 });
 
 // 2. Read all files in a directory (recursive) looking for .md files
 ipcMain.handle('fs:readDirectory', async (_, dirPath) => {
+    if (!isSafePath(dirPath)) {
+        console.error('Security Error: Attempted to read directory outside safe root:', dirPath);
+        return null;
+    }
+
     const items = [];
 
     async function scan(currentPath, parentId = null) {
@@ -128,6 +177,10 @@ ipcMain.handle('fs:readDirectory', async (_, dirPath) => {
 
 // 3. Read a specific file's content
 ipcMain.handle('fs:readFile', async (_, filePath) => {
+    if (!isSafePath(filePath)) {
+        console.error('Security Error: Attempted to read outside safe root:', filePath);
+        return null;
+    }
     try {
         return await fsPromises.readFile(filePath, 'utf8');
     } catch (err) {
@@ -138,6 +191,10 @@ ipcMain.handle('fs:readFile', async (_, filePath) => {
 
 // 4. Save file to disk
 ipcMain.handle('fs:writeFile', async (_, filePath, content) => {
+    if (!isSafePath(filePath)) {
+        console.error('Security Error: Attempted to write outside safe root:', filePath);
+        return false;
+    }
     try {
         await fsPromises.writeFile(filePath, content, 'utf8');
         return true;
@@ -149,6 +206,10 @@ ipcMain.handle('fs:writeFile', async (_, filePath, content) => {
 
 // 5. Create new folder
 ipcMain.handle('fs:mkdir', async (_, dirPath) => {
+    if (!isSafePath(dirPath)) {
+        console.error('Security Error: Attempted to create folder outside safe root:', dirPath);
+        return false;
+    }
     try {
         await fsPromises.mkdir(dirPath, { recursive: true });
         return true;
@@ -160,6 +221,10 @@ ipcMain.handle('fs:mkdir', async (_, dirPath) => {
 
 // 6. Delete file or folder
 ipcMain.handle('fs:delete', async (_, itemPath) => {
+    if (!isSafePath(itemPath)) {
+        console.error('Security Error: Attempted to delete item outside safe root:', itemPath);
+        return false;
+    }
     try {
         if (!fs.existsSync(itemPath)) return true; // Already gone? Success.
         const stat = await fsPromises.stat(itemPath);
@@ -177,6 +242,10 @@ ipcMain.handle('fs:delete', async (_, itemPath) => {
 
 // 7. Rename file or folder
 ipcMain.handle('fs:rename', async (_, oldPath, newPath) => {
+    if (!isSafePath(oldPath) || !isSafePath(newPath)) {
+        console.error('Security Error: Attempted to rename item outside safe root:', oldPath, '->', newPath);
+        return false;
+    }
     try {
         await fsPromises.rename(oldPath, newPath);
         return true;
