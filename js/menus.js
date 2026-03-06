@@ -3,7 +3,7 @@
    ============================================================= */
 import { state } from './state.js';
 import { insertAtCursor, openImageModal, closeImageModal } from './images.js';
-import { deleteCurrentItem, downloadNote, getActiveItem } from './files.js';
+import { deleteCurrentItem } from './files.js';
 import { loadActiveItem, renderSidebar } from './render.js';
 import { openThemeModal, closeThemeModal } from './theme.js';
 import { openHelp, closeHelp } from './shortcuts.js';
