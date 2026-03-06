@@ -29,7 +29,46 @@ function createWindow() {
     mainWindow.loadFile('index.html');
 }
 
+
+// ── Security: Allowed Workspaces ───────────────────────────────
+let allowedWorkspaces = new Set();
+let workspacesFile;
+
+function loadAllowedWorkspaces() {
+    workspacesFile = path.join(app.getPath('userData'), 'allowed-workspaces.json');
+    try {
+        if (fs.existsSync(workspacesFile)) {
+            const data = fs.readFileSync(workspacesFile, 'utf8');
+            allowedWorkspaces = new Set(JSON.parse(data));
+        }
+    } catch (err) {
+        console.error('Failed to load allowed workspaces:', err);
+    }
+}
+
+function saveAllowedWorkspaces() {
+    if (!workspacesFile) return;
+    try {
+        fs.writeFileSync(workspacesFile, JSON.stringify(Array.from(allowedWorkspaces)), 'utf8');
+    } catch (err) {
+        console.error('Failed to save allowed workspaces:', err);
+    }
+}
+
+function isSafePath(targetPath) {
+    if (!targetPath) return false;
+    const resolvedPath = path.resolve(targetPath);
+    for (const ws of allowedWorkspaces) {
+        const resolvedWs = path.resolve(ws);
+        if (resolvedPath === resolvedWs || resolvedPath.startsWith(resolvedWs + path.sep)) {
+            return true;
+        }
+    }
+    return false;
+}
+
 app.whenReady().then(() => {
+    loadAllowedWorkspaces();
     createWindow();
 
     // Check for updates seamlessly
@@ -89,11 +128,15 @@ ipcMain.handle('dialog:openDirectory', async () => {
         properties: ['openDirectory']
     });
     if (canceled || filePaths.length === 0) return null;
-    return filePaths[0];
+    const selectedDir = filePaths[0];
+    allowedWorkspaces.add(selectedDir);
+    saveAllowedWorkspaces();
+    return selectedDir;
 });
 
 // 2. Read all files in a directory (recursive) looking for .md files
 ipcMain.handle('fs:readDirectory', async (_, dirPath) => {
+    if (!isSafePath(dirPath)) return null;
     const items = [];
 
     async function scan(currentPath, parentId = null) {
@@ -147,6 +190,7 @@ ipcMain.handle('fs:readDirectory', async (_, dirPath) => {
 
 // 3. Read a specific file's content
 ipcMain.handle('fs:readFile', async (_, filePath) => {
+    if (!isSafePath(filePath)) return null;
     try {
         return await fsPromises.readFile(filePath, 'utf8');
     } catch (err) {
@@ -157,6 +201,7 @@ ipcMain.handle('fs:readFile', async (_, filePath) => {
 
 // 4. Save file to disk
 ipcMain.handle('fs:writeFile', async (_, filePath, content) => {
+    if (!isSafePath(filePath)) return false;
     try {
         await fsPromises.writeFile(filePath, content, 'utf8');
         return true;
@@ -168,6 +213,7 @@ ipcMain.handle('fs:writeFile', async (_, filePath, content) => {
 
 // 5. Create new folder
 ipcMain.handle('fs:mkdir', async (_, dirPath) => {
+    if (!isSafePath(dirPath)) return false;
     try {
         await fsPromises.mkdir(dirPath, { recursive: true });
         return true;
@@ -179,6 +225,7 @@ ipcMain.handle('fs:mkdir', async (_, dirPath) => {
 
 // 6. Delete file or folder
 ipcMain.handle('fs:delete', async (_, itemPath) => {
+    if (!isSafePath(itemPath)) return false;
     try {
         if (!fs.existsSync(itemPath)) return true; // Already gone? Success.
         const stat = await fsPromises.stat(itemPath);
@@ -196,6 +243,7 @@ ipcMain.handle('fs:delete', async (_, itemPath) => {
 
 // 7. Rename file or folder
 ipcMain.handle('fs:rename', async (_, oldPath, newPath) => {
+    if (!isSafePath(oldPath) || !isSafePath(newPath)) return false;
     try {
         await fsPromises.rename(oldPath, newPath);
         return true;
