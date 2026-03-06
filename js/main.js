@@ -5,7 +5,7 @@ import { state } from './state.js';
 import { generateId, debounce } from './utils.js';
 import { persist, autoSave, triggerManualSave } from './persistence.js';
 import { renderSidebar, loadActiveItem, updatePreview } from './render.js';
-import { getActiveItem, getActiveNote, createNote, createFolder, moveItem, getUniqueTitle, renameItem } from './files.js';
+import { getActiveItem, getActiveNote, createNote, createFolder, moveItem, renameItem } from './files.js';
 import { openImageModal } from './images.js';
 import { applyTheme } from './theme.js';
 import { applyTranslations, t } from './i18n.js';
