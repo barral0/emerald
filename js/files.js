@@ -190,7 +190,7 @@ export async function renameItem(itemId, newTitle) {
     renderSidebar();
 }
 
-function isDescendantOf(potentialChildId, ancestorId) {
+export function isDescendantOf(potentialChildId, ancestorId) {
     if (!potentialChildId) return false;
     if (potentialChildId === ancestorId) return true;
     const parent = getItem(potentialChildId);
