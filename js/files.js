@@ -19,16 +19,30 @@ export const getActiveNote = () => {
 };
 
 export function getUniqueTitle(baseTitle, parentId, isFile = true, excludeId = null) {
+    // Bolt ⚡: Pre-compute existing titles in a Set for O(1) collision checking.
+    // This reduces the time complexity of resolving many collisions from O(N*M) to O(N+M).
+    const existingTitles = new Set();
+    for (let i = 0, len = state.items.length; i < len; i++) {
+        const item = state.items[i];
+        if (item.parentId === parentId && item.id !== excludeId) {
+            existingTitles.add(item.title);
+        }
+    }
+
     let title = baseTitle;
+    if (!existingTitles.has(title)) return title;
+
     let counter = 1;
     const extension = isFile ? '.md' : '';
     const nameOnly = isFile && title.toLowerCase().endsWith('.md') ? title.slice(0, -3) : title;
 
-    while (state.items.some(i => i.parentId === parentId && i.title === title && i.id !== excludeId)) {
+    while (true) {
         title = `${nameOnly} ${counter}${extension}`;
+        if (!existingTitles.has(title)) {
+            return title;
+        }
         counter++;
     }
-    return title;
 }
 
 // ── Create ───────────────────────────────────────────────────

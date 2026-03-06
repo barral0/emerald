@@ -1,0 +1,3 @@
+## 2024-03-02 - [O(N^2) Naming Collisions in File System]
+**Learning:** The `getUniqueTitle` function in `js/files.js` was previously searching the entire file tree `state.items` linearly to find naming collisions inside of a `while` loop that incremented a counter. This meant creating 5000 similarly named files ("Untitled.md", "Untitled 1.md", ..., "Untitled 4999.md") would result in O(N*M) time complexity and block the main thread for several seconds.
+**Action:** Always look for O(N) linear scans inside of loops that increment or retry operations. Pre-computing existing values into a `Set` brings the complexity down to O(N + M) and provides O(1) collision checking.
