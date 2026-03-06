@@ -68,7 +68,7 @@ function showFolderPlaceholder(item) {
         <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" style="opacity:0.25;">
             <path d="M4 20h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.93a2 2 0 0 1-1.66-.9l-.82-1.2A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13c0 1.1.9 2 2 2Z"></path>
         </svg>
-        <p style="opacity:0.35; font-size:0.85rem; margin-top:12px;">${item.title}</p>`;
+        <p style="opacity:0.35; font-size:0.85rem; margin-top:12px;">${escapeHtml(item.title)}</p>`;
 }
 
 function hideFolderPlaceholder() {
@@ -118,7 +118,7 @@ export async function loadActiveItem() {
     } else if (item.type === 'image') {
         const imgSrc = item.fsPath ? `file://${item.fsPath.replace(/\\/g, '/')}` : '';
         editor.style.display = 'none';
-        preview.innerHTML = `<div style="display:flex;align-items:center;justify-content:center;height:100%;"><img src="${imgSrc}" style="max-width:100%;max-height:100%;object-fit:contain;border-radius:8px;"></div>`;
+        preview.innerHTML = `<div style="display:flex;align-items:center;justify-content:center;height:100%;"><img src="${escapeHtml(imgSrc)}" style="max-width:100%;max-height:100%;object-fit:contain;border-radius:8px;"></div>`;
     }
 
     if (!window.electronAPI) persist();
