@@ -1,0 +1,3 @@
+## 2024-05-24 - [Optimizing getUniqueTitle with Set]
+**Learning:** The existing implementation of `getUniqueTitle` in `js/files.js` had an O(N^2) complexity because it checked `state.items.some` within a `while` loop that iterates until a unique title is found. For large directories or deeply nested trees, this could cause a noticeable slowdown when creating new notes or renaming them.
+**Action:** Replaced the `state.items.some` lookup with a `Set` that holds all existing titles for the given `parentId`. The Set is populated in O(N) time and queried in O(1) time within the `while` loop, reducing the overall complexity to O(N).

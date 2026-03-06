@@ -19,12 +19,22 @@ export const getActiveNote = () => {
 };
 
 export function getUniqueTitle(baseTitle, parentId, isFile = true, excludeId = null) {
+    const extension = isFile ? '.md' : '';
+    const nameOnly = isFile && baseTitle.toLowerCase().endsWith('.md') ? baseTitle.slice(0, -3) : baseTitle;
+
+    // Bolt: O(N) to build the Set of existing titles for the parent
+    const existingTitles = new Set();
+    for (const item of state.items) {
+        if (item.parentId === parentId && item.id !== excludeId) {
+            existingTitles.add(item.title);
+        }
+    }
+
     let title = baseTitle;
     let counter = 1;
-    const extension = isFile ? '.md' : '';
-    const nameOnly = isFile && title.toLowerCase().endsWith('.md') ? title.slice(0, -3) : title;
 
-    while (state.items.some(i => i.parentId === parentId && i.title === title && i.id !== excludeId)) {
+    // Bolt: O(1) lookup inside the while loop
+    while (existingTitles.has(title)) {
         title = `${nameOnly} ${counter}${extension}`;
         counter++;
     }
