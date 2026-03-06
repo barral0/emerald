@@ -24,7 +24,16 @@ export function getUniqueTitle(baseTitle, parentId, isFile = true, excludeId = n
     const extension = isFile ? '.md' : '';
     const nameOnly = isFile && title.toLowerCase().endsWith('.md') ? title.slice(0, -3) : title;
 
-    while (state.items.some(i => i.parentId === parentId && i.title === title && i.id !== excludeId)) {
+    // Collect existing titles for O(1) lookup to prevent O(N*M) worst-case performance
+    const existingTitles = new Set();
+    for (let i = 0; i < state.items.length; i++) {
+        const item = state.items[i];
+        if (item.parentId === parentId && item.id !== excludeId) {
+            existingTitles.add(item.title);
+        }
+    }
+
+    while (existingTitles.has(title)) {
         title = `${nameOnly} ${counter}${extension}`;
         counter++;
     }
