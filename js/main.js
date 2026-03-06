@@ -2,7 +2,7 @@
    main.js — Entry point: wires all modules together and boots
    ============================================================= */
 import { state } from './state.js';
-import { generateId } from './utils.js';
+import { generateId, debounce } from './utils.js';
 import { persist, autoSave, triggerManualSave } from './persistence.js';
 import { renderSidebar, loadActiveItem, updatePreview } from './render.js';
 import { getActiveItem, getActiveNote, createNote, createFolder, moveItem, getUniqueTitle, renameItem } from './files.js';
@@ -79,14 +79,24 @@ noteTitleInput.addEventListener('change', async () => {
 });
 
 // ── Editor input — live preview & autosave ───────────────────
+// ⚡ Bolt Performance Optimization:
+// What: Debounced heavy rendering and saving operations.
+// Why: Previously, `updatePreview` (markdown parsing/sanitization), `autoSave` (I/O),
+//      and `renderSidebar` (DOM rebuilding) fired synchronously on every keystroke.
+// Impact: Significantly reduces main thread blocking during fast typing.
+//         Prevents jank and excessive file writes by batching updates every 300ms.
+const debouncedEditorUpdate = debounce(() => {
+    updatePreview();
+    autoSave();
+    renderSidebar();
+}, 300);
+
 editor.addEventListener('input', () => {
     const note = getActiveNote();
     if (!note) return;
     note.content = editor.value;
     note.lastModified = Date.now();
-    updatePreview();
-    autoSave();
-    renderSidebar();
+    debouncedEditorUpdate();
 });
 
 // ── File import (.md) ─────────────────────────────────────────
