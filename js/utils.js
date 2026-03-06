@@ -17,3 +17,15 @@ export const sortItems = arr =>
         if (a.type !== b.type) return a.type === 'folder' ? -1 : 1;
         return b.lastModified - a.lastModified;
     });
+
+export const debounce = (func, wait) => {
+    let timeout;
+    return function executedFunction(...args) {
+        const later = () => {
+            clearTimeout(timeout);
+            func(...args);
+        };
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+    };
+};

@@ -1,0 +1,3 @@
+## 2024-03-10 - [Debounced Heavy Renderer Operations]
+**Learning:** In standard Vanilla JS + HTML architectures without a virtual DOM, rebuilding an entire sidebar tree (`renderSidebar()`) synchronously on every keystroke causes significant main-thread blocking. Coupling this with file system writes (`autoSave()`) and markdown parsing (`updatePreview()`) within the same `input` event listener creates a massive performance bottleneck during typing.
+**Action:** Always decouple immediate visual feedback (like the raw text in the `textarea`) from expensive background tasks (I/O, tree rendering). Use a simple `debounce` utility to batch these heavy operations.
