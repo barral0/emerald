@@ -1,0 +1,3 @@
+## 2024-05-24 - [Main Thread Blocking from DOM/IO Thrashing]
+**Learning:** High-frequency events like text input (`editor.addEventListener('input')`) should avoid triggering expensive operations such as file I/O writes (`autoSave()`) and full DOM tree rebuilds (`renderSidebar()`) synchronously. Doing so blocks the main thread and introduces significant input latency, specifically when typing quickly or handling larger files in this Electron architecture.
+**Action:** Always decouple critical fast-path operations (like `updatePreview()`) from heavy operations (like `autoSave()` and `renderSidebar()`) using debouncing (e.g., a 500ms `setTimeout`) to ensure UI responsiveness.
