@@ -3,7 +3,7 @@
    ============================================================= */
 import { state } from './state.js';
 import { generateId } from './utils.js';
-import { persist, autoSave } from './persistence.js';
+import { autoSave } from './persistence.js';
 import { renderSidebar, loadActiveItem } from './render.js';
 import { confirmDelete } from './dialogs.js';
 import { t } from './i18n.js';
