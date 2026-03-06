@@ -47,7 +47,7 @@ export function closeImageModal() {
 }
 
 // ── Commit insert ─────────────────────────────────────────────
-export async function commitImageInsert() {
+async function commitImageInsert() {
     if (!_pendingImageFile) return;
     const maxEdge = parseInt(modalImgQuality.value, 10);
     const alt = modalImgAlt.value.trim() || 'image';
