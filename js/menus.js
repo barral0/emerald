@@ -2,7 +2,7 @@
    menus.js — File context menu, editor context menu, app menu
    ============================================================= */
 import { state } from './state.js';
-import { insertAtCursor, openImageModal, closeImageModal } from './images.js';
+import { insertAtCursor, closeImageModal } from './images.js';
 import { deleteCurrentItem, downloadNote, getActiveItem } from './files.js';
 import { loadActiveItem, renderSidebar } from './render.js';
 import { openThemeModal, closeThemeModal, theme } from './theme.js';
