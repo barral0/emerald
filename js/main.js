@@ -2,10 +2,10 @@
    main.js — Entry point: wires all modules together and boots
    ============================================================= */
 import { state } from './state.js';
-import { generateId } from './utils.js';
+import { generateId, debounce } from './utils.js';
 import { persist, autoSave, triggerManualSave } from './persistence.js';
 import { renderSidebar, loadActiveItem, updatePreview } from './render.js';
-import { getActiveItem, getActiveNote, createNote, createFolder, moveItem, getUniqueTitle, renameItem } from './files.js';
+import { getActiveItem, getActiveNote, createNote, createFolder, moveItem, renameItem } from './files.js';
 import { openImageModal } from './images.js';
 import { applyTheme } from './theme.js';
 import { applyTranslations, t } from './i18n.js';
@@ -79,14 +79,18 @@ noteTitleInput.addEventListener('change', async () => {
 });
 
 // ── Editor input — live preview & autosave ───────────────────
+const debouncedSideEffects = debounce(() => {
+    autoSave();
+    renderSidebar();
+}, 300);
+
 editor.addEventListener('input', () => {
     const note = getActiveNote();
     if (!note) return;
     note.content = editor.value;
     note.lastModified = Date.now();
-    updatePreview();
-    autoSave();
-    renderSidebar();
+    updatePreview(); // Fast: Keep synchronous for instant live preview
+    debouncedSideEffects(); // Heavy: Debounce I/O write and DOM rebuilds
 });
 
 // ── File import (.md) ─────────────────────────────────────────
