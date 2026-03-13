@@ -181,8 +181,7 @@ export async function renameItem(itemId, newTitle) {
             const newFsPath = await window.electronAPI.joinPath(parentDir, title);
             await window.electronAPI.renameItem(item.fsPath, newFsPath);
             item.fsPath = newFsPath;
-        } catch (err) {
-            console.error('Failed to rename local object:', err);
+        } catch {
         }
     }
 
