@@ -1,3 +1,3 @@
-## 2024-03-03 - [Renderer Process Debouncing]
-**Learning:** Heavy operations like I/O write calls (autoSave) and full DOM rebuilds (renderSidebar) were tightly coupled to the editor's `input` event, firing synchronously on every keystroke. This causes severe main-thread blocking during rapid typing.
-**Action:** Always decouple instant UI feedback (like markdown `updatePreview`) from heavy state persistence and tree rendering by using a `debounce` utility when handling high-frequency events like text input.
+## 2024-05-24 - Optimize renderSidebar
+**Learning:** O(N^2) complexity in recursive tree rendering can easily become a bottleneck for large datasets (e.g. 10k items).
+**Action:** Always pre-compute a children map (O(N)) to allow O(1) lookups during tree traversal, reducing overall rendering complexity to O(N).
