@@ -9,6 +9,9 @@ let _statusTimer = null;
 export function persist() {
     localStorage.setItem('app-items', JSON.stringify(state.items));
     localStorage.setItem('app-current-item', state.currentItemId);
+    localStorage.setItem('app-open-tabs', JSON.stringify(state.openTabs));
+    if (state.activeTabId) localStorage.setItem('app-active-tab', state.activeTabId);
+    else localStorage.removeItem('app-active-tab');
     localStorage.setItem('app-images', JSON.stringify(state.imageStore));
 }
 

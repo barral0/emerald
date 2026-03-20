@@ -61,6 +61,8 @@ export const state = {
     set items(v) { _items = v; },
 
     currentItemId: localStorage.getItem('app-current-item') || _items.find(i => i.type === 'file')?.id,
+    openTabs: JSON.parse(localStorage.getItem('app-open-tabs')) || [],   // [{id, title}]
+    activeTabId: localStorage.getItem('app-active-tab') || null,
     contextTargetId: null,
     imageStore: JSON.parse(localStorage.getItem('app-images')) || {},
     selectedIds: new Set(),   // multi-selection

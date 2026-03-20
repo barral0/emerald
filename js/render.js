@@ -130,6 +130,117 @@ export async function loadActiveItem() {
 }
 
 
+// ── Tabs engine ───────────────────────────────────────────────
+const tabsContainer = document.getElementById('tabs-container');
+
+function stripMd(title) {
+    return title && title.toLowerCase().endsWith('.md') ? title.slice(0, -3) : title;
+}
+
+export function openTab(itemId) {
+    const item = state.items.find(i => i.id === itemId);
+    if (!item || item.type === 'folder') return;
+
+    // Add to openTabs if not present
+    if (!state.openTabs.find(t => t.id === itemId)) {
+        state.openTabs.push({ id: itemId, title: item.title });
+    }
+
+    // Switch active
+    state.activeTabId = itemId;
+    state.currentItemId = itemId;
+    loadActiveItem();
+    renderTabs();
+    renderSidebar();
+    persist();
+}
+
+export function closeTab(itemId) {
+    const idx = state.openTabs.findIndex(t => t.id === itemId);
+    if (idx === -1) return;
+
+    state.openTabs.splice(idx, 1);
+
+    // If we closed the active tab, switch to adjacent one
+    if (state.activeTabId === itemId) {
+        if (state.openTabs.length > 0) {
+            const nextIdx = Math.min(idx, state.openTabs.length - 1);
+            const nextTab = state.openTabs[nextIdx];
+            state.activeTabId = nextTab.id;
+            state.currentItemId = nextTab.id;
+            loadActiveItem();
+        } else {
+            state.activeTabId = null;
+            // Keep currentItemId as-is so editor keeps showing something
+        }
+    }
+
+    renderTabs();
+    renderSidebar();
+    persist();
+}
+
+export function renderTabs() {
+    tabsContainer.innerHTML = '';
+
+    // Clean up stale tabs (items that no longer exist)
+    state.openTabs = state.openTabs.filter(t => state.items.some(i => i.id === t.id));
+
+    for (const tab of state.openTabs) {
+        const item = state.items.find(i => i.id === tab.id);
+        // Keep title synced
+        if (item) tab.title = item.title;
+
+        const el = document.createElement('div');
+        el.className = 'tab-item' + (state.activeTabId === tab.id ? ' active' : '');
+        el.dataset.tabId = tab.id;
+
+        el.innerHTML = `
+            <span class="tab-title">${escapeHtml(stripMd(tab.title))}</span>
+            <span class="tab-close" data-tab-close="${tab.id}">
+                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                    stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+            </span>`;
+
+        // Click tab to switch
+        el.addEventListener('click', (e) => {
+            if (e.target.closest('.tab-close')) return;
+            openTab(tab.id);
+        });
+
+        // Middle-click to close
+        el.addEventListener('mousedown', (e) => {
+            if (e.button === 1) { e.preventDefault(); closeTab(tab.id); }
+        });
+
+        // Close button
+        el.querySelector('.tab-close').addEventListener('click', (e) => {
+            e.stopPropagation();
+            closeTab(tab.id);
+        });
+
+        tabsContainer.appendChild(el);
+    }
+}
+
+// On boot: ensure the current item is visible as a tab
+function syncTabOnLoad() {
+    if (state.currentItemId) {
+        const item = state.items.find(i => i.id === state.currentItemId);
+        if (item && item.type !== 'folder') {
+            if (!state.openTabs.find(t => t.id === state.currentItemId)) {
+                state.openTabs.push({ id: state.currentItemId, title: item.title });
+            }
+            state.activeTabId = state.currentItemId;
+        }
+    }
+    renderTabs();
+}
+syncTabOnLoad();
+
 // ── Multi-select helpers ──────────────────────────────────────
 let _lastClickedId = null;   // for Shift+Click range
 
@@ -497,10 +608,8 @@ function buildFileEl(item) {
         e.stopPropagation();
         handleItemClick(e, item.id);
         if (!e.ctrlKey && !e.metaKey && !e.shiftKey) {
-            state.currentItemId = item.id;
-            loadActiveItem();
+            openTab(item.id);
         }
-        renderSidebar();
     });
 
     div.addEventListener('contextmenu', e => showContextMenu(e, item.id));
