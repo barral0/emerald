@@ -619,19 +619,46 @@ body.bg-sunset {
     transition: none !important;
 }
 
-/* Fallback for background when blur is off */
+/* Solid opaque backgrounds when blur is off (dark) */
 .lite .sidebar,
-.lite .pane,
-.lite .app-header,
-.lite .modal,
-.lite .app-menu {
-    background: var(--bg-pane) !important;
-    opacity: 1 !important;
+.lite .editor-pane,
+.lite .preview-pane,
+.lite .app-header {
+    background: hsl(230, 15%, 14%) !important;
 }
 
-/* Ensure the body gradient is static in lite mode */
-.lite body {
+.lite .modal,
+.lite .app-menu,
+.lite #context-menu,
+.lite #editor-context-menu {
+    background: hsl(230, 15%, 16%) !important;
+}
+
+/* Solid opaque backgrounds when blur is off (light) */
+[data-theme="light"] .lite .sidebar,
+[data-theme="light"] .lite .editor-pane,
+[data-theme="light"] .lite .preview-pane,
+[data-theme="light"] .lite .app-header {
+    background: hsl(220, 20%, 96%) !important;
+}
+
+[data-theme="light"] .lite .modal,
+[data-theme="light"] .lite .app-menu,
+[data-theme="light"] .lite #context-menu,
+[data-theme="light"] .lite #editor-context-menu {
+    background: hsl(220, 20%, 98%) !important;
+}
+
+/* Ensure the body itself is solid in lite mode */
+.lite body,
+body.lite {
+    background: hsl(230, 20%, 8%) !important;
     background-size: 100% 100% !important;
+}
+
+[data-theme="light"] .lite body,
+[data-theme="light"] body.lite {
+    background: hsl(220, 20%, 94%) !important;
 }
 
 body.bg-custom {
