@@ -79,18 +79,19 @@ noteTitleInput.addEventListener('change', async () => {
 });
 
 // ── Editor input — live preview & autosave ───────────────────
-const debouncedSideEffects = debounce(() => {
-    autoSave();
-    renderSidebar();
-}, 300);
+// Debounce heavy operations (I/O and DOM rebuilds) on rapid text input
+const debouncedAutoSave = debounce(autoSave, 300);
+const debouncedRenderSidebar = debounce(renderSidebar, 300);
 
 editor.addEventListener('input', () => {
     const note = getActiveNote();
     if (!note) return;
     note.content = editor.value;
     note.lastModified = Date.now();
-    updatePreview(); // Fast: Keep synchronous for instant live preview
-    debouncedSideEffects(); // Heavy: Debounce I/O write and DOM rebuilds
+    // Keep preview synchronous for instant visual feedback
+    updatePreview();
+    debouncedAutoSave();
+    debouncedRenderSidebar();
 });
 
 // ── File import (.md) ─────────────────────────────────────────
