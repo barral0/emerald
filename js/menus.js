@@ -2,11 +2,11 @@
    menus.js — File context menu, editor context menu, app menu
    ============================================================= */
 import { state } from './state.js';
-import { insertAtCursor, openImageModal, closeImageModal } from './images.js';
-import { deleteCurrentItem, downloadNote, getActiveItem } from './files.js';
-import { loadActiveItem, renderSidebar } from './render.js';
-import { openThemeModal, closeThemeModal, theme } from './theme.js';
-import { openHelp, closeHelp } from './shortcuts.js';
+import { insertAtCursor } from './images.js';
+import { deleteCurrentItem } from './files.js';
+import { renderSidebar } from './render.js';
+import { openThemeModal, theme } from './theme.js';
+import { openHelp } from './shortcuts.js';
 import { t } from './i18n.js';
 
 const noteTitleInput = document.getElementById('note-title');
