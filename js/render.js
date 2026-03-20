@@ -55,7 +55,7 @@ const previewPane = document.querySelector('.preview-pane');
 function showFolderPlaceholder(item) {
     editor.style.display = 'none';
     preview.style.display = 'none';
-    // Show a subtle folder placeholder in the preview pane
+    // Show folder info + children list in the preview pane
     let ph = document.getElementById('folder-placeholder');
     if (!ph) {
         ph = document.createElement('div');
@@ -64,11 +64,57 @@ function showFolderPlaceholder(item) {
         previewPane?.appendChild(ph);
     }
     ph.style.display = 'flex';
+
+    const children = state.items.filter(i => i.parentId === item.id);
+    const files = children.filter(i => i.type === 'file' || i.type === 'image');
+    const folders = children.filter(i => i.type === 'folder');
+
+    let childrenHtml = '';
+    if (files.length === 0 && folders.length === 0) {
+        childrenHtml = `<p style="opacity:0.35; font-size:0.8rem; font-style:italic; margin-top:8px;">Empty folder</p>`;
+    } else {
+        const listItems = [];
+        for (const f of folders) {
+            listItems.push(`
+                <div class="folder-ph-item" style="display:flex;align-items:center;gap:8px;padding:6px 12px;border-radius:6px;cursor:default;opacity:0.5;">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;">
+                        <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
+                    </svg>
+                    <span style="font-size:0.82rem;">${escapeHtml(f.title)}</span>
+                </div>`);
+        }
+        for (const f of files) {
+            const title = f.title.toLowerCase().endsWith('.md') ? f.title.slice(0, -3) : f.title;
+            const date = formatDate(f.lastModified);
+            listItems.push(`
+                <div class="folder-ph-item" data-file-id="${f.id}" style="display:flex;align-items:center;gap:8px;padding:6px 12px;border-radius:6px;cursor:pointer;transition:background 0.15s ease;">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;opacity:0.6;">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                        <polyline points="14 2 14 8 20 8"></polyline>
+                        <line x1="16" y1="13" x2="8" y2="13"></line>
+                        <line x1="16" y1="17" x2="8" y2="17"></line>
+                    </svg>
+                    <span style="font-size:0.82rem;flex:1;">${escapeHtml(title)}</span>
+                    <span style="font-size:0.7rem;opacity:0.45;">${date}</span>
+                </div>`);
+        }
+        childrenHtml = `<div style="width:100%;max-width:360px;margin-top:16px;display:flex;flex-direction:column;gap:2px;">${listItems.join('')}</div>`;
+    }
+
     ph.innerHTML = `
-        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" style="opacity:0.25;">
+        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" style="opacity:0.25;">
             <path d="M4 20h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.93a2 2 0 0 1-1.66-.9l-.82-1.2A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13c0 1.1.9 2 2 2Z"></path>
         </svg>
-        <p style="opacity:0.35; font-size:0.85rem; margin-top:12px;">${item.title}</p>`;
+        <p style="opacity:0.5; font-size:0.9rem; margin-top:8px; font-weight:600;">${escapeHtml(item.title)}</p>
+        <p style="opacity:0.3; font-size:0.72rem; margin-top:2px;">${files.length} note${files.length !== 1 ? 's' : ''}${folders.length > 0 ? `, ${folders.length} folder${folders.length !== 1 ? 's' : ''}` : ''}</p>
+        ${childrenHtml}`;
+
+    // Wire up click handlers on file items
+    ph.querySelectorAll('[data-file-id]').forEach(el => {
+        el.addEventListener('click', () => openTab(el.dataset.fileId));
+        el.addEventListener('mouseenter', () => el.style.background = 'var(--bg-pane-hover)');
+        el.addEventListener('mouseleave', () => el.style.background = 'transparent');
+    });
 }
 
 function hideFolderPlaceholder() {
