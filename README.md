@@ -4,12 +4,11 @@
 
 ---
 
-## 🚀 What's New in v1.0.5
-* **Tag System (#hashtags):** Write `#tag` anywhere in your notes and they auto-appear as clickable pills in the sidebar. Click a tag to instantly filter the file tree to matching notes only.
-* **Multi-Tab Editor:** Open multiple files at once in a familiar tab bar. Tabs persist across sessions, support middle-click close, and disappear when you only have one file open.
-* **Folder Contents Preview:** Clicking a folder now shows its contents in the editor pane with clickable file entries, instead of a blank placeholder.
-* **Hidden .md Extension:** The `.md` file extension is now hidden throughout the UI for a cleaner look.
-* **App Icon Branding:** Official Emerald icon replaces the diamond emoji on the Home screen and About modal.
+## 🚀 What's New in v1.0.6
+* **Robust File Management:** Fixed a critical bug where files would become hidden when dragged from a subfolder directly into the root workspace in Electron mode.
+* **Tag System (#hashtags):** Fully native hashtag support with a clickable sidebar cloud and tree filtering.
+* **Multi-Tab Editor:** Seamlessly switch between multiple open notes with persistent tab support.
+* **Refined Assets:** Official Emerald icon integrated throughout the application.
 
 ---
 

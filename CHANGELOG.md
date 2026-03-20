@@ -4,6 +4,12 @@ All notable changes to Emerald are documented here.
 
 ## [Unreleased]
 
+## [1.0.6] — 2026-03-20
+
+### Fixed
+- **Root Drag-and-Drop:** Resolved a critical issue where notes would become hidden when dragged from a subfolder directly into the root workspace in Electron mode.
+- Improved sidebar performance when rendering large tag clouds.
+
 ## [1.0.5] — 2026-03-20
 
 ### Added

@@ -1,6 +1,6 @@
 {
   "name": "emerald",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "> A lightweight, self-hosted markdown editor with live preview, folder organisation, image support, and full theme customisation. No accounts. No cloud. Your notes stay on your device.",
   "main": "main.js",
   "scripts": {
