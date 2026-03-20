@@ -186,6 +186,13 @@ export function renderTabs() {
     // Clean up stale tabs (items that no longer exist)
     state.openTabs = state.openTabs.filter(t => state.items.some(i => i.id === t.id));
 
+    // Hide tabs bar when only one tab is open
+    if (state.openTabs.length <= 1) {
+        tabsContainer.style.display = 'none';
+        return;
+    }
+    tabsContainer.style.display = 'flex';
+
     for (const tab of state.openTabs) {
         const item = state.items.find(i => i.id === tab.id);
         // Keep title synced
