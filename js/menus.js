@@ -99,10 +99,10 @@ export function showContextMenu(e, itemId) {
     const mw = contextMenu.offsetWidth;
     const mh = contextMenu.offsetHeight;
     let x = e.clientX, y = e.clientY;
-    if (x + mw > window.innerWidth) x -= mw;
-    if (y + mh > window.innerHeight) y -= mh;
-    contextMenu.style.left = x + 'px';
-    contextMenu.style.top = y + 'px';
+    if (x + mw > window.innerWidth) x = window.innerWidth - mw;
+    if (y + mh > window.innerHeight) y = window.innerHeight - mh;
+    contextMenu.style.left = Math.max(0, x) + 'px';
+    contextMenu.style.top = Math.max(0, y) + 'px';
 }
 
 export function hideContextMenu() {
@@ -134,10 +134,10 @@ export function showEditorContextMenu(e) {
     const mw = editorContextMenu.offsetWidth;
     const mh = editorContextMenu.offsetHeight;
     let x = e.clientX, y = e.clientY;
-    if (x + mw > window.innerWidth) x -= mw;
-    if (y + mh > window.innerHeight) y -= mh;
-    editorContextMenu.style.left = x + 'px';
-    editorContextMenu.style.top = y + 'px';
+    if (x + mw > window.innerWidth) x = window.innerWidth - mw;
+    if (y + mh > window.innerHeight) y = window.innerHeight - mh;
+    editorContextMenu.style.left = Math.max(0, x) + 'px';
+    editorContextMenu.style.top = Math.max(0, y) + 'px';
 }
 
 export function hideEditorContextMenu() {
