@@ -29,7 +29,19 @@ const homeCreateBtn = document.getElementById('home-create-btn');
 const homeCloseAppBtn = document.getElementById('home-close-app-btn');
 
 // ── Marked.js ────────────────────────────────────────────────
-marked.use({ breaks: true, gfm: true });
+marked.use({
+    breaks: true,
+    gfm: true,
+    renderer: {
+        html(token) {
+            // Escape raw HTML so it displays as text
+            return token.text
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;');
+        }
+    }
+});
 
 // ── Sidebar Toggle ────────────────────────────────────────────
 function setSidebarCollapsed(collapsed) {
