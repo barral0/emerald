@@ -4,13 +4,20 @@ All notable changes to Emerald are documented here.
 
 ## [Unreleased]
 
-## [1.0.3] — 2026-03-20
+## [1.0.4] — 2026-03-20
 
 ### Added
 - **Global AI Kill-Switch:** Added setting to entirely disable AI integration, hiding related menus and UI clutter.
 - **Interface Scale:** Native application zoom control (70% - 150%) available under Settings ✨.
+- Extra translations mapped to the new configuration states.
+
+### Fixed
+- Proper initialization of states to immediately hide/show UI components when the AI master-switch is toggled.
+
+## [1.0.3] — 2026-03-20
+
+### Added
 - **Create Workspace Modal:** Custom native Emerald application modal for inserting new target workspaces, deprecating basic browser `prompt()` behavior.
-- Translation expansions covering UI scale, workspace creation menus and AI features mapping on all languages.
 
 ### Changed
 - Centralized the language dropdown to **Settings → General**, stripping it away from the Header and Home layout.
@@ -18,7 +25,7 @@ All notable changes to Emerald are documented here.
 - Electron Builder `artifactName` properly injecting consistent `.exe` formatting bypassing 404 URL issues during GitHub auto-updates.
 
 ### Fixed
-- **Context Menus Clipping:** Dynamic menus boundary logic recalculation prevents elements from rendering off-screen.
+- **Context Menus Clipping:** Dynamic menus boundary logic recalculation prevents elements from rendering off-screen (further perfected in 1.0.4 testing).
 - **HTML Injection rendering:** Raw HTML inside editor fields is properly serialized resolving unclosed tags formatting destruction on preview wrappers.
 - **Lite Mode readability:** Transparent/glassmorphism overrides replaced strictly with flat solid colors correcting interface bleed-through visibility in Lite Mode.
 - Infinite overlapping `Untitled.md` naming conflict when generating files on base directories.
