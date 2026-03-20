@@ -1,0 +1,4 @@
+## 2024-05-18 - XSS Vulnerability in Recent Workspaces
+**Vulnerability:** Cross-Site Scripting (XSS) vulnerability was present when populating "Recent Workspaces" in `js/main.js`. The `name` and `path` of recent workspaces were retrieved from `localStorage` and added directly to the DOM using `innerHTML` without prior sanitization in the `updateRecentUI` function.
+**Learning:** This repo builds the frontend primarily using vanilla JS manipulating the DOM. Care must be taken to ensure any dynamically added properties from user input or storage into DOM using `innerHTML` are correctly sanitized. This vulnerability specifically showed up in how workspaces are rendered from `localStorage`.
+**Prevention:** Always import and use `escapeHtml` from `js/utils.js` when constructing HTML strings manually via string concatenation prior to inserting them into `innerHTML`.
