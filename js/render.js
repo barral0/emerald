@@ -265,34 +265,149 @@ async function deleteSelected() {
     autoSave();
 }
 
+// ── Tags engine ───────────────────────────────────────────────
+const TAG_REGEX = /(?:^|\s)#([a-zA-Z0-9_\u00C0-\u024F\-]+)/g;
+
+function extractTags(content) {
+    const tags = new Set();
+    if (!content) return tags;
+    let m;
+    TAG_REGEX.lastIndex = 0;
+    while ((m = TAG_REGEX.exec(content)) !== null) {
+        // Ignore common markdown heading patterns like `# Title`
+        // Those won't match since the regex requires the tag to start after whitespace or start-of-string
+        tags.add(m[1].toLowerCase());
+    }
+    return tags;
+}
+
+function buildTagsIndex() {
+    const index = {};
+    for (const item of state.items) {
+        if (item.type !== 'file') continue;
+        const tags = extractTags(item.content);
+        for (const tag of tags) {
+            if (!index[tag]) index[tag] = [];
+            index[tag].push(item.id);
+        }
+    }
+    state.tagsIndex = index;
+}
+
+const sidebarTagsEl = document.getElementById('sidebar-tags');
+const sidebarTagsListEl = document.getElementById('sidebar-tags-list');
+const tagFilterBadge = document.getElementById('tag-filter-badge');
+const tagFilterLabel = document.getElementById('tag-filter-label');
+const tagFilterClear = document.getElementById('tag-filter-clear');
+
+tagFilterClear?.addEventListener('click', () => {
+    state.activeTagFilter = null;
+    renderSidebar();
+});
+
+function renderTagsCloud() {
+    const tags = Object.keys(state.tagsIndex).sort();
+
+    if (tags.length === 0) {
+        sidebarTagsEl.style.display = 'none';
+        return;
+    }
+
+    sidebarTagsEl.style.display = 'block';
+    sidebarTagsListEl.innerHTML = '';
+
+    for (const tag of tags) {
+        const count = state.tagsIndex[tag].length;
+        const pill = document.createElement('span');
+        pill.className = 'tag-pill' + (state.activeTagFilter === tag ? ' active' : '');
+        pill.innerHTML = `#${tag} <span class="tag-count">${count}</span>`;
+        pill.addEventListener('click', () => {
+            if (state.activeTagFilter === tag) {
+                state.activeTagFilter = null;
+            } else {
+                state.activeTagFilter = tag;
+            }
+            renderSidebar();
+        });
+        sidebarTagsListEl.appendChild(pill);
+    }
+
+    // Update filter badge
+    if (state.activeTagFilter) {
+        tagFilterBadge.style.display = 'flex';
+        tagFilterLabel.textContent = `#${state.activeTagFilter}`;
+    } else {
+        tagFilterBadge.style.display = 'none';
+    }
+}
+
+// Collect all descendant file IDs from a folder
+function getDescendantFileIds(folderId) {
+    const ids = new Set();
+    for (const item of state.items) {
+        if (item.parentId === folderId) {
+            if (item.type === 'file') ids.add(item.id);
+            else if (item.type === 'folder') {
+                for (const childId of getDescendantFileIds(item.id)) ids.add(childId);
+            }
+        }
+    }
+    return ids;
+}
+
 // ── Build sidebar tree ────────────────────────────────────────
 export function renderSidebar() {
     fileListEl.innerHTML = '';
 
+    // Rebuild tags index
+    buildTagsIndex();
+    renderTagsCloud();
+
+    // Determine which file IDs match the active tag filter
+    let matchingFileIds = null;
+    if (state.activeTagFilter && state.tagsIndex[state.activeTagFilter]) {
+        matchingFileIds = new Set(state.tagsIndex[state.activeTagFilter]);
+    }
+
     const fsRoot = state.items.find(i => i.id === 'fs-root');
 
     if (fsRoot) {
-        // Electron mode: hide the root folder row, show children directly
         sortItems(state.items.filter(i => i.parentId === 'fs-root'))
-            .forEach(item => fileListEl.appendChild(createTreeNode(item)));
+            .forEach(item => {
+                const node = createTreeNode(item, matchingFileIds);
+                if (node) fileListEl.appendChild(node);
+            });
     } else {
-        // Web mode: render normally from parentId === null
         sortItems(state.items.filter(i => i.parentId === null))
-            .forEach(item => fileListEl.appendChild(createTreeNode(item)));
+            .forEach(item => {
+                const node = createTreeNode(item, matchingFileIds);
+                if (node) fileListEl.appendChild(node);
+            });
     }
 
     updateSelectionBar();
     updateSelectionStyles();
 }
 
-function createTreeNode(item) {
+function createTreeNode(item, matchingFileIds) {
+    // If filter active, skip non-matching files
+    if (matchingFileIds) {
+        if (item.type === 'file' && !matchingFileIds.has(item.id)) return null;
+        if (item.type === 'image' && !matchingFileIds.has(item.id)) return null;
+        if (item.type === 'folder') {
+            // Only show folder if it has at least one matching descendant
+            const descendants = getDescendantFileIds(item.id);
+            const hasMatch = [...descendants].some(id => matchingFileIds.has(id));
+            if (!hasMatch) return null;
+        }
+    }
     const li = document.createElement('li');
     li.className = 'tree-node';
-    li.appendChild(item.type === 'folder' ? buildFolderEl(item) : buildFileEl(item));
+    li.appendChild(item.type === 'folder' ? buildFolderEl(item, matchingFileIds) : buildFileEl(item));
     return li;
 }
 
-function buildFolderEl(item) {
+function buildFolderEl(item, matchingFileIds) {
     const wrapper = document.createDocumentFragment();
 
     const row = document.createElement('div');
@@ -344,7 +459,10 @@ function buildFolderEl(item) {
     const childrenUl = document.createElement('ul');
     childrenUl.className = 'folder-children' + (item.isOpen ? ' open' : '');
     sortItems(state.items.filter(c => c.parentId === item.id))
-        .forEach(child => childrenUl.appendChild(createTreeNode(child)));
+        .forEach(child => {
+            const node = createTreeNode(child, matchingFileIds);
+            if (node) childrenUl.appendChild(node);
+        });
 
     wrapper.appendChild(row);
     wrapper.appendChild(childrenUl);

@@ -201,6 +201,104 @@
     border-radius: 6px;
 }
 
+/* ── Sidebar Tags ─────────────────────────────────────────── */
+.sidebar-tags {
+    padding: 8px 12px 4px;
+    border-bottom: 1px solid var(--border);
+}
+
+.sidebar-tags-label {
+    font-size: 0.68rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.1px;
+    color: var(--text-secondary);
+    margin-bottom: 8px;
+    opacity: 0.7;
+}
+
+.sidebar-tags-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    padding-bottom: 8px;
+    max-height: 120px;
+    overflow-y: auto;
+}
+
+.tag-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    padding: 3px 9px;
+    border-radius: 12px;
+    font-size: 0.72rem;
+    font-family: var(--font-ui);
+    font-weight: 500;
+    background: hsla(230, 15%, 50%, 0.1);
+    color: var(--text-secondary);
+    border: 1px solid transparent;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    user-select: none;
+    white-space: nowrap;
+}
+
+.tag-pill:hover {
+    background: hsla(230, 15%, 50%, 0.18);
+    color: var(--text-primary);
+    border-color: var(--border);
+}
+
+.tag-pill.active {
+    background: var(--accent);
+    color: #fff;
+    border-color: var(--accent);
+}
+
+.tag-pill .tag-count {
+    font-size: 0.65rem;
+    opacity: 0.65;
+    margin-left: 2px;
+}
+
+.tag-pill.active .tag-count {
+    opacity: 0.85;
+}
+
+/* Tag filter badge */
+.tag-filter-badge {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    background: hsla(var(--accent-hsl, 250, 100%, 65%), 0.08);
+    border-bottom: 1px solid var(--border);
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--accent);
+    font-family: var(--font-ui);
+}
+
+.tag-filter-clear {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    border: none;
+    color: var(--text-secondary);
+    cursor: pointer;
+    padding: 2px;
+    border-radius: 4px;
+    margin-left: auto;
+    transition: all 0.1s ease;
+}
+
+.tag-filter-clear:hover {
+    background: hsla(0, 80%, 60%, 0.15);
+    color: #ff5f56;
+}
+
 /* ── Header controls ────────────────────────────────────── */
 .note-title-input {
     background: transparent;

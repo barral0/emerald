@@ -64,4 +64,6 @@ export const state = {
     contextTargetId: null,
     imageStore: JSON.parse(localStorage.getItem('app-images')) || {},
     selectedIds: new Set(),   // multi-selection
+    tagsIndex: {},             // { tagName: [fileId, ...] }
+    activeTagFilter: null,     // string or null
 };
