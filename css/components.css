@@ -8,11 +8,12 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-start;
+    padding-top: 48px;
     height: 100%;
     color: var(--text-secondary);
     user-select: none;
-    pointer-events: none;
+    overflow-y: auto;
 }
 
 /* Note title input — locked state when folder is active */
