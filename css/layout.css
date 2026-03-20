@@ -24,6 +24,16 @@ body {
     display: flex;
     overflow: hidden;
     line-height: 1.6;
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+#editor,
+.markdown-body,
+input,
+textarea {
+    user-select: text;
+    -webkit-user-select: text;
 }
 
 [data-theme="light"] body {

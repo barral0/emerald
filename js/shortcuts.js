@@ -39,6 +39,21 @@ window.addEventListener('keydown', e => {
         window.toggleSidebar?.();
     }
 
+    if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'a') {
+        const activeTag = document.activeElement.tagName;
+        if (!['INPUT', 'TEXTAREA'].includes(activeTag)) {
+            e.preventDefault();
+            const preview = document.getElementById('preview');
+            if (preview && preview.innerText.trim().length > 0) {
+                const range = document.createRange();
+                range.selectNodeContents(preview);
+                const sel = window.getSelection();
+                sel.removeAllRanges();
+                sel.addRange(range);
+            }
+        }
+    }
+
     if (e.key === '?' && !['INPUT', 'TEXTAREA', 'SELECT'].includes(document.activeElement.tagName)) {
         openHelp();
     }
