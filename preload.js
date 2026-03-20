@@ -22,5 +22,11 @@ contextBridge.exposeInMainWorld('electronAPI', {
     onUpdateDownloaded: (callback) => ipcRenderer.on('updater:downloaded', callback),
     onUpdateError: (callback) => ipcRenderer.on('updater:error', callback),
     installUpdate: () => ipcRenderer.invoke('updater:install'),
-    checkForUpdates: () => ipcRenderer.invoke('updater:check')
+    checkForUpdates: () => ipcRenderer.invoke('updater:check'),
+
+    // App Scale
+    setZoomFactor: (factor) => {
+        const { webFrame } = require('electron');
+        webFrame.setZoomFactor(factor);
+    }
 });

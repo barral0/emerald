@@ -15,6 +15,8 @@ const lineHeightVal = document.getElementById('line-height-val');
 const themeResetBtn = document.getElementById('theme-reset-btn');
 const langSelect = document.getElementById('lang-select');
 const animBgSelect = document.getElementById('anim-bg-select');
+const appScaleRange = document.getElementById('app-scale-range');
+const appScaleVal = document.getElementById('app-scale-val');
 const liteModeToggle = document.getElementById('lite-mode-toggle');
 const aiProviderSelect = document.getElementById('ai-provider-select');
 const aiModelSelect = document.getElementById('ai-model-select');
@@ -39,6 +41,7 @@ const THEME_DEFAULTS = {
     aiProvider: 'openai',
     aiModel: 'gpt-4o-mini',
     aiKey: '',
+    appScale: 100,
     customBgColors: ['#4c1d95', '#0e7490', '#be185d'],
 };
 
@@ -132,6 +135,11 @@ export function applyTheme(t = theme) {
         root.classList.remove('lite');
         document.body.classList.remove('lite');
     }
+
+    // App Scale
+    if (window.electronAPI && window.electronAPI.setZoomFactor) {
+        window.electronAPI.setZoomFactor((t.appScale || 100) / 100);
+    }
 }
 
 export function saveTheme() {
@@ -160,6 +168,10 @@ function syncThemeUI() {
     if (customBgColor2 && theme.customBgColors) customBgColor2.value = theme.customBgColors[1];
     if (customBgColor3 && theme.customBgColors) customBgColor3.value = theme.customBgColors[2];
     if (liteModeToggle) liteModeToggle.checked = theme.liteMode || false;
+    if (appScaleRange) {
+        appScaleRange.value = theme.appScale || 100;
+        if (appScaleVal) appScaleVal.textContent = (theme.appScale || 100) + '%';
+    }
     if (aiProviderSelect) aiProviderSelect.value = theme.aiProvider || 'openai';
     updateModelOptions();
     if (aiKeyInput) {
@@ -271,6 +283,14 @@ if (liteModeToggle) {
         theme.liteMode = liteModeToggle.checked;
         applyTheme();
         saveTheme();
+    });
+}
+
+if (appScaleRange) {
+    appScaleRange.addEventListener('input', () => {
+        theme.appScale = parseInt(appScaleRange.value, 10);
+        if (appScaleVal) appScaleVal.textContent = theme.appScale + '%';
+        applyTheme(); saveTheme();
     });
 }
 
