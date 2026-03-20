@@ -4,6 +4,15 @@
 
 ---
 
+## 🚀 What's New in v1.0.2
+* **Smart Text Selection (Ctrl+A)**: Context-aware keybinds prevent UI elements (like menus and titles) from being inadvertently highlighted when selecting all text from the preview pane. 
+* **Preview Scroll Restored**: Squashed a CSS bug that previously disabled vertical scrollbars inside the live Markdown preview.
+* **Intelligent File Scaffolding**: Fixed a logical loop bug that generated identically-named `Untitled.md` copies instead of incrementing names correctly during root folder insertions.
+* **Auto-Updater Transparency**: The `About` modal now seamlessly handles and displays native Electron update networking traces directly on the interface buttons rather than failing silently or breaking modal padding.
+* **Greener CI/CD Pipelines**: Refactored all GitHub Actions to strictly operate on-demand (`workflow_dispatch`), significantly reducing wasted background compiler minutes on minor commits.
+
+---
+
 ## ✨ Features
 
 | Feature | Details |
