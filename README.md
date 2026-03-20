@@ -4,12 +4,15 @@
 
 ---
 
-## 🚀 What's New in v1.0.2
-* **Smart Text Selection (Ctrl+A)**: Context-aware keybinds prevent UI elements (like menus and titles) from being inadvertently highlighted when selecting all text from the preview pane. 
-* **Preview Scroll Restored**: Squashed a CSS bug that previously disabled vertical scrollbars inside the live Markdown preview.
-* **Intelligent File Scaffolding**: Fixed a logical loop bug that generated identically-named `Untitled.md` copies instead of incrementing names correctly during root folder insertions.
-* **Auto-Updater Transparency**: The `About` modal now seamlessly handles and displays native Electron update networking traces directly on the interface buttons rather than failing silently or breaking modal padding.
-* **Greener CI/CD Pipelines**: Refactored all GitHub Actions to strictly operate on-demand (`workflow_dispatch`), significantly reducing wasted background compiler minutes on minor commits.
+## 🚀 What's New in v1.0.3
+* **Create Workspace Modal:** Replaced the generic OS `prompt()` dialog with a beautifully styled Emerald modal for creating new workspaces, complete with location preview, name input, and full i18n support (EN, PT, ES).
+* **Language Selector Moved to Settings:** The language dropdown has been relocated from the header and home screen into the **Settings → General** tab for a cleaner, centralized configuration experience.
+* **Lite Mode Solid Backgrounds:** Lite Mode now uses fully opaque, solid background colors instead of translucent glassmorphic panels, ensuring maximum readability and zero visual bleed-through on all elements (sidebar, editor, preview, modals, and menus) in both dark and light themes.
+* **Preview Scroll Restored:** Fixed a CSS clipping bug (`overflow: hidden`) that disabled vertical scrolling inside the live Markdown preview pane.
+* **Smart Text Selection (Ctrl+A):** Context-aware `Ctrl+A` now selects only the rendered preview text instead of grabbing sidebar icons, buttons, and other UI elements.
+* **Duplicate Untitled.md Fix:** The "New Note" button now correctly identifies the workspace root before generating titles, preventing infinite identical `Untitled.md` files.
+* **Auto-Updater Error Handling:** The About modal gracefully displays concise, user-friendly update error messages instead of dumping raw HTTP stack traces onto the UI.
+* **CI/CD Optimization:** All GitHub Actions workflows now run exclusively on manual trigger (`workflow_dispatch`), saving Actions minutes on routine commits. Node.js version bumped to 24.
 
 ---
 
