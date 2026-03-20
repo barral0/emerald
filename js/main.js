@@ -127,7 +127,10 @@ fileListEl.addEventListener('dragover', e => e.preventDefault());
 fileListEl.addEventListener('drop', e => {
     e.preventDefault();
     const id = e.dataTransfer.getData('text/plain');
-    if (id) moveItem(id, null);
+    if (id) {
+        const fsRoot = state.items.find(i => i.id === 'fs-root');
+        moveItem(id, fsRoot ? 'fs-root' : null);
+    }
 });
 
 // ── Image paste ───────────────────────────────────────────────
