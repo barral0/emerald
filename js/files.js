@@ -3,7 +3,7 @@
    ============================================================= */
 import { state } from './state.js';
 import { generateId } from './utils.js';
-import { persist, autoSave } from './persistence.js';
+import { autoSave } from './persistence.js';
 import { renderSidebar, loadActiveItem } from './render.js';
 import { confirmDelete } from './dialogs.js';
 import { t } from './i18n.js';
@@ -19,12 +19,28 @@ export const getActiveNote = () => {
 };
 
 export function getUniqueTitle(baseTitle, parentId, isFile = true, excludeId = null) {
+    const existingTitles = new Set();
+    for (const item of state.items) {
+        if (item.parentId === parentId && item.id !== excludeId) {
+            existingTitles.add(item.title);
+        }
+    }
+
     let title = baseTitle;
     let counter = 1;
     const extension = isFile ? '.md' : '';
     const nameOnly = isFile && title.toLowerCase().endsWith('.md') ? title.slice(0, -3) : title;
 
-    while (state.items.some(i => i.parentId === parentId && i.title === title && i.id !== excludeId)) {
+    // Collect existing titles for O(1) lookup to prevent O(N*M) worst-case performance
+    const existingTitles = new Set();
+    for (let i = 0; i < state.items.length; i++) {
+        const item = state.items[i];
+        if (item.parentId === parentId && item.id !== excludeId) {
+            existingTitles.add(item.title);
+        }
+    }
+
+    while (existingTitles.has(title)) {
         title = `${nameOnly} ${counter}${extension}`;
         counter++;
     }
@@ -174,8 +190,7 @@ export async function renameItem(itemId, newTitle) {
             const newFsPath = await window.electronAPI.joinPath(parentDir, title);
             await window.electronAPI.renameItem(item.fsPath, newFsPath);
             item.fsPath = newFsPath;
-        } catch (err) {
-            console.error('Failed to rename local object:', err);
+        } catch {
         }
     }
 
@@ -190,7 +205,7 @@ export async function renameItem(itemId, newTitle) {
     renderSidebar();
 }
 
-function isDescendantOf(potentialChildId, ancestorId) {
+export function isDescendantOf(potentialChildId, ancestorId) {
     if (!potentialChildId) return false;
     if (potentialChildId === ancestorId) return true;
     const parent = getItem(potentialChildId);

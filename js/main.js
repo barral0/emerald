@@ -2,10 +2,10 @@
    main.js — Entry point: wires all modules together and boots
    ============================================================= */
 import { state } from './state.js';
-import { generateId } from './utils.js';
+import { generateId, escapeHtml } from './utils.js';
 import { persist, autoSave, triggerManualSave } from './persistence.js';
 import { renderSidebar, loadActiveItem, updatePreview } from './render.js';
-import { getActiveItem, getActiveNote, createNote, createFolder, moveItem, getUniqueTitle, renameItem } from './files.js';
+import { getActiveItem, getActiveNote, createNote, createFolder, moveItem, renameItem } from './files.js';
 import { openImageModal } from './images.js';
 import { applyTheme } from './theme.js';
 import { applyTranslations, t } from './i18n.js';
@@ -79,14 +79,19 @@ noteTitleInput.addEventListener('change', async () => {
 });
 
 // ── Editor input — live preview & autosave ───────────────────
+// Debounce heavy operations (I/O and DOM rebuilds) on rapid text input
+const debouncedAutoSave = debounce(autoSave, 300);
+const debouncedRenderSidebar = debounce(renderSidebar, 300);
+
 editor.addEventListener('input', () => {
     const note = getActiveNote();
     if (!note) return;
     note.content = editor.value;
     note.lastModified = Date.now();
+    // Keep preview synchronous for instant visual feedback
     updatePreview();
-    autoSave();
-    renderSidebar();
+    debouncedAutoSave();
+    debouncedRenderSidebar();
 });
 
 // ── File import (.md) ─────────────────────────────────────────
@@ -182,8 +187,8 @@ function updateRecentUI() {
         const li = document.createElement('li');
         li.className = 'home-recent-item';
         li.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.93a2 2 0 0 1-1.66-.9l-.82-1.2A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13c0 1.1.9 2 2 2Z"></path></svg>' +
-            '<span class="home-recent-name">' + ws.name + '</span>' +
-            '<span class="home-recent-path">' + ws.path + '</span>';
+            '<span class="home-recent-name">' + escapeHtml(ws.name) + '</span>' +
+            '<span class="home-recent-path">' + escapeHtml(ws.path) + '</span>';
         li.addEventListener('click', () => window.__openDirectoryFlow?.(ws.path));
         list.appendChild(li);
     });
