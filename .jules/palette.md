@@ -1,0 +1,3 @@
+## 2024-05-24 - Icon-only Interactive Elements Need ARIA Labels
+**Learning:** Icon-only interactive elements (like the sidebar toggle, preview toggle, and window control buttons) often rely solely on `title` attributes for tooltips, but this is insufficient for screen readers. They need explicit `aria-label` attributes to ensure full accessibility.
+**Action:** Always verify that interactive elements with only icons include `aria-label` attributes, not just `title` attributes.

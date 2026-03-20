@@ -4,6 +4,51 @@ const path = require('path');
 const fs = require('fs');
 const fsPromises = fs.promises;
 
+// ── Path Safety ─────────────────────────────────────────────
+
+const allowedWorkspacesPath = path.join(app.getPath('userData'), 'allowed-workspaces.json');
+let allowedWorkspaces = new Set();
+
+function loadAllowedWorkspaces() {
+    try {
+        if (fs.existsSync(allowedWorkspacesPath)) {
+            const data = fs.readFileSync(allowedWorkspacesPath, 'utf8');
+            const parsed = JSON.parse(data);
+            if (Array.isArray(parsed)) {
+                allowedWorkspaces = new Set(parsed);
+            }
+        }
+    } catch (err) {
+        console.error('Failed to load allowed workspaces:', err);
+    }
+}
+
+function saveAllowedWorkspaces() {
+    try {
+        fs.writeFileSync(allowedWorkspacesPath, JSON.stringify([...allowedWorkspaces]), 'utf8');
+    } catch (err) {
+        console.error('Failed to save allowed workspaces:', err);
+    }
+}
+
+function isSafePath(targetPath) {
+    if (!targetPath) return false;
+    try {
+        const resolvedPath = path.resolve(targetPath);
+        for (const workspace of allowedWorkspaces) {
+            const resolvedWorkspace = path.resolve(workspace);
+            if (resolvedPath === resolvedWorkspace || resolvedPath.startsWith(resolvedWorkspace + path.sep)) {
+                return true;
+            }
+        }
+    } catch (err) {
+        console.error('Path validation error:', err);
+    }
+    return false;
+}
+
+loadAllowedWorkspaces();
+
 let mainWindow;
 let allowedWorkspaces = [];
 
