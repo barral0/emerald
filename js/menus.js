@@ -70,6 +70,15 @@ if (updateCheckBtn && window.electronAPI && window.electronAPI.checkForUpdates) 
             updateCheckBtn.onclick = () => window.electronAPI.installUpdate();
         }
     });
+
+    if (window.electronAPI.onUpdateError) {
+        window.electronAPI.onUpdateError((event, err) => {
+            if (updateCheckBtn) {
+                updateCheckBtn.textContent = 'Erro: ' + err;
+                updateCheckBtn.disabled = false;
+            }
+        });
+    }
 }
 if (aboutModal) aboutModal.addEventListener('click', e => { if (e.target === aboutModal) closeAboutModal(); });
 

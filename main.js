@@ -47,12 +47,24 @@ autoUpdater.on('update-available', () => {
 autoUpdater.on('update-downloaded', () => {
     if (mainWindow) mainWindow.webContents.send('updater:downloaded');
 });
+autoUpdater.on('error', (err) => {
+    if (mainWindow) mainWindow.webContents.send('updater:error', typeof err === 'string' ? err : (err?.message || 'Unknown update error'));
+});
 
 ipcMain.handle('updater:install', () => {
     autoUpdater.quitAndInstall();
 });
 ipcMain.handle('updater:check', () => {
-    autoUpdater.checkForUpdatesAndNotify();
+    try {
+        if (!app.isPackaged) {
+            if (mainWindow) mainWindow.webContents.send('updater:error', 'Updater is disabled in development mode (app not packed)');
+            return null;
+        }
+        return autoUpdater.checkForUpdatesAndNotify();
+    } catch (err) {
+        if (mainWindow) mainWindow.webContents.send('updater:error', err?.message || 'Failed to trigger update check');
+        return null;
+    }
 });
 
 app.on('window-all-closed', () => {
