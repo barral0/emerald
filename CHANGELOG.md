@@ -4,6 +4,19 @@ All notable changes to Emerald are documented here.
 
 ## [Unreleased]
 
+## [1.0.5] — 2026-03-20
+
+### Added
+- **Tag System (#hashtags):** Write `#tag` anywhere in your notes. Tags are auto-indexed and displayed as a clickable cloud in the sidebar. Clicking a tag filters the file tree to show only matching notes.
+- **Multi-Tab Editor:** Open multiple files simultaneously in browser-style tabs. Tabs persist across sessions, support middle-click close, and auto-hide when only one file is open.
+- **Folder Contents Preview:** Selecting a folder now displays its child notes and subfolders in the editor area. Clicking a listed note opens it directly as a tab.
+- **Hidden .md Extension:** File names in the sidebar and editor header no longer display the `.md` extension for a cleaner interface.
+- **App Icon Branding:** Replaced the generic diamond emoji with the official Emerald icon on the Home screen and About modal.
+
+### Fixed
+- Folder placeholder is now fully interactive (removed `pointer-events: none` blocker) and scrollable for large folders.
+- Tabs bar hides automatically when viewing a folder or when only one tab is open.
+
 ## [1.0.4] — 2026-03-20
 
 ### Added

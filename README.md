@@ -4,12 +4,12 @@
 
 ---
 
-## 🚀 What's New in v1.0.4
-* **Global AI Kill-Switch:** Added setting to entirely disable AI integration natively. Hides related contextual menus and UI clutter giving users total control over AI exposure.
-* **Interface Scale Control:** You can now fully control the native application UI scale (zoom) from 70% to 150% under *Settings > General*.
-* **Create Workspace Modal:** Native and translated Emerald modal replaces the generic OS `prompt()` dialog.
-* **UI Readability & Layout:** Consolidated the Language selector within the settings layout. Lite mode panels now utilize entirely solid background colors eliminating content bleed-through. Menus will no longer render off-screen if they hit the edge of the monitor.
-* **Core Fixes:** Live Markdown preview now escapes direct HTML strings correctly, live vertical-scrolling on preview pane restored, auto-updater network errors properly handled gracefully on the UI layer, and `Ctrl+A` is now restricted solely to the editor/preview blocks.
+## 🚀 What's New in v1.0.5
+* **Tag System (#hashtags):** Write `#tag` anywhere in your notes and they auto-appear as clickable pills in the sidebar. Click a tag to instantly filter the file tree to matching notes only.
+* **Multi-Tab Editor:** Open multiple files at once in a familiar tab bar. Tabs persist across sessions, support middle-click close, and disappear when you only have one file open.
+* **Folder Contents Preview:** Clicking a folder now shows its contents in the editor pane with clickable file entries, instead of a blank placeholder.
+* **Hidden .md Extension:** The `.md` file extension is now hidden throughout the UI for a cleaner look.
+* **App Icon Branding:** Official Emerald icon replaces the diamond emoji on the Home screen and About modal.
 
 ---
 
