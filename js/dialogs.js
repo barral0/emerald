@@ -1,7 +1,6 @@
 /* =============================================================
    dialogs.js — Custom UI dialogs (Delete confirmation, etc.)
    ============================================================= */
-import { t } from './i18n.js';
 
 const deleteModal = document.getElementById('delete-modal');
 const deleteModalBody = document.getElementById('delete-modal-body');

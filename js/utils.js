@@ -17,3 +17,15 @@ export const sortItems = arr =>
         if (a.type !== b.type) return a.type === 'folder' ? -1 : 1;
         return b.lastModified - a.lastModified;
     });
+
+/**
+ * Debounces a function, ensuring it is only called after `wait` milliseconds
+ * have passed since the last time it was invoked.
+ */
+export const debounce = (func, wait) => {
+    let timeout;
+    return function (...args) {
+        clearTimeout(timeout);
+        timeout = setTimeout(() => func.apply(this, args), wait);
+    };
+};
