@@ -18,10 +18,6 @@ export const sortItems = arr =>
         return b.lastModified - a.lastModified;
     });
 
-/**
- * Debounces a function, ensuring it is only called after `wait` milliseconds
- * have passed since the last time it was invoked.
- */
 export const debounce = (func, wait) => {
     let timeout;
     return function (...args) {

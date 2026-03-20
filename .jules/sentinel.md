@@ -1,4 +1,4 @@
-## 2024-05-24 - [Path Traversal in IPC File System Handlers]
-**Vulnerability:** File system handlers in the Electron main process (e.g., fs:readFile, fs:writeFile) accept absolute paths from the renderer without verifying if they fall within an authorized workspace, allowing a compromised renderer to read/write arbitrary system files.
-**Learning:** Directly trusting paths provided by the renderer process via IPC creates a critical path traversal vulnerability.
-**Prevention:** Maintain a secure list of authorized paths (e.g., safeRoots / allowedWorkspaces) in the main process, populated only via native dialogs. Validate all incoming IPC file paths against this list using a robust `isSafePath` check before any fs operation.
+## 2024-05-18 - XSS Vulnerability in Recent Workspaces
+**Vulnerability:** Cross-Site Scripting (XSS) vulnerability was present when populating "Recent Workspaces" in `js/main.js`. The `name` and `path` of recent workspaces were retrieved from `localStorage` and added directly to the DOM using `innerHTML` without prior sanitization in the `updateRecentUI` function.
+**Learning:** This repo builds the frontend primarily using vanilla JS manipulating the DOM. Care must be taken to ensure any dynamically added properties from user input or storage into DOM using `innerHTML` are correctly sanitized. This vulnerability specifically showed up in how workspaces are rendered from `localStorage`.
+**Prevention:** Always import and use `escapeHtml` from `js/utils.js` when constructing HTML strings manually via string concatenation prior to inserting them into `innerHTML`.
