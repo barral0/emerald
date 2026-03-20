@@ -1,0 +1,3 @@
+## 2025-03-06 - Debouncing Heavy Operations on Text Input
+**Learning:** Frequent heavy I/O (`autoSave` in Electron mode writes to disk via IPC) and DOM rebuilds (`renderSidebar` creates the tree from scratch) were tied directly to the `editor.addEventListener('input')` event. This blocks the main thread on every keystroke, causing severe input lag.
+**Action:** Always debounce operations like `autoSave` and `renderSidebar` (e.g., using `debounce` with 300ms delay) when they are triggered by high-frequency events like text input, while keeping critical UI updates like `updatePreview` synchronous for instant visual feedback.
