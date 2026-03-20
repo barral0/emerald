@@ -256,7 +256,8 @@ body {
     -webkit-backdrop-filter: blur(28px) saturate(180%);
     transition: flex 0.2s ease, opacity 0.18s ease;
     min-width: 0;
-    overflow: hidden;
+    overflow-x: hidden;
+    overflow-y: auto;
 }
 
 /* Preview hidden — editor takes full width */
