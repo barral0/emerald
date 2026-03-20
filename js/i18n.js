@@ -115,6 +115,12 @@ export const TRANSLATIONS = {
         'update.ready': 'Update Ready! Click to Restart.',
         'update.install': 'Install Update & Restart',
         'update.bg_download': 'A new update is downloading in the background...',
+        'workspace.create_title': 'Create New Workspace',
+        'workspace.create_desc': 'Choose a name for your new workspace folder.',
+        'workspace.location': 'Location',
+        'workspace.name_label': 'Workspace Name',
+        'workspace.name_placeholder': 'My Notes',
+        'workspace.create_btn': 'Create',
     },
     pt: {
         'app.title': 'Emerald — Editor Markdown',
@@ -228,6 +234,12 @@ export const TRANSLATIONS = {
         'update.ready': 'Atualização Pronta! Clique para Reiniciar.',
         'update.install': 'Instalar e Reiniciar',
         'update.bg_download': 'Uma nova versão está sendo baixada em segundo plano...',
+        'workspace.create_title': 'Criar Novo Workspace',
+        'workspace.create_desc': 'Escolha um nome para a sua nova pasta de trabalho.',
+        'workspace.location': 'Local',
+        'workspace.name_label': 'Nome do Workspace',
+        'workspace.name_placeholder': 'Minhas Notas',
+        'workspace.create_btn': 'Criar',
     },
     es: {
         'app.title': 'Emerald — Editor Markdown',
@@ -341,6 +353,12 @@ export const TRANSLATIONS = {
         'update.ready': '¡Actualización Lista! Haz clic para Reiniciar.',
         'update.install': 'Instalar y Reiniciar',
         'update.bg_download': 'Se está descargando una actualización en segundo plano...',
+        'workspace.create_title': 'Crear Nuevo Espacio',
+        'workspace.create_desc': 'Elige un nombre para tu nueva carpeta de trabajo.',
+        'workspace.location': 'Ubicación',
+        'workspace.name_label': 'Nombre del Espacio',
+        'workspace.name_placeholder': 'Mis Notas',
+        'workspace.create_btn': 'Crear',
     }
 };
 

@@ -250,13 +250,54 @@ if (window.electronAPI) {
 
     homeCreateBtn?.addEventListener('click', async () => {
         const parentPath = await window.electronAPI.openDirectory();
-        if (parentPath) {
-            const folderName = prompt(t('sidebar.new_folder'), 'My Notes');
-            if (folderName) {
-                const newPath = await window.electronAPI.joinPath(parentPath, folderName);
-                await window.electronAPI.mkdir(newPath);
-                await openDirectoryFlow(newPath);
-            }
+        if (!parentPath) return;
+
+        // Show the custom modal
+        const modal = document.getElementById('create-workspace-modal');
+        const input = document.getElementById('workspace-name-input');
+        const locationEl = document.getElementById('workspace-location-path');
+        const confirmBtn = document.getElementById('workspace-confirm-btn');
+        const cancelBtn = document.getElementById('workspace-cancel-btn');
+
+        locationEl.textContent = parentPath;
+        input.value = 'My Notes';
+        modal.hidden = false;
+        input.focus();
+        input.select();
+
+        const result = await new Promise(resolve => {
+            const handleConfirm = () => {
+                cleanup();
+                resolve(input.value.trim());
+            };
+            const handleCancel = () => {
+                cleanup();
+                resolve(null);
+            };
+            const handleKeydown = (e) => {
+                if (e.key === 'Enter') handleConfirm();
+                if (e.key === 'Escape') handleCancel();
+            };
+            const handleOverlay = (e) => {
+                if (e.target === modal) handleCancel();
+            };
+            const cleanup = () => {
+                confirmBtn.removeEventListener('click', handleConfirm);
+                cancelBtn.removeEventListener('click', handleCancel);
+                input.removeEventListener('keydown', handleKeydown);
+                modal.removeEventListener('click', handleOverlay);
+                modal.hidden = true;
+            };
+            confirmBtn.addEventListener('click', handleConfirm);
+            cancelBtn.addEventListener('click', handleCancel);
+            input.addEventListener('keydown', handleKeydown);
+            modal.addEventListener('click', handleOverlay);
+        });
+
+        if (result) {
+            const newPath = await window.electronAPI.joinPath(parentPath, result);
+            await window.electronAPI.mkdir(newPath);
+            await openDirectoryFlow(newPath);
         }
     });
     window.__openDirectoryFlow = openDirectoryFlow;

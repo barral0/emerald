@@ -675,17 +675,53 @@
         </div>
     </div>
 
+    <!-- Create Workspace Modal -->
+    <div id="create-workspace-modal" class="modal-overlay" hidden>
+        <div class="modal" style="width: 420px; padding: 32px 24px;">
+            <div style="text-align: center; margin-bottom: 20px;">
+                <div style="font-size: 2.5rem; margin-bottom: 8px; pointer-events: none; user-select: none;">📁</div>
+                <h3 class="modal-title" data-i18n="workspace.create_title"
+                    style="margin-bottom: 4px; font-size: 1.2rem;">Create New Workspace</h3>
+                <p style="color: var(--text-secondary); font-size: 0.85rem;" data-i18n="workspace.create_desc">Choose a
+                    name for your new workspace folder.</p>
+            </div>
+            <div style="margin-bottom: 8px;">
+                <label style="display: block; color: var(--text-secondary); font-size: 0.8rem; margin-bottom: 6px;"
+                    data-i18n="workspace.location">Location</label>
+                <p id="workspace-location-path"
+                    style="color: var(--text-primary); font-family: var(--font-mono); font-size: 0.8rem; background: var(--bg-sidebar); padding: 8px 12px; border-radius: 8px; word-break: break-all; margin: 0;">
+                </p>
+            </div>
+            <div style="margin-bottom: 20px;">
+                <label for="workspace-name-input"
+                    style="display: block; color: var(--text-secondary); font-size: 0.8rem; margin-bottom: 6px;"
+                    data-i18n="workspace.name_label">Workspace Name</label>
+                <input type="text" id="workspace-name-input" class="note-title" placeholder="My Notes"
+                    data-i18n-placeholder="workspace.name_placeholder"
+                    style="width: 100%; padding: 10px 14px; font-size: 0.95rem; border-radius: 8px; border: 1px solid var(--border); background: var(--bg-sidebar); color: var(--text-primary); outline: none; box-sizing: border-box;" />
+            </div>
+            <div class="modal-actions" style="justify-content: center; gap: 12px;">
+                <button class="btn-secondary" id="workspace-cancel-btn" style="flex: 1;"
+                    data-i18n="img.cancel">Cancel</button>
+                <button class="btn-primary" id="workspace-confirm-btn" style="flex: 1;"
+                    data-i18n="workspace.create_btn">Create</button>
+            </div>
+        </div>
+    </div>
+
     <!-- About Modal -->
     <div id="about-modal-overlay" class="modal-overlay" hidden>
         <div class="modal" style="text-align: center; width: 400px; padding: 32px 24px;">
             <div style="font-size: 3.5rem; margin-bottom: 12px; pointer-events: none; user-select: none;">💎</div>
-            <h3 class="modal-title" data-i18n="about.title" style="margin-bottom: 4px; font-size: 1.4rem;">About Emerald
+            <h3 class="modal-title" data-i18n="about.title" style="margin-bottom: 4px; font-size: 1.4rem;">About
+                Emerald
             </h3>
             <p style="color: var(--text-secondary); font-family: var(--font-mono); font-size: 0.8rem; margin-bottom: 16px;"
                 data-i18n="about.version">Version 1.0.2</p>
             <p style="color: var(--text-primary); font-size: 0.95rem; line-height: 1.6; margin-bottom: 20px;"
                 data-i18n="about.desc">
-                A lightweight, self-hosted markdown editor with live preview, folder organization, image support, and
+                A lightweight, self-hosted markdown editor with live preview, folder organization, image support,
+                and
                 full theme customization. No accounts. No cloud.
             </p>
             <div style="margin-bottom: 24px; font-size: 0.85rem; color: var(--text-secondary);">
