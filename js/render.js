@@ -88,6 +88,7 @@ export async function loadActiveItem() {
         noteTitleInput.readOnly = true;
         noteTitleInput.style.opacity = '0.45';
         noteTitleInput.style.cursor = 'default';
+        tabsContainer.style.display = 'none';
         showFolderPlaceholder(item);
         return;
     }
