@@ -661,6 +661,11 @@ body.lite {
     background: hsl(220, 20%, 94%) !important;
 }
 
+/* AI Disabled Mode */
+.ai-disabled .ai-feature {
+    display: none !important;
+}
+
 body.bg-custom {
     background: radial-gradient(circle at 15% 30%, rgba(var(--bg-custom-1), 0.5), transparent 40%),
         radial-gradient(circle at 85% 70%, rgba(var(--bg-custom-2), 0.4), transparent 40%),

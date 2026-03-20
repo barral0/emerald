@@ -281,8 +281,8 @@
                 </svg>
                 <span data-i18n="editor.paste">Paste</span> <span class="menu-shortcut">Ctrl+V</span>
             </li>
-            <li class="menu-separator"></li>
-            <li data-action="spellcheck">
+            <li class="menu-separator ai-feature"></li>
+            <li data-action="spellcheck" class="ai-feature">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                     stroke-linecap="round" stroke-linejoin="round">
                     <path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"></path>
@@ -290,7 +290,7 @@
                 </svg>
                 <span data-i18n="editor.spellcheck">Fix Spelling &amp; Grammar</span>
             </li>
-            <li data-action="summarize">
+            <li data-action="summarize" class="ai-feature">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                     stroke-linecap="round" stroke-linejoin="round">
                     <line x1="21" y1="10" x2="3" y2="10"></line>
@@ -300,7 +300,7 @@
                 </svg>
                 <span data-i18n="editor.summarize">Summarize Text</span>
             </li>
-            <li class="menu-separator"></li>
+            <li class="menu-separator ai-feature"></li>
             <li data-action="bold">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                     stroke-linecap="round" stroke-linejoin="round">
@@ -520,21 +520,31 @@
                 <!-- Tab: AI -->
                 <div class="settings-tab-content" id="tab-ai">
                     <div class="theme-row">
-                        <label class="theme-label" data-i18n="theme.ai_provider">AI Provider</label>
-                        <select id="ai-provider-select" class="theme-select">
-                            <option value="openai">OpenAI</option>
-                            <option value="gemini">Google Gemini</option>
-                        </select>
+                        <label class="theme-label" data-i18n="theme.ai_enable">Enable AI Features</label>
+                        <label class="switch">
+                            <input type="checkbox" id="ai-enable-toggle" checked>
+                            <span class="slider round"></span>
+                        </label>
                     </div>
-                    <div class="theme-row">
-                        <label class="theme-label" data-i18n="theme.ai_model">AI Model</label>
-                        <select id="ai-model-select" class="theme-select"></select>
-                    </div>
-                    <div class="theme-row" style="flex-direction: column; align-items: flex-start; gap: 8px;">
-                        <label class="theme-label" data-i18n="theme.ai_key">API Key (Local only)</label>
-                        <input type="password" id="ai-key-input" data-i18n-placeholder="theme.ai_key_placeholder"
-                            placeholder="sk-... or AIza..." class="theme-slider"
-                            style="width: 100%; border: 1px solid var(--border); background: var(--bg-hover); padding: 6px 10px; border-radius: 4px; color: var(--text-primary); outline: none; font-size: 0.9rem; font-family: monospace;">
+
+                    <div id="ai-settings-group">
+                        <div class="theme-row">
+                            <label class="theme-label" data-i18n="theme.ai_provider">AI Provider</label>
+                            <select id="ai-provider-select" class="theme-select">
+                                <option value="openai">OpenAI</option>
+                                <option value="gemini">Google Gemini</option>
+                            </select>
+                        </div>
+                        <div class="theme-row">
+                            <label class="theme-label" data-i18n="theme.ai_model">AI Model</label>
+                            <select id="ai-model-select" class="theme-select"></select>
+                        </div>
+                        <div class="theme-row" style="flex-direction: column; align-items: flex-start; gap: 8px;">
+                            <label class="theme-label" data-i18n="theme.ai_key">API Key (Local only)</label>
+                            <input type="password" id="ai-key-input" data-i18n-placeholder="theme.ai_key_placeholder"
+                                placeholder="sk-... or AIza..." class="theme-slider"
+                                style="width: 100%; border: 1px solid var(--border); background: var(--bg-hover); padding: 6px 10px; border-radius: 4px; color: var(--text-primary); outline: none; font-size: 0.9rem; font-family: monospace;">
+                        </div>
                     </div>
                 </div>
 

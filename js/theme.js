@@ -18,6 +18,8 @@ const animBgSelect = document.getElementById('anim-bg-select');
 const appScaleRange = document.getElementById('app-scale-range');
 const appScaleVal = document.getElementById('app-scale-val');
 const liteModeToggle = document.getElementById('lite-mode-toggle');
+const aiEnableToggle = document.getElementById('ai-enable-toggle');
+const aiSettingsGroup = document.getElementById('ai-settings-group');
 const aiProviderSelect = document.getElementById('ai-provider-select');
 const aiModelSelect = document.getElementById('ai-model-select');
 const aiKeyInput = document.getElementById('ai-key-input');
@@ -38,6 +40,7 @@ const THEME_DEFAULTS = {
     lineHeight: 1.75,
     animBg: 'aurora',
     liteMode: false,
+    aiEnabled: true,
     aiProvider: 'openai',
     aiModel: 'gpt-4o-mini',
     aiKey: '',
@@ -136,6 +139,13 @@ export function applyTheme(t = theme) {
         document.body.classList.remove('lite');
     }
 
+    // AI Features Toggle
+    if (t.aiEnabled !== false) {
+        document.body.classList.remove('ai-disabled');
+    } else {
+        document.body.classList.add('ai-disabled');
+    }
+
     // App Scale
     if (window.electronAPI && window.electronAPI.setZoomFactor) {
         window.electronAPI.setZoomFactor((t.appScale || 100) / 100);
@@ -172,6 +182,16 @@ function syncThemeUI() {
         appScaleRange.value = theme.appScale || 100;
         if (appScaleVal) appScaleVal.textContent = (theme.appScale || 100) + '%';
     }
+
+    if (aiEnableToggle) {
+        // Fallback to true if undefined
+        const isEnabled = theme.aiEnabled !== false;
+        aiEnableToggle.checked = isEnabled;
+        if (aiSettingsGroup) {
+            aiSettingsGroup.style.display = isEnabled ? 'block' : 'none';
+        }
+    }
+
     if (aiProviderSelect) aiProviderSelect.value = theme.aiProvider || 'openai';
     updateModelOptions();
     if (aiKeyInput) {
@@ -291,6 +311,18 @@ if (appScaleRange) {
         theme.appScale = parseInt(appScaleRange.value, 10);
         if (appScaleVal) appScaleVal.textContent = theme.appScale + '%';
         applyTheme(); saveTheme();
+    });
+}
+
+if (aiEnableToggle) {
+    aiEnableToggle.addEventListener('change', () => {
+        theme.aiEnabled = aiEnableToggle.checked;
+        if (aiSettingsGroup) {
+            aiSettingsGroup.style.display = theme.aiEnabled ? 'block' : 'none';
+        }
+        saveTheme();
+        // Fire custom event so menus.js knows immediately
+        window.dispatchEvent(new CustomEvent('ai-toggle-changed'));
     });
 }
 
