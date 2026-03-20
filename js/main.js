@@ -147,19 +147,8 @@ imageInput.addEventListener('change', e => {
     imageInput.value = '';
 });
 
-// ── Home Screen — Language + About ────────────────────────────
-const homeLangSelect = document.getElementById('home-lang-select');
+// ── Home Screen — About ───────────────────────────────────────
 const homeAboutInlineBtn = document.getElementById('home-about-inline-btn');
-
-if (homeLangSelect) {
-    homeLangSelect.value = localStorage.getItem('app-lang') || 'en';
-    homeLangSelect.addEventListener('change', async () => {
-        const { setLang } = await import('./i18n.js');
-        setLang(homeLangSelect.value);
-        const ls = document.getElementById('lang-select');
-        if (ls) ls.value = homeLangSelect.value;
-    });
-}
 
 if (homeAboutInlineBtn) {
     homeAboutInlineBtn.addEventListener('click', () => {

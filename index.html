@@ -29,11 +29,6 @@
                 <p class="home-tagline" data-i18n="home.subtitle">Select a workspace to start writing</p>
             </div>
             <div class="home-meta">
-                <select id="home-lang-select" class="home-lang-select" aria-label="Language">
-                    <option value="en">EN</option>
-                    <option value="pt">PT</option>
-                    <option value="es">ES</option>
-                </select>
                 <button id="home-about-inline-btn" class="home-about-btn">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                         stroke-linecap="round" stroke-linejoin="round">
@@ -145,14 +140,6 @@
                     <!-- Hidden file inputs -->
                     <input type="file" id="file-input" accept=".md,.markdown,text/plain" style="display:none">
                     <input type="file" id="image-input" accept="image/*" style="display:none">
-
-                    <!-- Language Dropdown -->
-                    <select id="lang-select" class="header-lang-select" aria-label="Language"
-                        data-i18n-title="lang.title">
-                        <option value="en">EN</option>
-                        <option value="pt">PT</option>
-                        <option value="es">ES</option>
-                    </select>
 
                     <!-- Preview Toggle -->
                     <button class="icon-btn preview-toggle-btn" id="preview-toggle-btn" title="Toggle Preview"
@@ -469,6 +456,16 @@
                                 aria-label="Color 3"
                                 style="width: 32px; height: 32px; padding: 0; border: 1px solid var(--border); border-radius: 4px; cursor: pointer; background: transparent;">
                         </div>
+                    </div>
+
+                    <!-- Language -->
+                    <div class="theme-row">
+                        <label class="theme-label" data-i18n="lang.title">Language / Idioma</label>
+                        <select id="lang-select" class="theme-select" aria-label="Language">
+                            <option value="en">English</option>
+                            <option value="pt">Português</option>
+                            <option value="es">Español</option>
+                        </select>
                     </div>
 
                     <!-- Lite Mode -->
