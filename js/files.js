@@ -33,6 +33,10 @@ export function getUniqueTitle(baseTitle, parentId, isFile = true, excludeId = n
 
 // ── Create ───────────────────────────────────────────────────
 export async function createNote(parentId = null) {
+    if (!parentId && state.items.some(i => i.id === 'fs-root')) {
+        parentId = 'fs-root';
+    }
+
     const title = getUniqueTitle(t('header.untitled') + '.md', parentId, true);
     const note = {
         id: generateId(), type: 'file', parentId,
@@ -40,10 +44,6 @@ export async function createNote(parentId = null) {
     };
 
     if (window.electronAPI) {
-        if (!note.parentId && state.items.some(i => i.id === 'fs-root')) {
-            note.parentId = 'fs-root';
-        }
-
         const parent = state.items.find(i => i.id === note.parentId);
         if (parent && parent.fsPath) {
             note.fsPath = await window.electronAPI.joinPath(parent.fsPath, note.title);
