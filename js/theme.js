@@ -320,6 +320,7 @@ if (aiEnableToggle) {
         if (aiSettingsGroup) {
             aiSettingsGroup.style.display = theme.aiEnabled ? 'block' : 'none';
         }
+        applyTheme();
         saveTheme();
         // Fire custom event so menus.js knows immediately
         window.dispatchEvent(new CustomEvent('ai-toggle-changed'));
