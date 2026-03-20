@@ -286,30 +286,41 @@ async function deleteSelected() {
 export function renderSidebar() {
     fileListEl.innerHTML = '';
 
+    // Build children map for O(1) lookups: O(N) instead of O(N^2) for full tree
+    const childrenMap = new Map();
+    for (const item of state.items) {
+        let arr = childrenMap.get(item.parentId);
+        if (!arr) {
+            arr = [];
+            childrenMap.set(item.parentId, arr);
+        }
+        arr.push(item);
+    }
+
     const fsRoot = state.items.find(i => i.id === 'fs-root');
 
     if (fsRoot) {
         // Electron mode: hide the root folder row, show children directly
-        sortItems(state.items.filter(i => i.parentId === 'fs-root'))
-            .forEach(item => fileListEl.appendChild(createTreeNode(item)));
+        sortItems(childrenMap.get('fs-root') || [])
+            .forEach(item => fileListEl.appendChild(createTreeNode(item, childrenMap)));
     } else {
         // Web mode: render normally from parentId === null
-        sortItems(state.items.filter(i => i.parentId === null))
-            .forEach(item => fileListEl.appendChild(createTreeNode(item)));
+        sortItems(childrenMap.get(null) || [])
+            .forEach(item => fileListEl.appendChild(createTreeNode(item, childrenMap)));
     }
 
     updateSelectionBar();
     updateSelectionStyles();
 }
 
-function createTreeNode(item) {
+function createTreeNode(item, childrenMap) {
     const li = document.createElement('li');
     li.className = 'tree-node';
-    li.appendChild(item.type === 'folder' ? buildFolderEl(item) : buildFileEl(item));
+    li.appendChild(item.type === 'folder' ? buildFolderEl(item, childrenMap) : buildFileEl(item));
     return li;
 }
 
-function buildFolderEl(item) {
+function buildFolderEl(item, childrenMap) {
     const wrapper = document.createDocumentFragment();
 
     const row = document.createElement('div');
@@ -360,8 +371,8 @@ function buildFolderEl(item) {
 
     const childrenUl = document.createElement('ul');
     childrenUl.className = 'folder-children' + (item.isOpen ? ' open' : '');
-    sortItems(state.items.filter(c => c.parentId === item.id))
-        .forEach(child => childrenUl.appendChild(createTreeNode(child)));
+    sortItems(childrenMap.get(item.id) || [])
+        .forEach(child => childrenUl.appendChild(createTreeNode(child, childrenMap)));
 
     wrapper.appendChild(row);
     wrapper.appendChild(childrenUl);
