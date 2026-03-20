@@ -74,9 +74,17 @@ if (updateCheckBtn && window.electronAPI && window.electronAPI.checkForUpdates) 
     if (window.electronAPI.onUpdateError) {
         window.electronAPI.onUpdateError((event, err) => {
             if (updateCheckBtn) {
-                updateCheckBtn.textContent = 'Erro: ' + err;
+                let shortErr = 'Erro ao checar';
+                if (typeof err === 'string' && err.includes('latest.yml')) {
+                    shortErr = 'Versão não publicada no GitHub';
+                } else if (typeof err === 'string') {
+                    shortErr = err.split('\n')[0].substring(0, 30) + '...';
+                }
+                updateCheckBtn.textContent = 'Erro: ' + shortErr;
+                updateCheckBtn.title = err;
                 updateCheckBtn.disabled = false;
             }
+            console.error('AutoUpdater Error:', err);
         });
     }
 }
