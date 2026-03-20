@@ -50,6 +50,36 @@ function isSafePath(targetPath) {
 loadAllowedWorkspaces();
 
 let mainWindow;
+let allowedWorkspaces = [];
+
+function loadAllowedWorkspaces() {
+    try {
+        const dataPath = path.join(app.getPath('userData'), 'allowed-workspaces.json');
+        if (fs.existsSync(dataPath)) {
+            allowedWorkspaces = JSON.parse(fs.readFileSync(dataPath, 'utf8'));
+        }
+    } catch (e) {
+        console.error('Failed to load allowed workspaces:', e);
+    }
+}
+
+function saveAllowedWorkspaces() {
+    try {
+        const dataPath = path.join(app.getPath('userData'), 'allowed-workspaces.json');
+        fs.writeFileSync(dataPath, JSON.stringify(allowedWorkspaces), 'utf8');
+    } catch (e) {
+        console.error('Failed to save allowed workspaces:', e);
+    }
+}
+
+function isSafePath(targetPath) {
+    if (!targetPath) return false;
+    const resolvedPath = path.resolve(targetPath);
+    return allowedWorkspaces.some(workspace => {
+        const resolvedWorkspace = path.resolve(workspace);
+        return resolvedPath === resolvedWorkspace || resolvedPath.startsWith(resolvedWorkspace + path.sep);
+    });
+}
 
 function createWindow() {
     mainWindow = new BrowserWindow({
@@ -75,6 +105,7 @@ function createWindow() {
 }
 
 app.whenReady().then(() => {
+    loadAllowedWorkspaces();
     createWindow();
 
     // Check for updates seamlessly
