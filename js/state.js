@@ -68,4 +68,5 @@ export const state = {
     selectedIds: new Set(),   // multi-selection
     tagsIndex: {},             // { tagName: [fileId, ...] }
     activeTagFilter: null,     // string or null
+    globalSearchQuery: null,   // string or null
 };

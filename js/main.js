@@ -43,6 +43,28 @@ marked.use({
     }
 });
 
+// ── Global Search ─────────────────────────────────────────────
+const globalSearchInput = document.getElementById('global-search-input');
+let searchTimeout;
+if (globalSearchInput) {
+    globalSearchInput.addEventListener('input', (e) => {
+        clearTimeout(searchTimeout);
+        searchTimeout = setTimeout(async () => {
+            const query = e.target.value.trim();
+            state.globalSearchQuery = query || null;
+            
+            // If in Electron and searching, precache all file contents asynchronously
+            if (state.globalSearchQuery && window.electronAPI) {
+                const unloadedFiles = state.items.filter(i => i.type === 'file' && i.fsPath && typeof i.content === 'undefined');
+                await Promise.all(unloadedFiles.map(async f => {
+                    try { f.content = await window.electronAPI.readFile(f.fsPath) || ''; } catch { }
+                }));
+            }
+            renderSidebar();
+        }, 250);
+    });
+}
+
 // ── Sidebar Toggle ────────────────────────────────────────────
 function setSidebarCollapsed(collapsed) {
     const sb = document.getElementById('app-sidebar');

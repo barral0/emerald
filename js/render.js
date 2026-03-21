@@ -528,10 +528,31 @@ export function renderSidebar() {
     buildTagsIndex();
     renderTagsCloud();
 
-    // Determine which file IDs match the active tag filter
+    // Determine which file IDs match the active tag filter and/or search query
     let matchingFileIds = null;
-    if (state.activeTagFilter && state.tagsIndex[state.activeTagFilter]) {
-        matchingFileIds = new Set(state.tagsIndex[state.activeTagFilter]);
+    if (state.activeTagFilter || state.globalSearchQuery) {
+        matchingFileIds = new Set();
+        const sq = state.globalSearchQuery ? state.globalSearchQuery.toLowerCase() : null;
+
+        for (const item of state.items) {
+            if (item.type !== 'file' && item.type !== 'image') continue;
+
+            let matchTag = true;
+            if (state.activeTagFilter) {
+                matchTag = state.tagsIndex[state.activeTagFilter] && state.tagsIndex[state.activeTagFilter].includes(item.id);
+            }
+
+            let matchSearch = true;
+            if (sq) {
+                const title = (item.title || '').toLowerCase();
+                const content = (item.content || '').toLowerCase();
+                matchSearch = title.includes(sq) || content.includes(sq);
+            }
+
+            if (matchTag && matchSearch) {
+                matchingFileIds.add(item.id);
+            }
+        }
     }
 
     const fsRoot = state.items.find(i => i.id === 'fs-root');
@@ -555,7 +576,7 @@ export function renderSidebar() {
 }
 
 function createTreeNode(item, matchingFileIds) {
-    // If filter active, skip non-matching files
+    // If filter or search active, skip non-matching files
     if (matchingFileIds) {
         if (item.type === 'file' && !matchingFileIds.has(item.id)) return null;
         if (item.type === 'image' && !matchingFileIds.has(item.id)) return null;
