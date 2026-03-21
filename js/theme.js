@@ -23,6 +23,7 @@ const aiSettingsGroup = document.getElementById('ai-settings-group');
 const aiProviderSelect = document.getElementById('ai-provider-select');
 const aiModelSelect = document.getElementById('ai-model-select');
 const aiKeyInput = document.getElementById('ai-key-input');
+const aiOllamaUrlInput = document.getElementById('ai-ollama-url-input');
 const settingsTabs = document.querySelectorAll('.settings-tab');
 const settingsTabContents = document.querySelectorAll('.settings-tab-content');
 const customBgColorsRow = document.getElementById('custom-bg-colors-row');
@@ -44,6 +45,7 @@ const THEME_DEFAULTS = {
     aiProvider: 'openai',
     aiModel: 'gpt-4o-mini',
     aiKey: '',
+    ollamaUrl: 'http://localhost:11434',
     appScale: 100,
     customBgColors: ['#4c1d95', '#0e7490', '#be185d'],
 };
@@ -60,15 +62,27 @@ const AI_MODELS = {
     openai: [
         { value: 'gpt-4o-mini', label: 'GPT-4o Mini' },
         { value: 'gpt-4o', label: 'GPT-4o' },
-        { value: 'o1-mini', label: 'o1 Mini' },
+        { value: 'gpt-4.1', label: 'GPT-4.1' },
+        { value: 'gpt-4.1-mini', label: 'GPT-4.1 Mini' },
+        { value: 'gpt-4.1-nano', label: 'GPT-4.1 Nano' },
+        { value: 'o4-mini', label: 'o4 Mini' },
         { value: 'o3-mini', label: 'o3 Mini' }
     ],
     gemini: [
         { value: 'gemini-2.5-flash', label: 'Gemini 2.5 Flash' },
         { value: 'gemini-2.5-pro', label: 'Gemini 2.5 Pro' },
-        { value: 'gemini-1.5-flash', label: 'Gemini 1.5 Flash' },
-        { value: 'gemini-1.5-pro', label: 'Gemini 1.5 Pro' },
-        { value: 'gemini-2.0-flash', label: 'Gemini 2.0 Flash' }
+        { value: 'gemini-2.0-flash', label: 'Gemini 2.0 Flash' },
+        { value: 'gemini-2.0-flash-lite', label: 'Gemini 2.0 Flash Lite' },
+    ],
+    ollama: [
+        { value: 'llama3.1', label: 'Llama 3.1' },
+        { value: 'llama3.2', label: 'Llama 3.2' },
+        { value: 'mistral', label: 'Mistral' },
+        { value: 'phi3', label: 'Phi-3' },
+        { value: 'codellama', label: 'Code Llama' },
+        { value: 'gemma2', label: 'Gemma 2' },
+        { value: 'qwen2.5', label: 'Qwen 2.5' },
+        { value: 'deepseek-r1', label: 'DeepSeek R1' },
     ]
 };
 
@@ -90,6 +104,12 @@ function updateModelOptions() {
         saveTheme();
     }
     aiModelSelect.value = theme.aiModel;
+
+    // Toggle API Key vs Ollama URL visibility
+    const keyRow = document.getElementById('ai-key-row');
+    const ollamaRow = document.getElementById('ai-ollama-url-row');
+    if (keyRow) keyRow.style.display = provider === 'ollama' ? 'none' : '';
+    if (ollamaRow) ollamaRow.style.display = provider === 'ollama' ? '' : 'none';
 }
 
 // ── Tabs ─────────────────────────────────────────────────────
@@ -202,6 +222,9 @@ function syncThemeUI() {
             lbl.textContent = isGemini ? 'Google Gemini API Key (Local)' : t('theme.ai_key');
         }
         aiKeyInput.placeholder = isGemini ? 'AIza...' : t('theme.ai_key_placeholder');
+    }
+    if (aiOllamaUrlInput) {
+        aiOllamaUrlInput.value = theme.ollamaUrl || 'http://localhost:11434';
     }
     try { accentCustom.value = hslToHex(theme.accent); } catch { }
 }
@@ -346,6 +369,13 @@ if (aiModelSelect) {
 if (aiKeyInput) {
     aiKeyInput.addEventListener('input', () => {
         theme.aiKey = aiKeyInput.value.trim();
+        saveTheme();
+    });
+}
+
+if (aiOllamaUrlInput) {
+    aiOllamaUrlInput.addEventListener('input', () => {
+        theme.ollamaUrl = aiOllamaUrlInput.value.trim();
         saveTheme();
     });
 }

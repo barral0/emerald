@@ -153,7 +153,7 @@ function wrapSelection(prefix, suffix = prefix, placeholder = '') {
 
 // ── AI Helper ──────────────────────────────────────────────────
 async function callLLM(systemPrompt, noSelectionMsgs) {
-    if (!theme.aiKey) {
+    if (theme.aiProvider !== 'ollama' && !theme.aiKey) {
         alert(t('theme.ai_key') + " is required.");
         openThemeModal();
         return;
@@ -188,6 +188,25 @@ async function callLLM(systemPrompt, noSelectionMsgs) {
             const data = await res.json();
             if (data.error) throw new Error(data.error.message);
             resultText = data.candidates[0].content.parts[0].text;
+        } else if (theme.aiProvider === 'ollama') {
+            const modelName = theme.aiModel || 'llama3.1';
+            const ollamaUrl = (theme.ollamaUrl || 'http://localhost:11434').replace(/\/$/, "");
+            const res = await fetch(`${ollamaUrl}/api/chat`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    model: modelName,
+                    options: { temperature: 0.3 },
+                    stream: false,
+                    messages: [
+                        { role: 'system', content: systemPrompt },
+                        { role: 'user', content: selectedText }
+                    ]
+                })
+            });
+            const data = await res.json();
+            if (data.error) throw new Error(data.error);
+            resultText = data.message.content;
         } else {
             const modelName = theme.aiModel || 'gpt-4o-mini';
             const res = await fetch('https://api.openai.com/v1/chat/completions', {

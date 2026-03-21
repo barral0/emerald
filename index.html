@@ -557,16 +557,22 @@
                             <select id="ai-provider-select" class="theme-select">
                                 <option value="openai">OpenAI</option>
                                 <option value="gemini">Google Gemini</option>
+                                <option value="ollama">Ollama (Local)</option>
                             </select>
                         </div>
                         <div class="theme-row">
                             <label class="theme-label" data-i18n="theme.ai_model">AI Model</label>
                             <select id="ai-model-select" class="theme-select"></select>
                         </div>
-                        <div class="theme-row" style="flex-direction: column; align-items: flex-start; gap: 8px;">
+                        <div class="theme-row" id="ai-key-row" style="flex-direction: column; align-items: flex-start; gap: 8px;">
                             <label class="theme-label" data-i18n="theme.ai_key">API Key (Local only)</label>
                             <input type="password" id="ai-key-input" data-i18n-placeholder="theme.ai_key_placeholder"
                                 placeholder="sk-... or AIza..." class="theme-slider"
+                                style="width: 100%; border: 1px solid var(--border); background: var(--bg-hover); padding: 6px 10px; border-radius: 4px; color: var(--text-primary); outline: none; font-size: 0.9rem; font-family: monospace;">
+                        </div>
+                        <div class="theme-row" id="ai-ollama-url-row" style="flex-direction: column; align-items: flex-start; gap: 8px; display: none;">
+                            <label class="theme-label">Ollama URL</label>
+                            <input type="text" id="ai-ollama-url-input" placeholder="http://localhost:11434" class="theme-slider"
                                 style="width: 100%; border: 1px solid var(--border); background: var(--bg-hover); padding: 6px 10px; border-radius: 4px; color: var(--text-primary); outline: none; font-size: 0.9rem; font-family: monospace;">
                         </div>
                     </div>
