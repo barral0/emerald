@@ -46,7 +46,7 @@
     },
     "mac": {
       "target": "dmg",
-      "arch": "universal"
+      "defaultArch": "universal"
     },
     "linux": {
       "target": "AppImage"
