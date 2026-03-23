@@ -45,7 +45,8 @@
       "artifactName": "Emerald-Setup-${version}.${ext}"
     },
     "mac": {
-      "target": "dmg"
+      "target": "dmg",
+      "arch": "universal"
     },
     "linux": {
       "target": "AppImage"
